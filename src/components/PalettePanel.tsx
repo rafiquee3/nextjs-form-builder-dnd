@@ -1,3 +1,4 @@
+import DraggableElement from "./DraggableElement";
 import CheckobxInput from "./FormElements/CheckboxInput";
 import RadioInput from "./FormElements/RadioInput";
 import SelectInput from "./FormElements/SelectInput";
@@ -6,69 +7,66 @@ import TextInput from "./FormElements/TextInput";
 
 export default function PalettePanel() {
     const options = {};
+    const DUMMY_PROPS = {
+        id: Date.now().toString(),
+        isPaletteItem: true, 
+        required: false, 
+        placeholder: "Example", 
+        validation: options
+    };
     return (
         <div className="h-[500px] w-[300px] bg-gray-200">
             <h2 className="text-black">Palette Panel</h2>
             <aside>
                 <ul>
-                    <li>
+                    <DraggableElement elementProps={{
+                        type: "text"
+                    }}>
                         <TextInput 
-                            isPaletteItem={true} 
                             type="text" 
                             label="Text Input" 
-                            id="dummy-text" 
-                            required={false} 
-                            placeholder="Example" 
-                            validation={options}
+                            {...DUMMY_PROPS}
                         />
-                    </li>
-                    <li>
+                    </DraggableElement>
+                    <DraggableElement elementProps={{
+                        type: "textarea"
+                    }}>
                         <TextareaInput 
-                            isPaletteItem={true} 
-                            id="dummy-textarea" 
-                            type="text" 
-                            required={false} 
+                            type="textarea" 
                             label="Textarea Input" 
-                            placeholder="Example" 
-                            validation={options}
+                            {...DUMMY_PROPS}
                         />
-                    </li>
-                    <li>
+                    </DraggableElement>
+                    <DraggableElement elementProps={{
+                        type: "select"
+                    }}>
                         <SelectInput 
-                            isPaletteItem={true} 
-                            id="dummy-select" 
                             type="select" 
-                            required={false} 
                             label="Select Input" 
-                            placeholder="Example" 
-                            validation={options} 
+                            {...DUMMY_PROPS}   
                             options={[]}
                         />
-                    </li>
-                    <li>
+                    </DraggableElement>
+                    <DraggableElement elementProps={{
+                        type: "checkbox"
+                    }}>
                         <CheckobxInput 
-                            isPaletteItem={true} 
-                            id="dummy-checkbox" 
                             type="checkbox" 
-                            required={false} 
-                            label="Checkbox Input" 
-                            placeholder="Example" 
-                            validation={options} 
-                            defaultChecked={false}
+                            label="Checkbox Input"
+                            checked={false}
+                            {...DUMMY_PROPS}  
                         />
-                    </li>
-                    <li>
+                    </DraggableElement>
+                    <DraggableElement elementProps={{
+                        type: "radio"
+                    }}>
                         <RadioInput 
-                            isPaletteItem={true} 
-                            id="dummy-radio" 
                             type="radio" 
-                            required={false} 
                             label="Radio Input" 
-                            placeholder="Example" 
-                            validation={options} 
-                            defaultChecked={false}
+                            checked={false}
+                            {...DUMMY_PROPS}  
                         />
-                    </li>
+                    </DraggableElement>
                 </ul>
             </aside>
         </div>

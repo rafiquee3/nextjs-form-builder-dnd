@@ -18,7 +18,7 @@ export default function PropertiesPanel() {
         }
     }, [selectedId, elements])
 
-    const isCheckable = currentElement?.type === 'checkbox' || currentElement?.type === 'radio' || false;
+    const isCheckable = (currentElement?.type === 'checkbox' || currentElement?.type === 'radio');
     const checkableElement = currentElement as (CheckboxElement | RadioElement);
 
     return (
