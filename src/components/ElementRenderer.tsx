@@ -1,11 +1,16 @@
 import { FormElement } from "../types/FormElement";
+import CheckboxInput from "./FormElements/CheckboxInput";
+import RadioInput from "./FormElements/RadioInput";
+import SelectInput from "./FormElements/SelectInput";
+import TextareaInput from "./FormElements/TextareaInput";
+import TextInput from "./FormElements/TextInput";
 
 const componentMap = {
     'text': TextInput,
     'checkbox': CheckboxInput, 
     'select': SelectInput,
-    'textarea': textareaInput, 
-    'radio': radioInput,
+    'textarea': TextareaInput, 
+    'radio': RadioInput,
 }
 
 interface ElementRendererProps {
@@ -21,7 +26,7 @@ export default function ElementRenderer({element}: ElementRendererProps) {
 
     return (
         <div key={element.id}>
-            <Component {...element}/>
+            <Component {...element as any}/>
         </div>
     );
 }
