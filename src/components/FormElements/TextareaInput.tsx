@@ -1,22 +1,25 @@
 'use client';
+import { styleContainer } from "@/src/styles/styles";
 import { TextInputProps } from "@/src/types/props/props";
 
 export default function TextareaInput({ 
     id, 
     label, 
     required, 
-    placeholder 
+    placeholder,
+    isPaletteItem, 
 }: TextInputProps) {
     const inputId = `input-${id}`;
-
+    const isDraggable = isPaletteItem;
+    
     return (
-        <div className="">
+        <div className={styleContainer(isDraggable)} draggable={isDraggable}>
             <label 
                 htmlFor={inputId} 
                 className=""
             >
                 {label}
-                {required && <span className="">*</span>}
+                {required && isPaletteItem && <span className="">*</span>}
             </label>
             
             <input 
@@ -25,6 +28,7 @@ export default function TextareaInput({
                 required={required}
                 placeholder={placeholder}
                 className=""
+                disabled={isPaletteItem}
             />
         </div>
     );

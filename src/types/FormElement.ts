@@ -2,8 +2,8 @@ export type BaseElement = {
     id: string;
     type: 'text' | 'checkbox' | 'select' | 'textarea' | 'radio';
     required: boolean;
-    label: 'string';
-    placeholder: 'string';
+    label: string;
+    placeholder: string;
     validation: object;
 }
 
