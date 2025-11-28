@@ -28,7 +28,7 @@ export default function SelectInput({
                 className=""
                 disabled={isPaletteItem}
             >
-                <option value="" disabled selected>Select an option</option>
+                <option value="" disabled>Select an option</option>
                 {options.map(opt => (
                     <option key={opt} value={opt}>{opt}</option>
                 ))}

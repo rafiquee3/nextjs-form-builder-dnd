@@ -14,7 +14,7 @@ export type SelectElement = BaseElement & {
 
 export type CheckboxElement = BaseElement & {
     type: 'checkbox';
-    defaultChecked: boolean;
+    checked: boolean;
 }
 
 export type TextareaElement = BaseElement & {
@@ -27,7 +27,7 @@ export type TextElement = BaseElement & {
 
 export type RadioElement = BaseElement & {
     type: 'radio';
-    defaultChecked: boolean;
+    checked: boolean;
 }
 
 export type FormElement = SelectElement | CheckboxElement | TextareaElement | TextElement | RadioElement;
