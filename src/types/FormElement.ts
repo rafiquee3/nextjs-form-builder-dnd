@@ -32,3 +32,7 @@ export type RadioElement = BaseElement & {
 
 export type FormElement = SelectElement | CheckboxElement | TextareaElement | TextElement | RadioElement;
 export type FormElementKeys = keyof (SelectElement & CheckboxElement & TextElement & TextareaElement & RadioElement);
+
+export interface DropItem {
+    type: FormElement['type']; 
+}
