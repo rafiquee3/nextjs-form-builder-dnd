@@ -10,7 +10,7 @@ export default function TextareaInput({
     placeholder,
     isPaletteItem, 
 }: TextInputProps) {
-    const inputId = `input-${id}`;
+    const inputId = id;
     const isDraggable = isPaletteItem;
     const context = isPaletteItem ? null : useFormContext();
 
@@ -56,10 +56,7 @@ export default function TextareaInput({
                             {...field} // Spreads RHF props: onChange, onBlur, value, ref
                             type="textarea"
                             id={inputId}
-                            placeholder={placeholder}
                             className=""
-                            required={required}
-                            disabled={isPaletteItem}
                         />
                         {fieldState.error && (
                             <p className="text-red-500 text-xs mt-1">{fieldState.error.message}</p>

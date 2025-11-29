@@ -6,13 +6,12 @@ import TextareaInput from "./FormElements/TextareaInput";
 import TextInput from "./FormElements/TextInput";
 
 export default function PalettePanel() {
-    const options = {};
     const DUMMY_PROPS = {
         id: Date.now().toString(),
         isPaletteItem: true, 
         required: false, 
         placeholder: "Example", 
-        validation: options
+        validation: {}
     };
     return (
         <div className="h-[500px] w-[300px] bg-gray-200">
@@ -45,6 +44,7 @@ export default function PalettePanel() {
                             label="Select Input" 
                             {...DUMMY_PROPS}   
                             options={[]}
+                            value=''
                         />
                     </DraggableElement>
                     <DraggableElement elementProps={{

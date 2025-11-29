@@ -6,12 +6,27 @@ import ElementRenderer from "./ElementRenderer";
 import { ItemTypes } from "./Palette";
 import { DropItem } from "../types/FormElement";
 import { useForm, FormProvider } from 'react-hook-form';
+import { getRHFDefaultValues } from "../utils/getRHFDefaultValues";
+import { useEffect, useMemo } from "react";
 
 export default function FormBuilderArea() {
     const formElements = useFormBuilderStore((store) => store.elements);
     const addElement = useFormBuilderStore(store => store.addElement);
-    const methods = useForm();
-    const {handleSubmit} = methods;
+    const defaultValues = useMemo(() => getRHFDefaultValues(formElements), [formElements]);
+    console.log('defValues', defaultValues)
+
+    const methods = useForm({
+        mode: 'onSubmit',
+        reValidateMode: 'onSubmit',
+        //resolver: zodResolver(), 
+        defaultValues: defaultValues,
+    });
+
+    const {handleSubmit, reset} = methods;
+
+    useEffect(() => {
+        reset(defaultValues);
+    }, [defaultValues, reset])
 
     const [{ isOver }, drop] = useDrop(() => ({
         accept: ItemTypes.FORM_ELEMENT,
@@ -30,13 +45,17 @@ export default function FormBuilderArea() {
         console.log('submit', data);
     };
 
+    const hasElements = formElements.length > 0;
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <div ref ={drop as any} className={`h-[500px] w-[300px] bg-gray-200 text-black ${isOver ? 'bg-green-200 text-black' : ''}`}>
-                <FormProvider {...methods}>
-                    {formElements.map(el => (<ElementRenderer key={el.id} element={el}/>))}
-                </FormProvider>
-            </div>
-        </form>
+        <div ref ={drop as any} className={`h-[500px] w-[300px] bg-gray-200 text-black ${isOver ? 'bg-green-200 text-black' : ''}`}>
+            {hasElements &&
+            <form onSubmit={handleSubmit(onSubmit)}>
+                    <FormProvider {...methods}>
+                        {formElements.map(el => (<ElementRenderer key={el.id} element={el}/>))}
+                    </FormProvider>
+            
+            </form>
+            }
+         </div>
     )
 }

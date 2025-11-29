@@ -11,7 +11,7 @@ export default function RadioInput({
     checked, 
     isPaletteItem,
 }: RadioInputProps) {
-    const inputId = `input-${id}`;
+    const inputId = id;
     const isDraggable = isPaletteItem;
     const context = isPaletteItem ? null : useFormContext();
 
@@ -58,8 +58,7 @@ export default function RadioInput({
                             type="radio"
                             id={inputId}
                             className=""
-                            required={required}
-                            checked={checked}
+                          
                         />
                         {fieldState.error && (
                             <p className="text-red-500 text-xs mt-1">{fieldState.error.message}</p>

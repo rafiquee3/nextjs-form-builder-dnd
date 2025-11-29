@@ -10,7 +10,7 @@ export default function SelectInput({
     options, 
     isPaletteItem,
 }: SelectInputProps) {
-    const selectId = `select-${id}`;
+    const selectId = id;
     const isDraggable = isPaletteItem;
     const context = isPaletteItem ? null : useFormContext();
 
@@ -59,7 +59,7 @@ export default function SelectInput({
                         >
                             <option value="" disabled>Select an option</option>
                             {options.map(opt => (
-                            <option key={opt}>{opt}</option>
+                            <option key={opt.value}>{opt.value}</option>
                             ))}
                         </select>
                         {fieldState.error && (

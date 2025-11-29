@@ -3,7 +3,7 @@ import { FormElement, FormElementKeys } from '../types/FormElement';
 
 function CreateElement(type: FormElement['type']): FormElement {
   const id = Date.now().toString();
-  const baseProps = {id, label: `New ${type.toUpperCase()}`, required: false, placeholder: '', validation: {}};
+  const baseProps = {id, label: `New ${type.toUpperCase()}`, required: false, placeholder: '', validation: {}, value: ''};
 
   switch (type) {
     case 'text':
@@ -21,14 +21,15 @@ function CreateElement(type: FormElement['type']): FormElement {
 
 type FormBuilderState = {
     elements: FormElement[];
-    selectedId: string | null;
+    selectedId: FormElement['id'] | null;
 };
 
 type FormBuilderActions = {
     addElement: (type: FormElement['type']) => void;
     setElements: (elements: FormElement[]) => void;
-    selectElement: (id: string | null) => void;
-    updateElementProperty: (id: string, property: FormElementKeys, value: any) => void;
+    selectElement: (id:  FormElement['id'] | null) => void;
+    updateElementProperty: (id:  FormElement['id'], property: FormElementKeys, value: any) => void;
+    remElement: (id:  FormElement['id']) => void;
 }
 
 export const useFormBuilderStore = create<FormBuilderState & FormBuilderActions>((set, get) => ({
@@ -36,6 +37,10 @@ export const useFormBuilderStore = create<FormBuilderState & FormBuilderActions>
   selectedId: null,
 
   addElement: (type: FormElement['type']) => set((state) => ({elements: [...state.elements, CreateElement(type)]})),
+  remElement: (id: FormElement['id']) => set((state) => {
+    const element = state.elements.find(el => el.id === id);
+    return element ? {elements: state.elements.filter(el => el.id !== id)} : {elements: state.elements};
+  }),
   setElements: (elements: FormElement[]) => set({ elements: elements }),
   selectElement: (id: string | null) => set({ selectedId: id }),
   updateElementProperty: (id: string, property: FormElementKeys, value: any) => set((state) => ({

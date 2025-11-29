@@ -7,9 +7,15 @@ export type BaseElement = {
     validation: object;
 }
 
+export interface SelectOption {
+    label: string; 
+    value: string;
+}
+
 export type SelectElement = BaseElement & {
     type: 'select';
-    options: string[];
+    options: SelectOption[];
+    value: string;
 }
 
 export type CheckboxElement = BaseElement & {
@@ -19,10 +25,12 @@ export type CheckboxElement = BaseElement & {
 
 export type TextareaElement = BaseElement & {
     type: 'textarea';
+    value: string;
 }
 
 export type TextElement = BaseElement & {
     type: 'text';
+    value: string;
 }
 
 export type RadioElement = BaseElement & {
@@ -35,4 +43,8 @@ export type FormElementKeys = keyof (SelectElement & CheckboxElement & TextEleme
 
 export interface DropItem {
     type: FormElement['type']; 
+}
+
+export type RHFDefaultValues = {
+    [key: string]: string | boolean | number | undefined;
 }

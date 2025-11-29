@@ -10,7 +10,7 @@ export default function TextInput({
     placeholder,
     isPaletteItem, 
 }: TextInputProps ) {
-    const inputId = `input-${id}`;
+    const inputId = id;
     const isDraggable = isPaletteItem;
     const context = isPaletteItem ? null : useFormContext();
     
@@ -53,11 +53,10 @@ export default function TextInput({
                     <div>
                         <input
                             {...field} // Spreads RHF props: onChange, onBlur, value, ref
+                            value={field.value}
                             type="text"
                             id={inputId}
-                            placeholder={placeholder}
                             className=""
-                            required={required}
                         />
                         {fieldState.error && (
                             <p className="text-red-500 text-xs mt-1">{fieldState.error.message}</p>
