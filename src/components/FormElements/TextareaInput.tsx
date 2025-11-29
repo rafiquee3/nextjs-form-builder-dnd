@@ -54,6 +54,7 @@ export default function TextareaInput({
                     <div>
                         <input
                             {...field} // Spreads RHF props: onChange, onBlur, value, ref
+                            value={field.value ?? ''}
                             type="textarea"
                             id={inputId}
                             className=""

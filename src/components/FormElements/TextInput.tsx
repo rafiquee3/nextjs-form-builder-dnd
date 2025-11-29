@@ -53,7 +53,7 @@ export default function TextInput({
                     <div>
                         <input
                             {...field} // Spreads RHF props: onChange, onBlur, value, ref
-                            value={field.value}
+                            value={field.value ?? ''}
                             type="text"
                             id={inputId}
                             className=""
