@@ -1,36 +1,71 @@
 'use client';
 import { styleContainer } from "@/src/styles/styles";
 import { CheckboxInputProps } from "@/src/types/props/props";
+import { Controller, useFormContext } from "react-hook-form";
 
 export default function CheckobxInput({ 
     id, 
     label, 
     required, 
     placeholder,
-    defaultChecked,
+    checked,
     isPaletteItem, 
 }: CheckboxInputProps) {
     const inputId = `input-${id}`;
     const isDraggable = isPaletteItem;
+    const context = isPaletteItem ? null : useFormContext();
+
+    if (isPaletteItem) {
+        return (
+        <div className={styleContainer(isDraggable)}>
+                <label 
+                    htmlFor={inputId} 
+                    className=""
+                >
+                    {label}
+                </label>
+                
+                <input 
+                    id={inputId}
+                    type="checkbox"
+                    placeholder={placeholder}
+                    className=""
+                    disabled
+                />
+            </div>
+        )
+    }
+
+    const {control} = context!;
 
     return (
-        <div className={styleContainer(isDraggable)}>
+        <div className={styleContainer(isDraggable)} draggable={isDraggable}>
             <label 
                 htmlFor={inputId} 
                 className=""
             >
                 {label}
-                {required && isPaletteItem && <span className="">*</span>}
+                {required && <span className="">*</span>}
             </label>
-            
-            <input 
-                id={inputId}
-                type="checkbox"
-                required={required}
-                placeholder={placeholder}
-                className=""
-                checked={defaultChecked}
-                disabled={isPaletteItem}
+            <Controller
+                name={inputId} 
+                control={control}
+                rules={{ required: required ? `${label} is required` : false }}
+                render={({ field, fieldState }) => (
+                    <div>
+                       <input
+                            {...field} // Spreads RHF props: onChange, onBlur, value, ref
+                            type="checkbox"
+                            id={inputId}
+                            className=""
+                            required={required}
+                            checked={checked}
+                        />
+                        {fieldState.error && (
+                            <p className="text-red-500 text-xs mt-1">{fieldState.error.message}</p>
+                        )}
+                    </div>
+                )}
             />
         </div>
     );

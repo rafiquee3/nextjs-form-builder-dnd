@@ -25,7 +25,7 @@ export default function ElementRenderer({element}: ElementRendererProps) {
     }
 
     return (
-        <div key={element.id}>
+        <div key={element.id} className="my-2">
             <Component {...element as any}/>
         </div>
     );

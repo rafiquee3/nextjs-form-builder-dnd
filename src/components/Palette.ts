@@ -5,7 +5,7 @@ export const ComponentPalette = [
     { type: 'radio', icon: '🔽', label: 'Radio' },
     { type: 'textarea', icon: '🔽', label: 'Textarea' },
 ];
-
+// 
 export const ItemTypes = {
     FORM_ELEMENT: 'formElement'
 };

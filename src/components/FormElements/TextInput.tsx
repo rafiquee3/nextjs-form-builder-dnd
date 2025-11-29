@@ -1,6 +1,7 @@
 'use client';
 import { styleContainer } from "@/src/styles/styles";
 import { TextInputProps } from "@/src/types/props/props";
+import { useFormContext, Controller } from 'react-hook-form';
 
 export default function TextInput({ 
     id, 
@@ -11,6 +12,29 @@ export default function TextInput({
 }: TextInputProps ) {
     const inputId = `input-${id}`;
     const isDraggable = isPaletteItem;
+    const context = isPaletteItem ? null : useFormContext();
+    
+    if (isPaletteItem) {
+        return (
+            <div className={styleContainer(isDraggable)} draggable={isDraggable}>
+                <label 
+                    htmlFor={inputId} 
+                    className=""
+                >
+                    {label}
+                </label>
+                <input
+                    type="text"
+                    id={inputId}
+                    placeholder={placeholder}
+                    className=""
+                    disabled
+                />
+            </div>
+        )
+    }
+
+    const {control} = context!;
 
     return (
         <div className={styleContainer(isDraggable)} draggable={isDraggable}>
@@ -19,16 +43,27 @@ export default function TextInput({
                 className=""
             >
                 {label}
-                {required && !isPaletteItem && <span className="">*</span>}
+                {required && <span className="">*</span>}
             </label>
-            
-            <input 
-                id={inputId}
-                type="text"
-                required={required}
-                placeholder={placeholder}
-                className=""
-                disabled={isPaletteItem}
+            <Controller
+                name={inputId} 
+                control={control}
+                rules={{ required: required ? `${label} is required` : false }}
+                render={({ field, fieldState }) => (
+                    <div>
+                        <input
+                            {...field} // Spreads RHF props: onChange, onBlur, value, ref
+                            type="text"
+                            id={inputId}
+                            placeholder={placeholder}
+                            className=""
+                            required={required}
+                        />
+                        {fieldState.error && (
+                            <p className="text-red-500 text-xs mt-1">{fieldState.error.message}</p>
+                        )}
+                    </div>
+                )}
             />
         </div>
     );
