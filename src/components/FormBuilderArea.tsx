@@ -7,14 +7,17 @@ import { ItemTypes } from "./Palette";
 import { DropItem } from "../types/FormElement";
 import { useForm, FormProvider } from 'react-hook-form';
 import { getRHFDefaultValues } from "../utils/getRHFDefaultValues";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 
 export default function FormBuilderArea() {
     const formElements = useFormBuilderStore((store) => store.elements);
     const addElement = useFormBuilderStore(store => store.addElement);
     const defaultValues = useMemo(() => getRHFDefaultValues(formElements), [formElements]);
-    console.log('defValues', defaultValues)
 
+    const formKey = useMemo(() => {
+        return formElements.map(el => el.id).join('-');
+    }, [formElements]);
+    
     const methods = useForm({
         mode: 'onSubmit',
         reValidateMode: 'onSubmit',
@@ -24,9 +27,7 @@ export default function FormBuilderArea() {
 
     const {handleSubmit, reset} = methods;
 
-    useEffect(() => {
-        reset(defaultValues);
-    }, [defaultValues, reset])
+
 
     const [{ isOver }, drop] = useDrop(() => ({
         accept: ItemTypes.FORM_ELEMENT,
@@ -45,17 +46,13 @@ export default function FormBuilderArea() {
         console.log('submit', data);
     };
 
-    const hasElements = formElements.length > 0;
     return (
         <div ref ={drop as any} className={`h-[500px] w-[300px] bg-gray-200 text-black ${isOver ? 'bg-green-200 text-black' : ''}`}>
-            {hasElements &&
             <form onSubmit={handleSubmit(onSubmit)}>
                     <FormProvider {...methods}>
                         {formElements.map(el => (<ElementRenderer key={el.id} element={el}/>))}
                     </FormProvider>
-            
             </form>
-            }
          </div>
     )
 }
