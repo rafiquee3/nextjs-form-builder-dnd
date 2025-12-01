@@ -13,10 +13,6 @@ export default function FormBuilderArea() {
     const formElements = useFormBuilderStore((store) => store.elements);
     const addElement = useFormBuilderStore(store => store.addElement);
     const defaultValues = useMemo(() => getRHFDefaultValues(formElements), [formElements]);
-
-    const formKey = useMemo(() => {
-        return formElements.map(el => el.id).join('-');
-    }, [formElements]);
     
     const methods = useForm({
         mode: 'onSubmit',
@@ -25,9 +21,7 @@ export default function FormBuilderArea() {
         defaultValues: defaultValues,
     });
 
-    const {handleSubmit, reset} = methods;
-
-
+    const {handleSubmit, reset, unregister} = methods;
 
     const [{ isOver }, drop] = useDrop(() => ({
         accept: ItemTypes.FORM_ELEMENT,
@@ -50,7 +44,7 @@ export default function FormBuilderArea() {
         <div ref ={drop as any} className={`h-[500px] w-[300px] bg-gray-200 text-black ${isOver ? 'bg-green-200 text-black' : ''}`}>
             <form onSubmit={handleSubmit(onSubmit)}>
                     <FormProvider {...methods}>
-                        {formElements.map(el => (<ElementRenderer key={el.id} element={el}/>))}
+                        {formElements.map(el => (<ElementRenderer key={el.id} element={el} unregister={unregister}/>))}
                     </FormProvider>
             </form>
          </div>

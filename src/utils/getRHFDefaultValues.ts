@@ -3,7 +3,7 @@ import { RHFDefaultValues } from "../types/FormElement";
 
 export const getRHFDefaultValues = (elements: FormElement[]): RHFDefaultValues => {
     return elements.reduce((acc, el) => {
-        let defaultValue: string | boolean = 'ss';
+        let defaultValue: string | boolean = '';
 
         if (el.type === 'checkbox' || el.type === 'radio') {
             defaultValue = el.checked || false;
