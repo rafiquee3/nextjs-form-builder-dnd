@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { FormElement, FormElementKeys } from '../types/FormElement';
+import { FormElement, FormElementKeys, ValidationRules } from '../types/FormElement';
 
 function CreateElement(type: FormElement['type']): FormElement {
   const id = Date.now().toString();
@@ -32,12 +32,18 @@ function CreateElement(type: FormElement['type']): FormElement {
       }
       return {...baseProps, type, options: [], validation};
     case 'checkbox':
-    case 'radio':
-      validation = {
+        validation = {
         required: undefined,
         checked: false
       }
-        return {...baseProps, type, checked: false, validation};
+      return {...baseProps, type, checked: false, validation};
+    case 'radio':
+      validation = {
+        required: undefined,
+        checked: false,
+        name: ''
+      }
+      return {...baseProps, type, checked: false, validation, name: ''};
     default:
         throw new Error(`Unknown element type: ${type}`);
   }
@@ -55,6 +61,7 @@ type FormBuilderActions = {
     updateElementProperty: (id:  FormElement['id'], property: FormElementKeys, value: any) => void;
     remElement: (id:  FormElement['id']) => void;
     moveElement: (id: FormElement['id'], action: 'up' | 'down') => void;
+    getValidationRules: (id: FormElement['id']) => ValidationRules | null;
 }
 
 export const useFormBuilderStore = create<FormBuilderState & FormBuilderActions>((set, get) => ({
@@ -93,5 +100,12 @@ export const useFormBuilderStore = create<FormBuilderState & FormBuilderActions>
       el.id === id ?
         {...el, [property]: value} : el
     )
-  }))
+  })),
+  getValidationRules: (id: FormElement['id']) => {
+    const currentElement = get().elements.find(el => el.id === id);
+    if (currentElement) {
+      return currentElement.validation;
+    }
+    return null;
+  },
 }));

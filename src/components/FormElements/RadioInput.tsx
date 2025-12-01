@@ -1,4 +1,5 @@
 'use client';
+import { useFormBuilderStore } from "@/src/store/useFormBuilderStore";
 import { styleContainer } from "@/src/styles/styles";
 import { RadioInputProps } from "@/src/types/props/props";
 import { Controller, useFormContext } from "react-hook-form";
@@ -7,13 +8,15 @@ export default function RadioInput({
     id, 
     label, 
     required, 
-    placeholder,
-    checked, 
+    checked,
+    name, 
     isPaletteItem,
 }: RadioInputProps) {
     const inputId = id;
     const isDraggable = isPaletteItem;
     const context = isPaletteItem ? null : useFormContext();
+    const updateElement = useFormBuilderStore(store => store.updateElementProperty);
+    const getValidationRules = useFormBuilderStore(store => store.getValidationRules);
 
     if (isPaletteItem) {
         return (
@@ -28,7 +31,6 @@ export default function RadioInput({
             <input 
                 id={inputId}
                 type="radio"
-                placeholder={placeholder}
                 className=""
                 disabled
             />
@@ -59,6 +61,14 @@ export default function RadioInput({
                             id={inputId}
                             className=""
                             required={required}
+                            name={name}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                const validationRules = getValidationRules(inputId);
+                                const checked = validationRules?.checked;
+                                updateElement(inputId, 'checked', !checked);
+                                updateElement(inputId, 'validation', {...validationRules, checked: !checked});
+                            }}
                         />
                         {fieldState.error && (
                             <p className="text-red-500 text-xs mt-1">{fieldState.error.message}</p>

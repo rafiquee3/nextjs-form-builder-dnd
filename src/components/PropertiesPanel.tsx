@@ -23,6 +23,7 @@ export default function PropertiesPanel() {
     const labelInputId = currentElement ? `label-${currentElement.id}` : undefined;
     const optionsInputRef = useRef<HTMLInputElement>(null);
     const optionsSelectRef = useRef<HTMLSelectElement>(null);
+    const nameInputRef = useRef<HTMLInputElement>(null);
 
     const handleSelectAction = (e: React.MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
@@ -34,20 +35,18 @@ export default function PropertiesPanel() {
             if (buttonAction.id === 'addOptBttn' && optionsInputRef.current) {
                 const inputValue = optionsInputRef.current.value;
                 const hasDuplicates = currentOptions.includes(inputValue);
-            
-                optionsInputRef.current.value = '';
 
                 if (inputValue && !hasDuplicates) {
                     updateElement(currentElement.id, 'options', [...currentOptions, inputValue]);
+                    optionsInputRef.current.value = '';
                 }
             } else if (buttonAction.id === 'remOptBttn' && optionsSelectRef.current) {
                 const selectValue = optionsSelectRef.current.value;
                 const hasDuplicates = currentOptions.includes(selectValue);
 
-                optionsSelectRef.current.value = '';
-
                 if (selectValue && hasDuplicates) {
                     updateElement(currentElement.id, 'options', [...currentOptions.filter((opt: string) => opt !== selectValue)]);
+                    optionsSelectRef.current.value = '';
                 }
             }   
         }
@@ -73,11 +72,13 @@ export default function PropertiesPanel() {
                                 {
                                 <>
                                 <select ref={optionsSelectRef}>
+                                    <option disabled>Select option</option>
                                     {currentElement.options &&
                                     currentElement.options.map(opt => 
                                     <option key={opt} value={opt}>{opt}</option>)}
                                 </select>
-                                <button id='remOptBttn'>rem</button></>
+                                <button id='remOptBttn'>rem</button>
+                                </>
                                 }
                                 <input ref={optionsInputRef} type="text"></input>
                                 <button id='addOptBttn'>add</button>
@@ -177,7 +178,22 @@ export default function PropertiesPanel() {
                                                             updateElement(checkableElement.id, 'checked', e.target.value);
                                                     }}/>
                                                 </div>
-                                        ); 
+                                        );
+                                        case 'name': 
+                                            return (
+                                                <div key={key}>
+                                                    <label htmlFor={labelInputId}>Group name</label>
+                                                    <input ref={nameInputRef} id={labelInputId} value={currentElement.validation.name}/>
+                                                    <button onClick={(e) => {
+                                                        e.preventDefault();
+                                                        if (nameInputRef.current) {
+                                                            const value = nameInputRef.current.value;
+                                                            updateElement(currentElement.id, 'validation', {...currentElement.validation, name: value});
+                                                            updateElement(currentElement.id, 'name', value);
+                                                        }
+                                                    }}>Add</button>
+                                                </div>
+                                        );
                                     }
                                 })
                             }

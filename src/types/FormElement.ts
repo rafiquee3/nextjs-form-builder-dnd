@@ -1,10 +1,11 @@
-interface ValidationRules {
+export interface ValidationRules {
     placeholder: string;
     min: number | undefined;
     max: number | undefined;
     regex: string | undefined;
     required: boolean | undefined;
     checked: boolean | undefined;
+    name: string;
 }
 
 export type BaseElement = {
@@ -42,6 +43,7 @@ export type TextElement = BaseElement & {
 export type RadioElement = BaseElement & {
     type: 'radio';
     checked: boolean;
+    name: string;
 }
 
 export type FormElement = SelectElement | CheckboxElement | TextareaElement | TextElement | RadioElement;
