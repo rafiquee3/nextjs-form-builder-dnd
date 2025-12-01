@@ -4,7 +4,7 @@ import { FormElement, FormElementKeys } from '../types/FormElement';
 function CreateElement(type: FormElement['type']): FormElement {
   const id = Date.now().toString();
   const baseProps = {id, label: `New ${type.toUpperCase()}`, required: false, placeholder: '', validation: {}, value: ''};
-  let validation = {};
+  let validation: any = {};
 
   switch (type) {
     case 'text':
@@ -12,8 +12,9 @@ function CreateElement(type: FormElement['type']): FormElement {
         min: undefined,
         max: undefined,
         regex: undefined,
+        required: undefined,
+        placeholder: '',
         types: ['text', 'email', 'password'],
-        required: undefined
       }
       return {...baseProps, type, validation};
     case 'textarea':
@@ -21,7 +22,8 @@ function CreateElement(type: FormElement['type']): FormElement {
         min: undefined,
         max: undefined,
         regex: undefined,
-        required: undefined
+        required: undefined,
+        placeholder: '',
       }
       return {...baseProps, type, validation};
     case 'select':

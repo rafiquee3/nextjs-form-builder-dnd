@@ -1,10 +1,18 @@
+interface ValidationRules {
+    min: number | undefined;
+    max: number | undefined;
+    regex: string | undefined;
+    required: boolean | undefined;
+    checked: boolean | undefined;
+    placeholder: string;
+}
+
 export type BaseElement = {
     id: string;
     type: 'text' | 'checkbox' | 'select' | 'textarea' | 'radio' | 'email' | 'password' | 'number';
     required: boolean;
     label: string;
-    placeholder: string;
-    validation: object;
+    validation: ValidationRules;
 }
 
 export interface SelectOption {
@@ -26,11 +34,13 @@ export type CheckboxElement = BaseElement & {
 export type TextareaElement = BaseElement & {
     type: 'textarea';
     value: string;
+    placeholder: string;
 }
 
 export type TextElement = BaseElement & {
     type: 'text';
     value: string;
+    placeholder: string;
 }
 
 export type RadioElement = BaseElement & {

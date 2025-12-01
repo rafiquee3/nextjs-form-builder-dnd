@@ -67,7 +67,7 @@ export default function ElementRenderer({element, unregister}: ElementRendererPr
     console.log('type', element.type)
     return (
         <div key={id} className="flex my-2 bg-red-100 " onClick={handleClick}>
-            <Component {...element as any} type={element.type}/>
+            <Component {...element as any} type={element.type} required={element.required}/>
             <button disabled={firstEl}>⬆️</button>
             <button disabled={lastEl}>⬇️</button>
             <button>del</button>

@@ -58,7 +58,7 @@ export default function RadioInput({
                             type="radio"
                             id={inputId}
                             className=""
-                          
+                            required={required}
                         />
                         {fieldState.error && (
                             <p className="text-red-500 text-xs mt-1">{fieldState.error.message}</p>

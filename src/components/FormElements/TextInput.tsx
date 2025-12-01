@@ -56,6 +56,7 @@ export default function TextInput({
                             {...field} // Spreads RHF props: onChange, onBlur, value, ref
                             value={field.value ?? ''}
                             type={type}
+                            required={required}
                             id={inputId}
                             placeholder={placeholder}
                             className=""

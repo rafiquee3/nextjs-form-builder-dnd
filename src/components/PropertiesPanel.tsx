@@ -18,7 +18,6 @@ export default function PropertiesPanel() {
         }
     }, [selectedId, elements])
 
-    const isCheckable = (currentElement?.type === 'checkbox' || currentElement?.type === 'radio');
     const checkableElement = currentElement as (CheckboxElement | RadioElement);
     const hasValidationRules = currentElement ? Object.keys(currentElement?.validation).length > 0 : false;
     const labelInputId = currentElement ? `label-${currentElement.id}` : undefined;
@@ -33,58 +32,72 @@ export default function PropertiesPanel() {
                             <label>Field Label</label>
                             <input 
                                 
-                                value={currentElement.label}
+                                value={currentElement.label ?? ''}
                                 onChange={(e) => updateElement(currentElement.id, 'label', e.target.value)}
                             />
                         </div>
-                        <div>
-                            <label>Placeholder Text</label>
-                            <input
-                                onChange={(e) => updateElement(currentElement.id, 'placeholder', e.target.value)}
-                            />
-                        </div>
-                        {isCheckable && (
-                        <div>
-                            <label>Required Field</label>
-                            <input 
-                                type="checkbox" 
-                                checked={checkableElement.checked}
-                                onChange={(e) => updateElement(checkableElement.id, 'checked', e.target.value)}
-                            />
-                        </div>
-                        )}
+        
                         {hasValidationRules && (
                         <div>
                             {Object
                                 .keys(currentElement.validation)
                                 .map(key => {
                                     switch (key) {
+                                        case 'placeholder':
+                                            return (
+                                                <div key={key}>
+                                                    <label>Placeholder Text</label>
+                                                    <input
+                                                        value={currentElement.validation.placeholder ?? ''}
+                                                        onChange={(e) => {
+                                                            updateElement(currentElement.id, 'validation', {...currentElement.validation, placeholder: e.target.value});
+                                                            updateElement(currentElement.id, 'placeholder', e.target.value);
+                                                            }
+                                                        }
+                                                    />
+                                                </div>
+                                            );
                                         case 'min':
                                             return (
                                                 <div key={key}>
                                                     <label htmlFor={labelInputId}>Min length</label>
-                                                    <input id={labelInputId} onChange={(e) => updateElement(currentElement.id, 'validation', {...currentElement.validation, min: e.target.value})}/>
+                                                    <input 
+                                                        id={labelInputId} 
+                                                        value={currentElement.validation[key] ?? ''}
+                                                        onChange={(e) => updateElement(currentElement.id, 'validation', {...currentElement.validation, min: e.target.value})}/>
                                                 </div>
                                         );  
                                         case 'max':
                                             return (
                                                 <div key={key}>
                                                     <label htmlFor={labelInputId}>Max length</label>
-                                                    <input id={labelInputId} onChange={(e) => updateElement(currentElement.id, 'validation', {...currentElement.validation, max: e.target.value})}/>
+                                                    <input 
+                                                        id={labelInputId} 
+                                                        value={currentElement.validation[key] ?? ''}
+                                                        onChange={(e) => updateElement(currentElement.id, 'validation', {...currentElement.validation, max: e.target.value})}
+                                                    />
                                                 </div>
                                         ); 
                                         case 'regex':
                                             return (
                                                 <div key={key}>
                                                     <label htmlFor={labelInputId}>Regex</label>
-                                                    <input id={labelInputId} onChange={(e) => updateElement(currentElement.id, 'validation', {...currentElement.validation, regex: e.target.value})}/>
+                                                    <input 
+                                                        id={labelInputId} 
+                                                        value={currentElement.validation[key] ?? ''}
+                                                        onChange={(e) => updateElement(currentElement.id, 'validation', {...currentElement.validation, regex: e.target.value})}
+                                                    />
                                                 </div>
                                         ); 
                                         case 'types':
                                             return (
                                                 <div key={key}>
                                                     <label htmlFor={labelInputId}>Type</label>
-                                                    <select id={labelInputId} onChange={(e) => updateElement(currentElement.id, 'type', e.target.value)}>
+                                                    <select 
+                                                        id={labelInputId} 
+                                                        value={currentElement.type}
+                                                        onChange={(e) => updateElement(currentElement.id, 'type', e.target.value)}
+                                                    >
                                                         <option value='text'>Text</option>
                                                         <option value='email'>Email</option>
                                                         <option value='password'>Password</option>
@@ -95,14 +108,27 @@ export default function PropertiesPanel() {
                                             return (
                                                 <div key={key}>
                                                     <label htmlFor={labelInputId}>Required</label>
-                                                    <input id={labelInputId} type='checkbox' onChange={(e) => updateElement(currentElement.id, 'validation', {...currentElement.validation, required: e.target.value})}/>
+                                                    <input 
+                                                        id={labelInputId} 
+                                                        value={labelInputId ?? undefined}
+                                                        checked={currentElement.validation.required ?? false}
+                                                        type='checkbox' onChange={(e) => {
+                                                            updateElement(currentElement.id, 'validation', {...currentElement.validation, required: e.target.checked});
+                                                            updateElement(checkableElement.id, 'required', e.target.checked);
+                                                    }}/>
                                                 </div>
                                         ); 
                                         case 'checked':
                                             return (
                                                 <div key={key}>
                                                     <label htmlFor={labelInputId}>Checked</label>
-                                                    <input id={labelInputId} type='checkbox' onChange={(e) => updateElement(currentElement.id, 'validation', {...currentElement.validation, checked: e.target.value})}/>
+                                                    <input id={labelInputId} 
+                                                        type='checkbox' 
+                                                        checked={currentElement.validation.checked}
+                                                        onChange={(e) => {
+                                                            updateElement(currentElement.id, 'validation', {...currentElement.validation, checked: e.target.value});
+                                                            updateElement(checkableElement.id, 'checked', e.target.value);
+                                                    }}/>
                                                 </div>
                                         ); 
                                     }

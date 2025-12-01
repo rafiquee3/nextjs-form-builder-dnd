@@ -56,6 +56,7 @@ export default function SelectInput({
                             {...field} // Spreads RHF props: onChange, onBlur, value, ref
                             id={selectId}
                             className=""
+                            required={required}
                         >
                             <option value="" disabled>Select an option</option>
                             {options.map(opt => (
