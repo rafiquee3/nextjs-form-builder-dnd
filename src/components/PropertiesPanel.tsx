@@ -21,18 +21,35 @@ export default function PropertiesPanel() {
     const checkableElement = currentElement as (CheckboxElement | RadioElement);
     const hasValidationRules = currentElement ? Object.keys(currentElement?.validation).length > 0 : false;
     const labelInputId = currentElement ? `label-${currentElement.id}` : undefined;
-    const optionsInputRef = useRef(null);
+    const optionsInputRef = useRef<HTMLInputElement>(null);
+    const optionsSelectRef = useRef<HTMLSelectElement>(null);
 
-    const handleAddOption = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const handleSelectAction = (e: React.MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
-        if (currentElement && optionsInputRef.current) {
-            const inputValue = optionsInputRef.current.value;
-            const hasDuplicates = currentElement.options.includes(inputValue);
-            optionsInputRef.current.value = '';
+        const buttonAction = (e.target as HTMLDivElement).closest('button');
+
+        if (currentElement && buttonAction) {
+            const currentOptions = (currentElement as any).options || [];
+
+            if (buttonAction.id === 'addOptBttn' && optionsInputRef.current) {
+                const inputValue = optionsInputRef.current.value;
+                const hasDuplicates = currentOptions.includes(inputValue);
             
-            if (!hasDuplicates) {
-                updateElement(currentElement.id, 'options', [...currentElement.options, inputValue]);
-            }
+                optionsInputRef.current.value = '';
+
+                if (inputValue && !hasDuplicates) {
+                    updateElement(currentElement.id, 'options', [...currentOptions, inputValue]);
+                }
+            } else if (buttonAction.id === 'remOptBttn' && optionsSelectRef.current) {
+                const selectValue = optionsSelectRef.current.value;
+                const hasDuplicates = currentOptions.includes(selectValue);
+
+                optionsSelectRef.current.value = '';
+
+                if (selectValue && hasDuplicates) {
+                    updateElement(currentElement.id, 'options', [...currentOptions.filter((opt: string) => opt !== selectValue)]);
+                }
+            }   
         }
     }
 
@@ -51,18 +68,19 @@ export default function PropertiesPanel() {
                             />
                         </div>
                         {currentElement.type === 'select'  && 
-                            <div>
+                            <div onClick={handleSelectAction}>
                                 <label>Options</label>
                                 {
-                                <select>
+                                <>
+                                <select ref={optionsSelectRef}>
                                     {currentElement.options &&
-                                       currentElement.options.map(opt => 
-                                       <option value={opt}>{opt}</option>)
-                                    }
+                                    currentElement.options.map(opt => 
+                                    <option key={opt} value={opt}>{opt}</option>)}
                                 </select>
+                                <button id='remOptBttn'>rem</button></>
                                 }
                                 <input ref={optionsInputRef} type="text"></input>
-                                <button onClick={handleAddOption}>add</button>
+                                <button id='addOptBttn'>add</button>
                             </div>
                         }
         
@@ -175,11 +193,3 @@ export default function PropertiesPanel() {
         </div>
     )
 }
-/*    validation = {
-        min: undefined,
-        max: undefined,
-        regex: undefined,
-        types: ['text', 'email', 'password'],
-        required: undefined,
-        checked
-      } */
