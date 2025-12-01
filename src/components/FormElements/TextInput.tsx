@@ -8,7 +8,8 @@ export default function TextInput({
     label, 
     required, 
     placeholder,
-    isPaletteItem, 
+    isPaletteItem,
+    type, 
 }: TextInputProps ) {
     const inputId = id;
     const isDraggable = isPaletteItem;
@@ -24,7 +25,7 @@ export default function TextInput({
                     {label}
                 </label>
                 <input
-                    type="text"
+                    type='text'
                     id={inputId}
                     placeholder={placeholder}
                     className=""
@@ -54,8 +55,9 @@ export default function TextInput({
                         <input
                             {...field} // Spreads RHF props: onChange, onBlur, value, ref
                             value={field.value ?? ''}
-                            type="text"
+                            type={type}
                             id={inputId}
+                            placeholder={placeholder}
                             className=""
                         />
                         {fieldState.error && (

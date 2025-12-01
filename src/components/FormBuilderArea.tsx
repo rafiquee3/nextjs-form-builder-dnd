@@ -39,7 +39,7 @@ export default function FormBuilderArea() {
     const onSubmit = (data:any) => {
         console.log('submit', data);
     };
-
+    console.log('elements', formElements)
     return (
         <div ref ={drop as any} className={`h-[500px] w-[300px] bg-gray-200 text-black ${isOver ? 'bg-green-200 text-black' : ''}`}>
             <form onSubmit={handleSubmit(onSubmit)}>

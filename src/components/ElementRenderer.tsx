@@ -10,6 +10,8 @@ import TextInput from "./FormElements/TextInput";
 
 const componentMap = {
     'text': TextInput,
+    'password': TextInput,
+    'email': TextInput,
     'checkbox': CheckboxInput, 
     'select': SelectInput,
     'textarea': TextareaInput, 
@@ -61,10 +63,11 @@ export default function ElementRenderer({element, unregister}: ElementRendererPr
     useEffect(() => {
         () => unregister();
     }, []);
-
+    console.log('rerender elements')
+    console.log('type', element.type)
     return (
         <div key={id} className="flex my-2 bg-red-100 " onClick={handleClick}>
-            <Component {...element as any}/>
+            <Component {...element as any} type={element.type}/>
             <button disabled={firstEl}>⬆️</button>
             <button disabled={lastEl}>⬇️</button>
             <button>del</button>

@@ -4,16 +4,38 @@ import { FormElement, FormElementKeys } from '../types/FormElement';
 function CreateElement(type: FormElement['type']): FormElement {
   const id = Date.now().toString();
   const baseProps = {id, label: `New ${type.toUpperCase()}`, required: false, placeholder: '', validation: {}, value: ''};
+  let validation = {};
 
   switch (type) {
     case 'text':
+      validation = {
+        min: undefined,
+        max: undefined,
+        regex: undefined,
+        types: ['text', 'email', 'password'],
+        required: undefined
+      }
+      return {...baseProps, type, validation};
     case 'textarea':
-      return {...baseProps, type};
+      validation = {
+        min: undefined,
+        max: undefined,
+        regex: undefined,
+        required: undefined
+      }
+      return {...baseProps, type, validation};
     case 'select':
-      return {...baseProps, type, options: []};
+      validation = {
+        required: undefined
+      }
+      return {...baseProps, type, options: [], validation};
     case 'checkbox':
     case 'radio':
-        return {...baseProps, type, checked: false};
+      validation = {
+        required: undefined,
+        checked: false
+      }
+        return {...baseProps, type, checked: false, validation};
     default:
         throw new Error(`Unknown element type: ${type}`);
   }
