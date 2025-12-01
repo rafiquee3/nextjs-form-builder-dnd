@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { useFormBuilderStore } from "../store/useFormBuilderStore";
 import { CheckboxElement, FormElement, RadioElement } from "../types/FormElement";
 
@@ -21,6 +21,20 @@ export default function PropertiesPanel() {
     const checkableElement = currentElement as (CheckboxElement | RadioElement);
     const hasValidationRules = currentElement ? Object.keys(currentElement?.validation).length > 0 : false;
     const labelInputId = currentElement ? `label-${currentElement.id}` : undefined;
+    const optionsInputRef = useRef(null);
+
+    const handleAddOption = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        if (currentElement && optionsInputRef.current) {
+            const inputValue = optionsInputRef.current.value;
+            const hasDuplicates = currentElement.options.includes(inputValue);
+            optionsInputRef.current.value = '';
+            
+            if (!hasDuplicates) {
+                updateElement(currentElement.id, 'options', [...currentElement.options, inputValue]);
+            }
+        }
+    }
 
     return (
         <div className="h-[500px] w-[300px] bg-gray-200 text-black">
@@ -36,6 +50,21 @@ export default function PropertiesPanel() {
                                 onChange={(e) => updateElement(currentElement.id, 'label', e.target.value)}
                             />
                         </div>
+                        {currentElement.type === 'select'  && 
+                            <div>
+                                <label>Options</label>
+                                {
+                                <select>
+                                    {currentElement.options &&
+                                       currentElement.options.map(opt => 
+                                       <option value={opt}>{opt}</option>)
+                                    }
+                                </select>
+                                }
+                                <input ref={optionsInputRef} type="text"></input>
+                                <button onClick={handleAddOption}>add</button>
+                            </div>
+                        }
         
                         {hasValidationRules && (
                         <div>

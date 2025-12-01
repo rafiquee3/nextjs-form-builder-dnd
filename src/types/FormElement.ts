@@ -1,10 +1,10 @@
 interface ValidationRules {
+    placeholder: string;
     min: number | undefined;
     max: number | undefined;
     regex: string | undefined;
     required: boolean | undefined;
     checked: boolean | undefined;
-    placeholder: string;
 }
 
 export type BaseElement = {
@@ -15,14 +15,10 @@ export type BaseElement = {
     validation: ValidationRules;
 }
 
-export interface SelectOption {
-    label: string; 
-    value: string;
-}
 
 export type SelectElement = BaseElement & {
     type: 'select';
-    options: SelectOption[];
+    options: string[];
     value: string;
 }
 

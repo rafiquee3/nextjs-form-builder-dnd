@@ -13,7 +13,7 @@ export default function SelectInput({
     const selectId = id;
     const isDraggable = isPaletteItem;
     const context = isPaletteItem ? null : useFormContext();
-
+    console.log('options', options)
     if (isPaletteItem) {
         return (
             <div className={styleContainer(isDraggable)} draggable={isDraggable}>
@@ -60,7 +60,7 @@ export default function SelectInput({
                         >
                             <option value="" disabled>Select an option</option>
                             {options.map(opt => (
-                            <option key={opt.value}>{opt.value}</option>
+                            <option key={opt}>{opt}</option>
                             ))}
                         </select>
                         {fieldState.error && (

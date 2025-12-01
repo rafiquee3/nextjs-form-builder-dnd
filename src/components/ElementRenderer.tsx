@@ -63,8 +63,7 @@ export default function ElementRenderer({element, unregister}: ElementRendererPr
     useEffect(() => {
         () => unregister();
     }, []);
-    console.log('rerender elements')
-    console.log('type', element.type)
+
     return (
         <div key={id} className="flex my-2 bg-red-100 " onClick={handleClick}>
             <Component {...element as any} type={element.type} required={element.required}/>
