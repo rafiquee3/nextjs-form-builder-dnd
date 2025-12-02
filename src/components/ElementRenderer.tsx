@@ -29,6 +29,7 @@ export default function ElementRenderer({element, unregister}: ElementRendererPr
     const remItem = useFormBuilderStore(store => store.remElement);
     const selectElement = useFormBuilderStore(store => store.selectElement);
     const moveItem = useFormBuilderStore(store => store.moveElement);
+    const remCfgItem = useFormBuilderStore(store => store.remItemCfg);
 
     const formElements = useFormBuilderStore(store => store.elements);
     const index = formElements.findIndex(el => el.id === id);
@@ -42,6 +43,7 @@ export default function ElementRenderer({element, unregister}: ElementRendererPr
                 case 'del':
                     e.stopPropagation();
                     remItem(id);
+                    remCfgItem(id);
                     unregister();
                     break;
                 case '⬆️':

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { FormElement, FormElementKeys, ValidationRules } from '../types/FormElement';
+import { nullish } from 'zod';
 
 function CreateElement(type: FormElement['type']): FormElement {
   const id = Date.now().toString();
@@ -64,6 +65,8 @@ type FormBuilderActions = {
     moveElement: (id: FormElement['id'], action: 'up' | 'down') => void;
     updateFormCfg: (id: FormElement['id'] | null, field: string, value: string | number) => void;
     initializeCfg: (element: FormElement) => void;
+    commitCfgToElements: (id: FormElement['id'] | null) => void;
+    remItemCfg: (id: FormElement['id'] | null) => void;
 }
 
 export const useFormBuilderStore = create<FormBuilderState & FormBuilderActions>((set, get) => ({
@@ -116,6 +119,13 @@ export const useFormBuilderStore = create<FormBuilderState & FormBuilderActions>
       }
     }
   }),
+  remItemCfg: (id: FormElement['id'] | null) => set((state) => {
+    if (!id || !Object.keys(state.formCfg).length) return state;
+    const exist = state.formCfg[id];
+    if (!exist) return state;
+    delete state.formCfg[id];
+    return state;
+  }),
   initializeCfg: (element: FormElement) => set((state) => {
     const cfgData = {
       id: element.id,
@@ -130,5 +140,19 @@ export const useFormBuilderStore = create<FormBuilderState & FormBuilderActions>
         [element.id]: cfgData,
       }
     };
+  }),
+  commitCfgToElements: (id: FormElement['id'] | null) => set((state) => {
+    if (!id) return state;
+    const cfgData = state.formCfg[id];
+    if (!Object.keys(cfgData).length) return state;
+
+    const elements = state.elements.map(el => {
+      if (el.id === id) {
+        return {...el, validation: {...cfgData}}
+      } else {
+        return el;
+      }
+    })
+    return {elements: elements};
   }),
 }));

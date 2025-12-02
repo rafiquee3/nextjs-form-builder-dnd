@@ -8,6 +8,7 @@ export default function PropertiesPanel() {
     const selectedId = useFormBuilderStore(store => store.selectedId);
     const elements = useFormBuilderStore(store => store.elements);
     const updateElement = useFormBuilderStore(store => store.updateElementProperty);
+    const syncDataInStore = useFormBuilderStore(store => store.commitCfgToElements);
     const [localProperties, setLocalProperties] = useState([]);
 
     const updateFormCfg = useFormBuilderStore(store => store.updateFormCfg);
@@ -70,8 +71,8 @@ export default function PropertiesPanel() {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
-        if (!currentElement) return;
+        syncDataInStore(selectedId);
+/*         if (!currentElement) return;
 
         if (localProperties.placeholder) {
             updateElement(currentElement.id, 'placeholder', localProperties.placeholder);
@@ -93,10 +94,11 @@ export default function PropertiesPanel() {
 
         if (localProperties.min) {
             updateElement(currentElement.id, 'validation', {...currentElement.validation, min: localProperties.min});
-        }
+        } */
     }
 
-
+    console.log('cfg', formCfg)
+    console.log('elements', elements)
     return (
         <div className="h-[500px] w-[300px] bg-gray-200 text-black">
             <aside>
