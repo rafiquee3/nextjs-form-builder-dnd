@@ -62,7 +62,7 @@ type FormBuilderActions = {
     updateElementProperty: (id:  FormElement['id'], property: FormElementKeys, value: any) => void;
     remElement: (id:  FormElement['id']) => void;
     moveElement: (id: FormElement['id'], action: 'up' | 'down') => void;
-    updateFormCfg: (id: FormElement['id'], field: string, value: string | number) => void;
+    updateFormCfg: (id: FormElement['id'] | null, field: string, value: string | number) => void;
     initializeCfg: (element: FormElement) => void;
 }
 
@@ -104,8 +104,8 @@ export const useFormBuilderStore = create<FormBuilderState & FormBuilderActions>
         {...el, [property]: value} : el
     )
   })),
-  updateFormCfg: (id: FormElement['id'], field: string, value: string | number) => set((state) => {
-    console.log('id', id, 'field', field, 'value', value)
+  updateFormCfg: (id: FormElement['id'] | null, field: string, value: string | number) => set((state) => {
+    if(!id) return state;
     return {
       formCfg: {
           ...state.formCfg,

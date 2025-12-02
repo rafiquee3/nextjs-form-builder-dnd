@@ -9,12 +9,14 @@ export default function PropertiesPanel() {
     const elements = useFormBuilderStore(store => store.elements);
     const updateElement = useFormBuilderStore(store => store.updateElementProperty);
     const [localProperties, setLocalProperties] = useState([]);
+
     const updateFormCfg = useFormBuilderStore(store => store.updateFormCfg);
-    const formCfg = useFormBuilderStore(store => store.formCfg);
-    
-    const handleLocalChange =  useCallback((key, value) => {
-        updateFormCfg(selectedId, key, value);
+
+    const handleLocalChange =  useCallback((field: string, value: any) => {
+        updateFormCfg(selectedId, field, value);
     }, [selectedId, updateFormCfg]);
+
+    const formCfg = useFormBuilderStore(store => store.formCfg); 
     const initializeCfg = useFormBuilderStore(store => store.initializeCfg);
     const liveCfg = selectedId ? formCfg[selectedId] : null;
 
@@ -22,7 +24,7 @@ export default function PropertiesPanel() {
         if (currentElement && !liveCfg) {
             initializeCfg(currentElement);
         }
-    }, [currentElement, liveCfg, initializeCfg])
+    }, [currentElement, initializeCfg])
 
     useEffect(() => {
         if (selectedId) {
@@ -38,10 +40,7 @@ export default function PropertiesPanel() {
     const labelInputId = currentElement ? `label-${currentElement.id}` : undefined;
     const optionsInputRef = useRef<HTMLInputElement>(null);
     const optionsSelectRef = useRef<HTMLSelectElement>(null);
-    const nameInputRef = useRef<HTMLInputElement>(null);
-    const placeholderRef = useRef<HTMLInputElement>(null);
 
-    console.log('formCFG', formCfg)
     const handleSelectAction = (e: React.MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
         const buttonAction = (e.target as HTMLDivElement).closest('button');
@@ -152,9 +151,10 @@ export default function PropertiesPanel() {
                                                     <label htmlFor={labelInputId}>Min length</label>
                                                     <input 
                                                         id={labelInputId} 
-                                                        value={localProperties.min}
+                                                        value={liveCfg?.min ?? ''}
                                                         onChange={
-                                                            (e) => setLocalProperties((prev) => ({...prev, min: e.target.value}))
+                                                            (e) => handleLocalChange('min', e.target.value)
+
                                                             //updateElement(currentElement.id, 'validation', {...currentElement.validation, min: e.target.value})
                                                         }/>
                                                 </div>
@@ -165,9 +165,9 @@ export default function PropertiesPanel() {
                                                     <label htmlFor={labelInputId}>Max length</label>
                                                     <input 
                                                         id={labelInputId} 
-                                                        value={localProperties.max}
+                                                        value={liveCfg?.max ?? ''}
                                                         onChange={
-                                                            (e) => setLocalProperties((prev) => ({...prev, max: e.target.value}))
+                                                            (e) => handleLocalChange('max', e.target.value)
                                                             //(e) => updateElement(currentElement.id, 'validation', {...currentElement.validation, max: e.target.value}
 
                                                             }
@@ -180,9 +180,9 @@ export default function PropertiesPanel() {
                                                     <label htmlFor={labelInputId}>Regex</label>
                                                     <input 
                                                         id={labelInputId} 
-                                                        value={localProperties.regex}
+                                                        value={liveCfg?.regex ?? ''}
                                                         onChange={
-                                                            (e) => setLocalProperties((prev) => ({...prev, regex: e.target.value}))
+                                                             (e) => handleLocalChange('regex', e.target.value)
                                                             //(e) => updateElement(currentElement.id, 'validation', {...currentElement.validation, regex: e.target.value})
                                                         }
                                                     />
@@ -236,8 +236,8 @@ export default function PropertiesPanel() {
                                                     <label htmlFor={labelInputId}>Group name</label>
                                                     <input 
                                                         id={labelInputId} 
-                                                        value={localProperties.name}
-                                                        onChange={(e) => setLocalProperties((prev) => ({...prev, name: e.target.value}))}
+                                                        value={liveCfg?.name ?? ''}
+                                                        onChange={(e) => handleLocalChange('name', e.target.value)}
                                                     />
                                                 </div>
                                         );
