@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { FormElement, FormElementKeys, ValidationRules } from '../types/FormElement';
-import { nullish } from 'zod';
+
 
 function CreateElement(type: FormElement['type']): FormElement {
   const id = Date.now().toString();
@@ -9,18 +9,8 @@ function CreateElement(type: FormElement['type']): FormElement {
 
   switch (type) {
     case 'text':
-      validation = {
-        placeholder: '',
-        min: undefined,
-        max: undefined,
-        regex: undefined,
-        required: undefined,
-        types: ['text', 'email', 'password'],
-      }
-      return {...baseProps, type, validation};
     case 'textarea':
       validation = {
-        placeholder: '',
         min: undefined,
         max: undefined,
         regex: undefined,
@@ -42,7 +32,6 @@ function CreateElement(type: FormElement['type']): FormElement {
       validation = {
         required: undefined,
         checked: false,
-        name: ''
       }
       return {...baseProps, type, checked: false, validation, name: ''};
     default:
@@ -63,7 +52,7 @@ type FormBuilderActions = {
     updateElementProperty: (id:  FormElement['id'], property: FormElementKeys, value: any) => void;
     remElement: (id:  FormElement['id']) => void;
     moveElement: (id: FormElement['id'], action: 'up' | 'down') => void;
-    updateFormCfg: (id: FormElement['id'] | null, field: string, value: string | number) => void;
+    updateFormCfg: (id: FormElement['id'] | null, field: string, value: string | number | boolean | object) => void;
     initializeCfg: (element: FormElement) => void;
     commitCfgToElements: (id: FormElement['id'] | null) => void;
     remItemCfg: (id: FormElement['id'] | null) => void;
@@ -107,7 +96,7 @@ export const useFormBuilderStore = create<FormBuilderState & FormBuilderActions>
         {...el, [property]: value} : el
     )
   })),
-  updateFormCfg: (id: FormElement['id'] | null, field: string, value: string | number) => set((state) => {
+  updateFormCfg: (id: FormElement['id'] | null, field: string, value: string | number | boolean | object) => set((state) => {
     if(!id) return state;
     return {
       formCfg: {
@@ -148,7 +137,7 @@ export const useFormBuilderStore = create<FormBuilderState & FormBuilderActions>
 
     const elements = state.elements.map(el => {
       if (el.id === id) {
-        return {...el, validation: {...cfgData}}
+        return {...el, ...cfgData, validation: {...cfgData}}
       } else {
         return el;
       }

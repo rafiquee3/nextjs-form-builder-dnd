@@ -72,33 +72,9 @@ export default function PropertiesPanel() {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         syncDataInStore(selectedId);
-/*         if (!currentElement) return;
 
-        if (localProperties.placeholder) {
-            updateElement(currentElement.id, 'placeholder', localProperties.placeholder);
-            updateElement(currentElement.id, 'validation', {...currentElement.validation, placeholder: localProperties.placeholder});
-        }
-
-        if (localProperties.regex) {
-            updateElement(currentElement.id, 'validation', {...currentElement.validation, regex: localProperties.placeholder});
-        }
-
-        if (localProperties.name) {
-            updateElement(currentElement.id, 'name', localProperties.name);
-            updateElement(currentElement.id, 'validation', {...currentElement.validation, name: localProperties.name});
-        }
-
-        if (localProperties.max) {
-            updateElement(currentElement.id, 'validation', {...currentElement.validation, max: localProperties.max});
-        }
-
-        if (localProperties.min) {
-            updateElement(currentElement.id, 'validation', {...currentElement.validation, min: localProperties.min});
-        } */
     }
-
-    console.log('cfg', formCfg)
-    console.log('elements', elements)
+    console.log('current', currentElement)
     return (
         <div className="h-[500px] w-[300px] bg-gray-200 text-black">
             <aside>
@@ -109,10 +85,14 @@ export default function PropertiesPanel() {
                             <label>Label</label>
                             <input 
                                 value={currentElement.label}
-                                onChange={(e) => updateElement(currentElement.id, 'label', e.target.value)}
+                                onChange={(e) => {
+                                    handleLocalChange('label', e.target.value)
+                                    updateElement(currentElement.id, 'label', e.target.value)
+                                }}
                             />
                         </div>
                         {currentElement.type === 'select'  && 
+                        <>
                             <div onClick={handleSelectAction}>
                                 <label>Options</label>
                                 {
@@ -129,24 +109,57 @@ export default function PropertiesPanel() {
                                 <input ref={optionsInputRef} type="text"></input>
                                 <button id='addOptBttn'>add</button>
                             </div>
+                            <div>
+                                <label htmlFor={labelInputId}>Group name</label>
+                                <input 
+                                    id={labelInputId} 
+                                    value={liveCfg?.name ?? ''}
+                                    onChange={(e) => handleLocalChange('name', e.target.value)}
+                                />
+                            </div>
+                        </>
                         }
-        
+                        {['text', 'number', 'email', 'data', 'password'].includes(currentElement.type) && 
+                            <div>
+                                <label htmlFor={labelInputId}>Type</label>
+                                <select 
+                                    id={labelInputId} 
+                                    value={currentElement.type}
+                                    onChange={(e) => {
+                                        const type = e.target.value;
+
+                                        switch (type) {
+                                            case 'number':
+                                                updateElement(currentElement.id, 'value', 10);
+                                        }
+
+                                        handleLocalChange('type', e.target.value);
+                                        updateElement(currentElement.id, 'type', e.target.value)
+                                    }}
+                                >
+                                    <option value='text'>Text</option>
+                                    <option value='email'>Email</option>
+                                    <option value='password'>Password</option>
+                                    <option value='number'>Number</option>
+                                    <option value='date'>Date</option>
+                                </select>
+                            </div>
+                        }
+                        {(currentElement.type === 'text' || currentElement.type === 'textarea') &&
+                            <div>
+                                <label>Placeholder Text</label>
+                                <input
+                                    value={liveCfg?.placeholder ?? ''}
+                                    onChange={(e) => handleLocalChange('placeholder', e.target.value)}
+                                />
+                            </div>
+                        }
                         {hasValidationRules && (
                         <div>
                             {Object
                                 .keys(currentElement.validation)
                                 .map(key => {
                                     switch (key) {
-                                        case 'placeholder':
-                                            return (
-                                                <div key={key}>
-                                                    <label>Placeholder Text</label>
-                                                    <input
-                                                        value={liveCfg?.placeholder ?? ''}
-                                                        onChange={(e) => handleLocalChange('placeholder', e.target.value)}
-                                                    />
-                                                </div>
-                                            );
                                         case 'min':
                                             return (
                                                 <div key={key}>
@@ -156,8 +169,6 @@ export default function PropertiesPanel() {
                                                         value={liveCfg?.min ?? ''}
                                                         onChange={
                                                             (e) => handleLocalChange('min', e.target.value)
-
-                                                            //updateElement(currentElement.id, 'validation', {...currentElement.validation, min: e.target.value})
                                                         }/>
                                                 </div>
                                         );  
@@ -170,9 +181,7 @@ export default function PropertiesPanel() {
                                                         value={liveCfg?.max ?? ''}
                                                         onChange={
                                                             (e) => handleLocalChange('max', e.target.value)
-                                                            //(e) => updateElement(currentElement.id, 'validation', {...currentElement.validation, max: e.target.value}
-
-                                                            }
+                                                        }
                                                     />
                                                 </div>
                                         ); 
@@ -185,26 +194,10 @@ export default function PropertiesPanel() {
                                                         value={liveCfg?.regex ?? ''}
                                                         onChange={
                                                              (e) => handleLocalChange('regex', e.target.value)
-                                                            //(e) => updateElement(currentElement.id, 'validation', {...currentElement.validation, regex: e.target.value})
                                                         }
                                                     />
                                                 </div>
                                         ); 
-                                        case 'types':
-                                            return (
-                                                <div key={key}>
-                                                    <label htmlFor={labelInputId}>Type</label>
-                                                    <select 
-                                                        id={labelInputId} 
-                                                        value={currentElement.type}
-                                                        onChange={(e) => updateElement(currentElement.id, 'type', e.target.value)}
-                                                    >
-                                                        <option value='text'>Text</option>
-                                                        <option value='email'>Email</option>
-                                                        <option value='password'>Password</option>
-                                                    </select>
-                                                </div>
-                                            ); 
                                         case 'required':
                                             return (
                                                 <div key={key}>
@@ -214,7 +207,7 @@ export default function PropertiesPanel() {
                                                         value={labelInputId ?? undefined}
                                                         checked={currentElement.validation.required ?? false}
                                                         type='checkbox' onChange={(e) => {
-                                                            updateElement(currentElement.id, 'validation', {...currentElement.validation, required: e.target.checked});
+                                                            handleLocalChange('required', e.target.checked);
                                                             updateElement(checkableElement.id, 'required', e.target.checked);
                                                     }}/>
                                                 </div>
@@ -227,20 +220,9 @@ export default function PropertiesPanel() {
                                                         type='checkbox' 
                                                         checked={currentElement.validation.checked}
                                                         onChange={(e) => {
-                                                            updateElement(currentElement.id, 'validation', {...currentElement.validation, checked: e.target.value});
+                                                            handleLocalChange('checked', e.target.value);
                                                             updateElement(checkableElement.id, 'checked', e.target.value);
                                                     }}/>
-                                                </div>
-                                        );
-                                        case 'name': 
-                                            return (
-                                                <div key={key}>
-                                                    <label htmlFor={labelInputId}>Group name</label>
-                                                    <input 
-                                                        id={labelInputId} 
-                                                        value={liveCfg?.name ?? ''}
-                                                        onChange={(e) => handleLocalChange('name', e.target.value)}
-                                                    />
                                                 </div>
                                         );
                                     }
