@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useRef, useState } from "react"
+import React, { useCallback, useEffect, useRef, useState } from "react"
 import { useFormBuilderStore } from "../store/useFormBuilderStore";
 import { CheckboxElement, FormElement, RadioElement } from "../types/FormElement";
 
@@ -8,6 +8,21 @@ export default function PropertiesPanel() {
     const selectedId = useFormBuilderStore(store => store.selectedId);
     const elements = useFormBuilderStore(store => store.elements);
     const updateElement = useFormBuilderStore(store => store.updateElementProperty);
+    const [localProperties, setLocalProperties] = useState([]);
+    const updateFormCfg = useFormBuilderStore(store => store.updateFormCfg);
+    const formCfg = useFormBuilderStore(store => store.formCfg);
+    
+    const handleLocalChange =  useCallback((key, value) => {
+        updateFormCfg(selectedId, key, value);
+    }, [selectedId, updateFormCfg]);
+    const initializeCfg = useFormBuilderStore(store => store.initializeCfg);
+    const liveCfg = selectedId ? formCfg[selectedId] : null;
+
+    useEffect(() => {
+        if (currentElement && !liveCfg) {
+            initializeCfg(currentElement);
+        }
+    }, [currentElement, liveCfg, initializeCfg])
 
     useEffect(() => {
         if (selectedId) {
@@ -24,7 +39,9 @@ export default function PropertiesPanel() {
     const optionsInputRef = useRef<HTMLInputElement>(null);
     const optionsSelectRef = useRef<HTMLSelectElement>(null);
     const nameInputRef = useRef<HTMLInputElement>(null);
+    const placeholderRef = useRef<HTMLInputElement>(null);
 
+    console.log('formCFG', formCfg)
     const handleSelectAction = (e: React.MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
         const buttonAction = (e.target as HTMLDivElement).closest('button');
@@ -52,17 +69,45 @@ export default function PropertiesPanel() {
         }
     }
 
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        if (!currentElement) return;
+
+        if (localProperties.placeholder) {
+            updateElement(currentElement.id, 'placeholder', localProperties.placeholder);
+            updateElement(currentElement.id, 'validation', {...currentElement.validation, placeholder: localProperties.placeholder});
+        }
+
+        if (localProperties.regex) {
+            updateElement(currentElement.id, 'validation', {...currentElement.validation, regex: localProperties.placeholder});
+        }
+
+        if (localProperties.name) {
+            updateElement(currentElement.id, 'name', localProperties.name);
+            updateElement(currentElement.id, 'validation', {...currentElement.validation, name: localProperties.name});
+        }
+
+        if (localProperties.max) {
+            updateElement(currentElement.id, 'validation', {...currentElement.validation, max: localProperties.max});
+        }
+
+        if (localProperties.min) {
+            updateElement(currentElement.id, 'validation', {...currentElement.validation, min: localProperties.min});
+        }
+    }
+
+
     return (
         <div className="h-[500px] w-[300px] bg-gray-200 text-black">
             <aside>
                 <h2 className="">Properties Panel</h2>
                 {currentElement ?
-                    <form>
+                    <form key={selectedId} onSubmit={handleSubmit}>
                         <div>
-                            <label>Field Label</label>
+                            <label>Label</label>
                             <input 
-                                
-                                value={currentElement.label ?? ''}
+                                value={currentElement.label}
                                 onChange={(e) => updateElement(currentElement.id, 'label', e.target.value)}
                             />
                         </div>
@@ -96,12 +141,8 @@ export default function PropertiesPanel() {
                                                 <div key={key}>
                                                     <label>Placeholder Text</label>
                                                     <input
-                                                        value={currentElement.validation.placeholder ?? ''}
-                                                        onChange={(e) => {
-                                                            updateElement(currentElement.id, 'validation', {...currentElement.validation, placeholder: e.target.value});
-                                                            updateElement(currentElement.id, 'placeholder', e.target.value);
-                                                            }
-                                                        }
+                                                        value={liveCfg?.placeholder ?? ''}
+                                                        onChange={(e) => handleLocalChange('placeholder', e.target.value)}
                                                     />
                                                 </div>
                                             );
@@ -111,8 +152,11 @@ export default function PropertiesPanel() {
                                                     <label htmlFor={labelInputId}>Min length</label>
                                                     <input 
                                                         id={labelInputId} 
-                                                        value={currentElement.validation[key] ?? ''}
-                                                        onChange={(e) => updateElement(currentElement.id, 'validation', {...currentElement.validation, min: e.target.value})}/>
+                                                        value={localProperties.min}
+                                                        onChange={
+                                                            (e) => setLocalProperties((prev) => ({...prev, min: e.target.value}))
+                                                            //updateElement(currentElement.id, 'validation', {...currentElement.validation, min: e.target.value})
+                                                        }/>
                                                 </div>
                                         );  
                                         case 'max':
@@ -121,8 +165,12 @@ export default function PropertiesPanel() {
                                                     <label htmlFor={labelInputId}>Max length</label>
                                                     <input 
                                                         id={labelInputId} 
-                                                        value={currentElement.validation[key] ?? ''}
-                                                        onChange={(e) => updateElement(currentElement.id, 'validation', {...currentElement.validation, max: e.target.value})}
+                                                        value={localProperties.max}
+                                                        onChange={
+                                                            (e) => setLocalProperties((prev) => ({...prev, max: e.target.value}))
+                                                            //(e) => updateElement(currentElement.id, 'validation', {...currentElement.validation, max: e.target.value}
+
+                                                            }
                                                     />
                                                 </div>
                                         ); 
@@ -132,8 +180,11 @@ export default function PropertiesPanel() {
                                                     <label htmlFor={labelInputId}>Regex</label>
                                                     <input 
                                                         id={labelInputId} 
-                                                        value={currentElement.validation[key] ?? ''}
-                                                        onChange={(e) => updateElement(currentElement.id, 'validation', {...currentElement.validation, regex: e.target.value})}
+                                                        value={localProperties.regex}
+                                                        onChange={
+                                                            (e) => setLocalProperties((prev) => ({...prev, regex: e.target.value}))
+                                                            //(e) => updateElement(currentElement.id, 'validation', {...currentElement.validation, regex: e.target.value})
+                                                        }
                                                     />
                                                 </div>
                                         ); 
@@ -183,15 +234,11 @@ export default function PropertiesPanel() {
                                             return (
                                                 <div key={key}>
                                                     <label htmlFor={labelInputId}>Group name</label>
-                                                    <input ref={nameInputRef} id={labelInputId} value={currentElement.validation.name}/>
-                                                    <button onClick={(e) => {
-                                                        e.preventDefault();
-                                                        if (nameInputRef.current) {
-                                                            const value = nameInputRef.current.value;
-                                                            updateElement(currentElement.id, 'validation', {...currentElement.validation, name: value});
-                                                            updateElement(currentElement.id, 'name', value);
-                                                        }
-                                                    }}>Add</button>
+                                                    <input 
+                                                        id={labelInputId} 
+                                                        value={localProperties.name}
+                                                        onChange={(e) => setLocalProperties((prev) => ({...prev, name: e.target.value}))}
+                                                    />
                                                 </div>
                                         );
                                     }
@@ -199,6 +246,7 @@ export default function PropertiesPanel() {
                             }
                         </div>
                         )}
+                        <button type='submit'>Save</button>
                     </form>
 
                     :

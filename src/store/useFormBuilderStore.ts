@@ -52,6 +52,7 @@ function CreateElement(type: FormElement['type']): FormElement {
 type FormBuilderState = {
     elements: FormElement[];
     selectedId: FormElement['id'] | null;
+    formCfg: any;
 };
 
 type FormBuilderActions = {
@@ -61,12 +62,14 @@ type FormBuilderActions = {
     updateElementProperty: (id:  FormElement['id'], property: FormElementKeys, value: any) => void;
     remElement: (id:  FormElement['id']) => void;
     moveElement: (id: FormElement['id'], action: 'up' | 'down') => void;
-    getValidationRules: (id: FormElement['id']) => ValidationRules | null;
+    updateFormCfg: (id: FormElement['id'], field: string, value: string | number) => void;
+    initializeCfg: (element: FormElement) => void;
 }
 
 export const useFormBuilderStore = create<FormBuilderState & FormBuilderActions>((set, get) => ({
   elements: [],
   selectedId: null,
+  formCfg: {},
 
   addElement: (type: FormElement['type']) => set((state) => ({elements: [...state.elements, CreateElement(type)]})),
   remElement: (id: FormElement['id']) => set((state) => {
@@ -101,11 +104,31 @@ export const useFormBuilderStore = create<FormBuilderState & FormBuilderActions>
         {...el, [property]: value} : el
     )
   })),
-  getValidationRules: (id: FormElement['id']) => {
-    const currentElement = get().elements.find(el => el.id === id);
-    if (currentElement) {
-      return currentElement.validation;
+  updateFormCfg: (id: FormElement['id'], field: string, value: string | number) => set((state) => {
+    console.log('id', id, 'field', field, 'value', value)
+    return {
+      formCfg: {
+          ...state.formCfg,
+          [id]: {
+            ...state.formCfg[id],
+            [field]: value,
+          }
+      }
     }
-    return null;
-  },
+  }),
+  initializeCfg: (element: FormElement) => set((state) => {
+    const cfgData = {
+      id: element.id,
+      type: element.type,
+      label: element.label ?? '',
+      validation: element.validation || [],
+      ...element.validation,
+    }
+    return {
+      formCfg: {
+        ...state.formCfg,
+        [element.id]: cfgData,
+      }
+    };
+  }),
 }));
