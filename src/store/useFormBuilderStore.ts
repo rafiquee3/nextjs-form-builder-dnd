@@ -56,6 +56,7 @@ type FormBuilderActions = {
     initializeCfg: (element: FormElement) => void;
     commitCfgToElements: (id: FormElement['id'] | null) => void;
     remItemCfg: (id: FormElement['id'] | null) => void;
+    resetCheckedAttr: () => void;
 }
 
 export const useFormBuilderStore = create<FormBuilderState & FormBuilderActions>((set, get) => ({
@@ -147,5 +148,28 @@ export const useFormBuilderStore = create<FormBuilderState & FormBuilderActions>
       }
     })
     return {elements: elements};
+  }),
+  resetCheckedAttr: () => set((state) => {
+    const updatedData = Object.keys(state.formCfg).reduce((acc, id) => {
+      const elCfgData = state.formCfg[id];
+      if (elCfgData.name) {
+        elCfgData.checked = false;
+      }
+      acc[id] = elCfgData;
+      return acc;
+    }, {});
+    const updatedElements = state.elements.map((el) => {
+        if(el.checked) {
+          el.checked = false;
+        }
+        return el;
+    })
+
+    return (
+      {
+        formCfg: updatedData,
+        elements: updatedElements,
+      }
+    )
   }),
 }));

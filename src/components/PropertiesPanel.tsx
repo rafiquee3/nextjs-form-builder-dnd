@@ -9,6 +9,7 @@ export default function PropertiesPanel() {
     const elements = useFormBuilderStore(store => store.elements);
     const updateElement = useFormBuilderStore(store => store.updateElementProperty);
     const syncDataInStore = useFormBuilderStore(store => store.commitCfgToElements);
+    const resetCheckedAttr = useFormBuilderStore(store => store.resetCheckedAttr);
 
     const updateFormCfg = useFormBuilderStore(store => store.updateFormCfg);
 
@@ -84,7 +85,7 @@ export default function PropertiesPanel() {
         syncDataInStore(selectedId);
 
     }
-    console.log('cfgForm', formCfg)
+    console.log('cfg', formCfg)
     return (
         <div className="h-[500px] w-[300px] bg-gray-200 text-black">
             <aside>
@@ -141,7 +142,6 @@ export default function PropertiesPanel() {
                                     value={currentElement.type}
                                     onChange={(e) => {
                                         const newType = e.target.value;
-
                                         handleLocalChange('type', newType);
                                         updateElement(currentElement.id, 'type', newType)
                                     }}
@@ -230,9 +230,18 @@ export default function PropertiesPanel() {
                                                     <input 
                                                         id={checkedInputId} 
                                                         type='checkbox'
-                                                        checked={liveCfg?.checked ?? ''} 
-                                                       // checked={currentElement.validation.checked}
+                                                        checked={
+                                                            liveCfg?.checked ?? ''
+                                                        } 
                                                         onChange={(e) => {
+                                                            if (currentElement.type === 'radio') {
+                                                                const needReset = Object.keys(formCfg)
+                                                                                        .filter(el => formCfg[el]?.name === liveCfg?.name && formCfg[el]?.name !== undefined)
+                                                                                        .length > 1 ? true : false;
+                                                                if (needReset) {
+                                                                  resetCheckedAttr();    
+                                                                };
+                                                            }
                                                             handleLocalChange('checked', e.target.checked);
                                                             updateElement(checkableElement.id, 'checked', e.target.checked);
                                                     }}/>
