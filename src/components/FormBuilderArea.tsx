@@ -39,6 +39,7 @@ export default function FormBuilderArea() {
 
     const onSubmit = (data:any) => {
        const syncData = getSyncData(data, formElements);
+       console.log('dta', data)
        console.log('syncData', syncData)
     };
   

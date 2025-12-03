@@ -2,9 +2,11 @@
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import { useFormBuilderStore } from "../store/useFormBuilderStore";
 import { CheckboxElement, FormElement, RadioElement } from "../types/FormElement";
+import { OptionSchema } from "../types/zodValidation";
 
 export default function PropertiesPanel() {
     const [currentElement, setCurrentElement] = useState<FormElement | null>(null);
+    const [optionFieldErrors, setOptionFieldErrors] = useState<Array<String>>([]);
     const selectedId = useFormBuilderStore(store => store.selectedId);
     const elements = useFormBuilderStore(store => store.elements);
     const updateElement = useFormBuilderStore(store => store.updateElementProperty);
@@ -40,6 +42,7 @@ export default function PropertiesPanel() {
     const hasValidationRules = currentElement ? Object.keys(currentElement?.validation).length > 0 : false;
     const optionsInputRef = useRef<HTMLInputElement>(null);
     const optionsSelectRef = useRef<HTMLSelectElement>(null);
+    const optionErrorRef = useRef<HTMLDivElement>(null);
 
     const labelInputId = currentElement ? `label-${currentElement.id}` : undefined;
     const optionsInputId = currentElement ? `options-${currentElement.id}` : undefined;
@@ -63,7 +66,12 @@ export default function PropertiesPanel() {
             if (buttonAction.id === 'addOptBttn' && optionsInputRef.current) {
                 const inputValue = optionsInputRef.current.value;
                 const hasDuplicates = currentOptions.includes(inputValue);
-
+                const validation = OptionSchema.safeParse(inputValue);
+                if (!validation.success) {
+                    const errorsArr = validation.error?.flatten().formErrors;
+                    setOptionFieldErrors(errorsArr);
+                }
+          
                 if (inputValue && !hasDuplicates) {
                     updateElement(currentElement.id, 'options', [...currentOptions, inputValue]);
                     //updateElement(currentElement.id, 'value', inputValue);
@@ -119,10 +127,19 @@ export default function PropertiesPanel() {
                                 <button id='remOptBttn'>rem</button>
                                 </>
                                 }
-                                <input id='opts-ref' ref={optionsInputRef} type="text"></input>
+                                <input 
+                                    id='opts-ref' 
+                                    ref={optionsInputRef} 
+                                    onChange={() => {
+                                        if (optionFieldErrors.length) {
+                                            setOptionFieldErrors([]);
+                                        }
+                                    }} 
+                                    type="text">
+                                </input>
                                 <button id='addOptBttn'>add</button>
                             </div>
-              
+                            <div>{optionFieldErrors.length ? optionFieldErrors.map(mssg => <p>*{mssg}</p>) : ''}</div>    
                         </>
                         }
                         {currentElement.type === 'radio' &&
