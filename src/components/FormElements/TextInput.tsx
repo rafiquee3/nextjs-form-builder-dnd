@@ -50,22 +50,34 @@ export default function TextInput({
                 name={inputId} 
                 control={control}
                 rules={{ required: required ? `${label} is required` : false }}
-                render={({ field, fieldState }) => (
-                    <div>
-                        <input
-                            {...field} // Spreads RHF props: onChange, onBlur, value, ref
-                            value={field.value ?? ''}
-                            type={type}
-                            required={required}
-                            id={inputId}
-                            placeholder={placeholder}
-                            className=""
-                        />
-                        {fieldState.error && (
-                            <p className="text-red-500 text-xs mt-1">{fieldState.error.message}</p>
-                        )}
-                    </div>
-                )}
+                render={({ field, fieldState }) => {
+                    let inputValue = field.value;
+
+                    if (type === 'number') {
+                    inputValue = !isNaN(Number(inputValue)) ? inputValue : '';
+                    } else if (type === 'date') {
+                        const date = new Date(inputValue);
+                        inputValue = date instanceof Date && !isNaN(date.getTime()) ? inputValue : ''; 
+                    } else {
+                        inputValue = field.value ?? '';
+                    }
+
+                    return (<div>
+                                    <input
+                                        {...field} // Spreads RHF props: onChange, onBlur, value, ref
+                                        value={inputValue}
+                                        type={type}
+                                        required={required}
+                                        id={inputId}
+                                        placeholder={placeholder}
+                                        className=""
+                                    
+                                    />
+                                    {fieldState.error && (
+                                        <p className="text-red-500 text-xs mt-1">{fieldState.error.message}</p>
+                                    )}
+                        </div>)
+                    }}
             />
         </div>
     );

@@ -74,7 +74,7 @@ export default function PropertiesPanel() {
         syncDataInStore(selectedId);
 
     }
-    console.log('current', currentElement)
+
     return (
         <div className="h-[500px] w-[300px] bg-gray-200 text-black">
             <aside>
@@ -119,22 +119,18 @@ export default function PropertiesPanel() {
                             </div>
                         </>
                         }
-                        {['text', 'number', 'email', 'data', 'password'].includes(currentElement.type) && 
+                        {['text', 'number', 'email', 'date', 'password'].includes(currentElement.type) && 
                             <div>
                                 <label htmlFor={labelInputId}>Type</label>
                                 <select 
                                     id={labelInputId} 
                                     value={currentElement.type}
                                     onChange={(e) => {
-                                        const type = e.target.value;
+                                        const newType = e.target.value;
+                                        const currentRHFValue = currentElement;
 
-                                        switch (type) {
-                                            case 'number':
-                                                updateElement(currentElement.id, 'value', 10);
-                                        }
-
-                                        handleLocalChange('type', e.target.value);
-                                        updateElement(currentElement.id, 'type', e.target.value)
+                                        handleLocalChange('type', newType);
+                                        updateElement(currentElement.id, 'type', newType)
                                     }}
                                 >
                                     <option value='text'>Text</option>

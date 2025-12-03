@@ -12,6 +12,8 @@ const componentMap = {
     'text': TextInput,
     'password': TextInput,
     'email': TextInput,
+    'date': TextInput,
+    'number': TextInput,
     'checkbox': CheckboxInput, 
     'select': SelectInput,
     'textarea': TextareaInput, 

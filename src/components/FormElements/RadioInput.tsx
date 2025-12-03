@@ -67,6 +67,7 @@ export default function RadioInput({
                                 const validationRules = getValidationRules(inputId);
                                 const checked = validationRules?.checked;
                                 updateElement(inputId, 'checked', !checked);
+                           
                                 updateElement(inputId, 'validation', {...validationRules, checked: !checked});
                             }}
                         />
