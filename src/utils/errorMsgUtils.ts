@@ -6,3 +6,8 @@ export function clearErrorMsg(field: string, errors: string[], set: (data: strin
     set(updatedData);
     return;
 };
+
+export function addErrorMsg(validation: any, errorMsg: string[] ,setErrorMsg: (data: string[]) => void) {
+    const errorsArr = validation.error?.flatten().formErrors;
+    setErrorMsg([...errorMsg, ...errorsArr]);
+}

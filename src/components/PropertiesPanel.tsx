@@ -2,8 +2,30 @@
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import { useFormBuilderStore } from "../store/useFormBuilderStore";
 import { CheckboxElement, FormElement, RadioElement } from "../types/FormElement";
-import { OptionSchema } from "../types/zodValidation";
-import { clearErrorMsg } from "../utils/clearErrorMsg";
+import { IntNumberSchema, LabelSchema, OptionSchema, PlaceholderSchema } from "../types/zodValidation";
+import { addErrorMsg, clearErrorMsg } from "../utils/errorMsgUtils";
+
+const renderErrorsMsg = (errorMsg: string[], field: string) => {
+    return (
+        <div>{errorMsg.length ? 
+                    
+            errorMsg.map((msg, i) => {
+                const key = `mssg-key-${i}`;
+                if(msg.toLowerCase().startsWith(field)) {
+                    return (<p key={key}>*{msg}</p>)
+                }
+                else {
+                    return '';
+                }
+            }) 
+            
+            : 
+
+            ''
+            }
+        </div>
+    );  
+}
 
 export default function PropertiesPanel() {
     const [currentElement, setCurrentElement] = useState<FormElement | null>(null);
@@ -33,6 +55,7 @@ export default function PropertiesPanel() {
     useEffect(() => {
         if (selectedId) {
             const elementToEdit = elements.find(el => el.id === selectedId);
+            setErrorMsg([]);
             setCurrentElement(elementToEdit || null);
         } else {
             setCurrentElement(null);
@@ -43,7 +66,6 @@ export default function PropertiesPanel() {
     const hasValidationRules = currentElement ? Object.keys(currentElement?.validation).length > 0 : false;
     const optionsInputRef = useRef<HTMLInputElement>(null);
     const optionsSelectRef = useRef<HTMLSelectElement>(null);
-    const optionErrorRef = useRef<HTMLDivElement>(null);
 
     const labelInputId = currentElement ? `label-${currentElement.id}` : undefined;
     const optionsInputId = currentElement ? `options-${currentElement.id}` : undefined;
@@ -55,7 +77,6 @@ export default function PropertiesPanel() {
     const requiredInputId = currentElement ? `required-${currentElement.id}` : undefined;
     const checkedInputId = currentElement ? `checked-${currentElement.id}` : undefined;
     const regexInputId = currentElement ? `regex-${currentElement.id}` : undefined;
-
 
     const handleSelectAction = (e: React.MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
@@ -69,13 +90,11 @@ export default function PropertiesPanel() {
                 const hasDuplicates = currentOptions.includes(inputValue);
                 const validation = OptionSchema.safeParse(inputValue);
                 if (!validation.success) {
-                    const errorsArr = validation.error?.flatten().formErrors;
-                    setErrorMsg([...errorMsg, ...errorsArr]);
+                    addErrorMsg(validation, errorMsg, setErrorMsg);
                 }
           
                 if (inputValue && !hasDuplicates) {
                     updateElement(currentElement.id, 'options', [...currentOptions, inputValue]);
-                    //updateElement(currentElement.id, 'value', inputValue);
                     optionsInputRef.current.value = '';
                 }
             } else if (buttonAction.id === 'remOptBttn' && optionsSelectRef.current) {
@@ -108,10 +127,21 @@ export default function PropertiesPanel() {
                                 id={labelInputId}
                                 value={currentElement.label}
                                 onChange={(e) => {
-                                    handleLocalChange('label', e.target.value)
-                                    updateElement(currentElement.id, 'label', e.target.value)
+                                    updateElement(currentElement.id, 'label', e.target.value);
+                                    if (errorMsg.length) {
+                                        clearErrorMsg('label', errorMsg, setErrorMsg);
+                                    }
+                                }}
+                                onBlur={(e) => {
+                                    handleLocalChange('label', e.target.value);
+                                    const validation = LabelSchema.safeParse(e.target.value);
+                                    if (!validation.success) {
+                                        addErrorMsg(validation, errorMsg, setErrorMsg);
+                                        updateElement(currentElement.id, 'label', '');
+                                    }
                                 }}
                             />
+                            <div>{renderErrorsMsg(errorMsg, 'label')}</div> 
                         </div>
                         {currentElement.type === 'select'  && 
                         <>
@@ -140,22 +170,7 @@ export default function PropertiesPanel() {
                                 </input>
                                 <button id='addOptBttn'>add</button>
                             </div>
-                            <div>{errorMsg.length ? 
-                            
-                            errorMsg.map((msg, i) => {
-                                const key = `mssg-key-${i}`;
-                                if(msg.toLowerCase().startsWith('option')) {
-                                    return (<p key={key}>*{msg}</p>)
-                                }
-                                else {
-                                    return '';
-                                }
-                            }) 
-                            
-                            : 
-
-                            ''
-                            }</div>    
+                            <div>{renderErrorsMsg(errorMsg, 'option')}</div>    
                         </>
                         }
                         {currentElement.type === 'radio' &&
@@ -194,8 +209,19 @@ export default function PropertiesPanel() {
                                 <input
                                     id={placeholderInputId}
                                     value={liveCfg?.placeholder ?? ''}
-                                    onChange={(e) => handleLocalChange('placeholder', e.target.value)}
+                                    onChange={(e) => {
+                                        if (errorMsg.length) clearErrorMsg('placeholder', errorMsg, setErrorMsg);
+                                        handleLocalChange('placeholder', e.target.value)
+                                    }}
+                                    onBlur={(e) => {
+                                        const validation = PlaceholderSchema.safeParse(e.target.value);
+                                        if (!validation.success) {
+                                            addErrorMsg(validation, errorMsg, setErrorMsg);
+                                            updateElement(currentElement.id, 'placeholder', '');
+                                        }
+                                    }}
                                 />
+                                <div>{renderErrorsMsg(errorMsg, 'placeholder')}</div>   
                             </div>
                         }
                         {hasValidationRules && (
@@ -211,9 +237,26 @@ export default function PropertiesPanel() {
                                                     <input 
                                                         id={minInputId} 
                                                         value={liveCfg?.min ?? ''}
-                                                        onChange={
-                                                            (e) => handleLocalChange('min', e.target.value)
-                                                        }/>
+                                                        type="number"
+                                                        step='1'
+                                                        onChange={(e) => {
+                                                            if (errorMsg.length) {
+                                                                clearErrorMsg('min', errorMsg, setErrorMsg);
+                                                            }
+                                                            handleLocalChange('min', e.target.value);
+                                                            }
+                                                        }
+                                                        onBlur={(e) => {
+                                                            const MinSchema = IntNumberSchema('Min').max(22);
+                                                            const validation = MinSchema.safeParse(Number(e.target.value));
+                                                            
+                                                            if (!validation.success) {
+                                                                addErrorMsg(validation, errorMsg, setErrorMsg);
+                                                                liveCfg.min = '';
+                                                            }
+                                                        }}
+                                                    />
+                                                    <div>{renderErrorsMsg(errorMsg, 'min')}</div>  
                                                 </div>
                                         );  
                                         case 'max':
@@ -223,6 +266,8 @@ export default function PropertiesPanel() {
                                                     <input 
                                                         id={maxInputId} 
                                                         value={liveCfg?.max ?? ''}
+                                                        type='number'
+                                                        step='1'
                                                         onChange={
                                                             (e) => handleLocalChange('max', e.target.value)
                                                         }
