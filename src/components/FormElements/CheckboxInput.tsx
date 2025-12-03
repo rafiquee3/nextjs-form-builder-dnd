@@ -11,7 +11,7 @@ export default function CheckobxInput({
     value,
     isPaletteItem, 
 }: CheckboxInputProps) {
-    const inputId = id;
+    const inputId = `checkbox-${id}`;
     const isDraggable = isPaletteItem;
     const context = useFormContext();
 

@@ -10,9 +10,9 @@ export default function TextareaInput({
     placeholder,
     isPaletteItem, 
 }: TextInputProps) {
-    const inputId = id;
+    const inputId = `textarea-${id}`
     const isDraggable = isPaletteItem;
-    const context = isPaletteItem ? null : useFormContext();
+    const context = useFormContext();
 
      if (isPaletteItem) {
         return (

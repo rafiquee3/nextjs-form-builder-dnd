@@ -11,7 +11,7 @@ export default function TextInput({
     isPaletteItem,
     type, 
 }: TextInputProps ) {
-    const inputId = id;
+    const inputId = `text-${id}`;
     const isDraggable = isPaletteItem;
     const context = isPaletteItem ? null : useFormContext();
     

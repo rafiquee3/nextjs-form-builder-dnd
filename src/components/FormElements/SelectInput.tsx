@@ -10,10 +10,10 @@ export default function SelectInput({
     options, 
     isPaletteItem,
 }: SelectInputProps) {
-    const selectId = id;
+    const selectId = `select-${id}`;
     const isDraggable = isPaletteItem;
-    const context = isPaletteItem ? null : useFormContext();
-    console.log('options', options)
+    const context = useFormContext();
+
     if (isPaletteItem) {
         return (
             <div className={styleContainer(isDraggable)} draggable={isDraggable}>
@@ -57,8 +57,9 @@ export default function SelectInput({
                             id={selectId}
                             className=""
                             required={required}
+                            value={field.value ?? ''}   
                         >
-                            <option value="" disabled>Select an option</option>
+                            <option value="" disabled>Select option</option>
                             {options.map(opt => (
                             <option value={opt} key={opt}>{opt}</option>
                             ))}

@@ -13,7 +13,7 @@ export default function RadioInput({
     isPaletteItem,
     value,
 }: RadioInputProps) {
-    const inputId = id;
+    const inputId = `radio-${id}`;
     const isDraggable = isPaletteItem;
     const context = isPaletteItem ? null : useFormContext();
 

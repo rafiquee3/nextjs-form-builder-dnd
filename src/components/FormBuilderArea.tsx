@@ -8,6 +8,7 @@ import { DropItem } from "../types/FormElement";
 import { useForm, FormProvider } from 'react-hook-form';
 import { getRHFDefaultValues } from "../utils/getRHFDefaultValues";
 import { useMemo } from "react";
+import { getSyncData } from "../utils/getSyncData";
 
 export default function FormBuilderArea() {
     const formElements = useFormBuilderStore((store) => store.elements);
@@ -37,9 +38,10 @@ export default function FormBuilderArea() {
     }), [addElement]);
 
     const onSubmit = (data:any) => {
-        console.log('submit', data);
+       const syncData = getSyncData(data, formElements);
+       console.log('syncData', syncData)
     };
-    console.log('elements', formElements)
+  
     return (
         <div ref ={drop as any} className={`h-[500px] w-[300px] bg-gray-200 text-black ${isOver ? 'bg-green-200 text-black' : ''}`}>
             <form onSubmit={handleSubmit(onSubmit)}>

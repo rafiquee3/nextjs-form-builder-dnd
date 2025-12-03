@@ -11,8 +11,17 @@ export default function PalettePanel() {
         isPaletteItem: true, 
         required: false, 
         placeholder: "Example", 
-        validation: {}
+        validation: {
+            placeholder: '',
+            min: undefined,
+            max: undefined,
+            regex: undefined,
+            required: undefined,
+            checked: undefined,
+            name: '',
+        }
     };
+
     return (
         <div className="h-[500px] w-[300px] bg-gray-200">
             <h2 className="text-black">Palette Panel</h2>
@@ -54,6 +63,7 @@ export default function PalettePanel() {
                             type="checkbox" 
                             label="Checkbox Input"
                             checked={false}
+                            value=''
                             {...DUMMY_PROPS}  
                         />
                     </DraggableElement>
@@ -64,6 +74,8 @@ export default function PalettePanel() {
                             type="radio" 
                             label="Radio Input" 
                             checked={false}
+                            name=''
+                            value=''
                             {...DUMMY_PROPS}  
                         />
                     </DraggableElement>

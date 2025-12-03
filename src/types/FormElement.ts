@@ -45,6 +45,7 @@ export type RadioElement = BaseElement & {
     type: 'radio';
     checked: boolean;
     name: string;
+    value: string;
 }
 
 export type FormElement = SelectElement | CheckboxElement | TextareaElement | TextElement | RadioElement;

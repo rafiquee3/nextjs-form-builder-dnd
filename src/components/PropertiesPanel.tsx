@@ -66,6 +66,7 @@ export default function PropertiesPanel() {
 
                 if (inputValue && !hasDuplicates) {
                     updateElement(currentElement.id, 'options', [...currentOptions, inputValue]);
+                    //updateElement(currentElement.id, 'value', inputValue);
                     optionsInputRef.current.value = '';
                 }
             } else if (buttonAction.id === 'remOptBttn' && optionsSelectRef.current) {

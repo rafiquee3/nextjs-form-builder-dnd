@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { FormElement, FormElementKeys, ValidationRules } from '../types/FormElement';
+import { FormElement, FormElementKeys } from '../types/FormElement';
 
 
 function CreateElement(type: FormElement['type']): FormElement {
@@ -157,9 +157,10 @@ export const useFormBuilderStore = create<FormBuilderState & FormBuilderActions>
       }
       acc[id] = elCfgData;
       return acc;
-    }, {});
+    }, {} as Record<string, string>);
+
     const updatedElements = state.elements.map((el) => {
-        if(el.checked) {
+        if(el.type === 'checkbox' || el.type === 'radio') {
           el.checked = false;
         }
         return el;
