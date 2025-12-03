@@ -38,9 +38,20 @@ export default function PropertiesPanel() {
 
     const checkableElement = currentElement as (CheckboxElement | RadioElement);
     const hasValidationRules = currentElement ? Object.keys(currentElement?.validation).length > 0 : false;
-    const labelInputId = currentElement ? `label-${currentElement.id}` : undefined;
     const optionsInputRef = useRef<HTMLInputElement>(null);
     const optionsSelectRef = useRef<HTMLSelectElement>(null);
+
+    const labelInputId = currentElement ? `label-${currentElement.id}` : undefined;
+    const optionsInputId = currentElement ? `options-${currentElement.id}` : undefined;
+    const nameInputId = currentElement ? `name-${currentElement.id}` : undefined;
+    const typeInputId = currentElement ? `type-${currentElement.id}` : undefined;
+    const placeholderInputId = currentElement ? `placeholder-${currentElement.id}` : undefined;
+    const minInputId = currentElement ? `min-${currentElement.id}` : undefined;
+    const maxInputId = currentElement ? `max-${currentElement.id}` : undefined;
+    const requiredInputId = currentElement ? `required-${currentElement.id}` : undefined;
+    const checkedInputId = currentElement ? `checked-${currentElement.id}` : undefined;
+    const regexInputId = currentElement ? `regex-${currentElement.id}` : undefined;
+
 
     const handleSelectAction = (e: React.MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
@@ -74,7 +85,7 @@ export default function PropertiesPanel() {
         syncDataInStore(selectedId);
 
     }
-
+    console.log('cfgForm', formCfg)
     return (
         <div className="h-[500px] w-[300px] bg-gray-200 text-black">
             <aside>
@@ -82,8 +93,9 @@ export default function PropertiesPanel() {
                 {currentElement ?
                     <form key={selectedId} onSubmit={handleSubmit}>
                         <div>
-                            <label>Label</label>
+                            <label htmlFor={labelInputId}>Label</label>
                             <input 
+                                id={labelInputId}
                                 value={currentElement.label}
                                 onChange={(e) => {
                                     handleLocalChange('label', e.target.value)
@@ -94,10 +106,10 @@ export default function PropertiesPanel() {
                         {currentElement.type === 'select'  && 
                         <>
                             <div onClick={handleSelectAction}>
-                                <label>Options</label>
+                                <label htmlFor={optionsInputId}>Options</label>
                                 {
                                 <>
-                                <select ref={optionsSelectRef}>
+                                <select ref={optionsSelectRef} id={optionsInputId}>
                                     <option disabled>Select option</option>
                                     {currentElement.options &&
                                     currentElement.options.map(opt => 
@@ -106,28 +118,30 @@ export default function PropertiesPanel() {
                                 <button id='remOptBttn'>rem</button>
                                 </>
                                 }
-                                <input ref={optionsInputRef} type="text"></input>
+                                <input id='opts-ref' ref={optionsInputRef} type="text"></input>
                                 <button id='addOptBttn'>add</button>
                             </div>
+              
+                        </>
+                        }
+                        {currentElement.type === 'radio' &&
                             <div>
-                                <label htmlFor={labelInputId}>Group name</label>
+                                <label htmlFor={nameInputId}>Group name</label>
                                 <input 
-                                    id={labelInputId} 
+                                    id={nameInputId} 
                                     value={liveCfg?.name ?? ''}
                                     onChange={(e) => handleLocalChange('name', e.target.value)}
                                 />
                             </div>
-                        </>
                         }
                         {['text', 'number', 'email', 'date', 'password'].includes(currentElement.type) && 
                             <div>
-                                <label htmlFor={labelInputId}>Type</label>
+                                <label htmlFor={typeInputId}>Type</label>
                                 <select 
-                                    id={labelInputId} 
+                                    id={typeInputId} 
                                     value={currentElement.type}
                                     onChange={(e) => {
                                         const newType = e.target.value;
-                                        const currentRHFValue = currentElement;
 
                                         handleLocalChange('type', newType);
                                         updateElement(currentElement.id, 'type', newType)
@@ -143,8 +157,9 @@ export default function PropertiesPanel() {
                         }
                         {(currentElement.type === 'text' || currentElement.type === 'textarea') &&
                             <div>
-                                <label>Placeholder Text</label>
+                                <label htmlFor={placeholderInputId}>Placeholder Text</label>
                                 <input
+                                    id={placeholderInputId}
                                     value={liveCfg?.placeholder ?? ''}
                                     onChange={(e) => handleLocalChange('placeholder', e.target.value)}
                                 />
@@ -159,9 +174,9 @@ export default function PropertiesPanel() {
                                         case 'min':
                                             return (
                                                 <div key={key}>
-                                                    <label htmlFor={labelInputId}>Min length</label>
+                                                    <label htmlFor={minInputId}>Min length</label>
                                                     <input 
-                                                        id={labelInputId} 
+                                                        id={minInputId} 
                                                         value={liveCfg?.min ?? ''}
                                                         onChange={
                                                             (e) => handleLocalChange('min', e.target.value)
@@ -171,9 +186,9 @@ export default function PropertiesPanel() {
                                         case 'max':
                                             return (
                                                 <div key={key}>
-                                                    <label htmlFor={labelInputId}>Max length</label>
+                                                    <label htmlFor={maxInputId}>Max length</label>
                                                     <input 
-                                                        id={labelInputId} 
+                                                        id={maxInputId} 
                                                         value={liveCfg?.max ?? ''}
                                                         onChange={
                                                             (e) => handleLocalChange('max', e.target.value)
@@ -184,9 +199,9 @@ export default function PropertiesPanel() {
                                         case 'regex':
                                             return (
                                                 <div key={key}>
-                                                    <label htmlFor={labelInputId}>Regex</label>
+                                                    <label htmlFor={regexInputId}>Regex</label>
                                                     <input 
-                                                        id={labelInputId} 
+                                                        id={regexInputId} 
                                                         value={liveCfg?.regex ?? ''}
                                                         onChange={
                                                              (e) => handleLocalChange('regex', e.target.value)
@@ -197,10 +212,10 @@ export default function PropertiesPanel() {
                                         case 'required':
                                             return (
                                                 <div key={key}>
-                                                    <label htmlFor={labelInputId}>Required</label>
+                                                    <label htmlFor={regexInputId}>Required</label>
                                                     <input 
-                                                        id={labelInputId} 
-                                                        value={labelInputId ?? undefined}
+                                                        id={regexInputId} 
+                                                        //value={labelInputId ?? undefined}
                                                         checked={currentElement.validation.required ?? false}
                                                         type='checkbox' onChange={(e) => {
                                                             handleLocalChange('required', e.target.checked);
@@ -211,8 +226,9 @@ export default function PropertiesPanel() {
                                         case 'checked':
                                             return (
                                                 <div key={key}>
-                                                    <label htmlFor={labelInputId}>Checked</label>
-                                                    <input id={labelInputId} 
+                                                    <label htmlFor={checkedInputId}>Checked</label>
+                                                    <input 
+                                                        id={checkedInputId} 
                                                         type='checkbox' 
                                                         checked={currentElement.validation.checked}
                                                         onChange={(e) => {

@@ -46,6 +46,7 @@ export default function FormBuilderArea() {
                     <FormProvider {...methods}>
                         {formElements.map(el => (<ElementRenderer key={el.id} element={el} unregister={unregister}/>))}
                     </FormProvider>
+                    <button type='submit'>Submit</button>
             </form>
          </div>
     )

@@ -98,16 +98,20 @@ export const useFormBuilderStore = create<FormBuilderState & FormBuilderActions>
   })),
   updateFormCfg: (id: FormElement['id'] | null, field: string, value: string | number | boolean | object) => set((state) => {
     if(!id) return state;
+    const validationRecord = Object.keys(state.formCfg[id].validation).includes(field) ? {[field]: value} : {};
     return {
       formCfg: {
           ...state.formCfg,
           [id]: {
             ...state.formCfg[id],
             [field]: value,
-          }
+            ['validation']: {
+              ...state.formCfg[id].validation,
+              ...validationRecord
+            },
+        }
       }
-    }
-  }),
+  }}),
   remItemCfg: (id: FormElement['id'] | null) => set((state) => {
     if (!id || !Object.keys(state.formCfg).length) return state;
     const exist = state.formCfg[id];
@@ -137,7 +141,7 @@ export const useFormBuilderStore = create<FormBuilderState & FormBuilderActions>
 
     const elements = state.elements.map(el => {
       if (el.id === id) {
-        return {...el, ...cfgData, validation: {...cfgData}}
+        return {...el, ...cfgData}
       } else {
         return el;
       }
