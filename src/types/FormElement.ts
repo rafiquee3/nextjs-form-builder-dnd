@@ -10,7 +10,7 @@ export interface ValidationRules {
 
 export type BaseElement = {
     id: string;
-    type: 'text' | 'checkbox' | 'select' | 'textarea' | 'radio' | 'email' | 'password' | 'number';
+    type: 'text' | 'checkbox' | 'select' | 'textarea' | 'radio' | 'email' | 'password' | 'number' | 'date' | '';
     required: boolean;
     label: string;
     validation: ValidationRules;
@@ -26,6 +26,7 @@ export type SelectElement = BaseElement & {
 export type CheckboxElement = BaseElement & {
     type: 'checkbox';
     checked: boolean;
+    value: string;
 }
 
 export type TextareaElement = BaseElement & {

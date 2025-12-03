@@ -60,7 +60,7 @@ export default function SelectInput({
                         >
                             <option value="" disabled>Select an option</option>
                             {options.map(opt => (
-                            <option key={opt}>{opt}</option>
+                            <option value={opt} key={opt}>{opt}</option>
                             ))}
                         </select>
                         {fieldState.error && (

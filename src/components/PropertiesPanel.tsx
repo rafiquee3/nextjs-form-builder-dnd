@@ -9,7 +9,6 @@ export default function PropertiesPanel() {
     const elements = useFormBuilderStore(store => store.elements);
     const updateElement = useFormBuilderStore(store => store.updateElementProperty);
     const syncDataInStore = useFormBuilderStore(store => store.commitCfgToElements);
-    const [localProperties, setLocalProperties] = useState([]);
 
     const updateFormCfg = useFormBuilderStore(store => store.updateFormCfg);
 
@@ -212,12 +211,13 @@ export default function PropertiesPanel() {
                                         case 'required':
                                             return (
                                                 <div key={key}>
-                                                    <label htmlFor={regexInputId}>Required</label>
+                                                    <label htmlFor={requiredInputId}>Required</label>
                                                     <input 
-                                                        id={regexInputId} 
-                                                        //value={labelInputId ?? undefined}
-                                                        checked={currentElement.validation.required ?? false}
-                                                        type='checkbox' onChange={(e) => {
+                                                        id={requiredInputId} 
+                                                        type='checkbox'
+                                                        checked={liveCfg?.required ?? ''} 
+                                                        onChange={(e) => {
+                                                            console.log('checkOnCh', e.target.checked)
                                                             handleLocalChange('required', e.target.checked);
                                                             updateElement(checkableElement.id, 'required', e.target.checked);
                                                     }}/>
@@ -229,12 +229,19 @@ export default function PropertiesPanel() {
                                                     <label htmlFor={checkedInputId}>Checked</label>
                                                     <input 
                                                         id={checkedInputId} 
-                                                        type='checkbox' 
-                                                        checked={currentElement.validation.checked}
+                                                        type='checkbox'
+                                                        checked={liveCfg?.checked ?? ''} 
+                                                       // checked={currentElement.validation.checked}
                                                         onChange={(e) => {
-                                                            handleLocalChange('checked', e.target.value);
-                                                            updateElement(checkableElement.id, 'checked', e.target.value);
+                                                            handleLocalChange('checked', e.target.checked);
+                                                            updateElement(checkableElement.id, 'checked', e.target.checked);
                                                     }}/>
+                                                    <label htmlFor={`${checkedInputId}-value`}>Value</label>
+                                                    <input 
+                                                        id={`${checkedInputId}-value`}
+                                                        value={liveCfg?.value ?? ''}
+                                                        onChange={(e) => handleLocalChange('value', e.target.value)}
+                                                    />
                                                 </div>
                                         );
                                     }

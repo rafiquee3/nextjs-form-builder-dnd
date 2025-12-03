@@ -7,13 +7,13 @@ export default function CheckobxInput({
     id, 
     label, 
     required, 
-    placeholder,
     checked,
+    value,
     isPaletteItem, 
 }: CheckboxInputProps) {
     const inputId = id;
     const isDraggable = isPaletteItem;
-    const context = isPaletteItem ? null : useFormContext();
+    const context = useFormContext();
 
     if (isPaletteItem) {
         return (
@@ -28,7 +28,6 @@ export default function CheckobxInput({
                 <input 
                     id={inputId}
                     type="checkbox"
-                    placeholder={placeholder}
                     className=""
                     disabled
                 />
@@ -50,21 +49,24 @@ export default function CheckobxInput({
             <Controller
                 name={inputId} 
                 control={control}
-                rules={{ required: required ? `${label} is required` : false }}
-                render={({ field, fieldState }) => (
-                    <div>
-                       <input
-                            {...field} // Spreads RHF props: onChange, onBlur, value, ref
-                            type="checkbox"
-                            id={inputId}
-                            className=""
-                            required={required}
-                        />
-                        {fieldState.error && (
-                            <p className="text-red-500 text-xs mt-1">{fieldState.error.message}</p>
-                        )}
-                    </div>
-                )}
+                //rules={{ required: required ? `${label} is required` : false }}
+                render={({ field, fieldState }) => {
+                    return (
+                        <div>
+                            <input
+                                    {...field} // Spreads RHF props: onChange, onBlur, value, ref
+                                    type="checkbox"
+                                    id={inputId}
+                                    checked={checked}
+                                    className=""
+                                    required={required}
+                                    value={value}
+                            />
+                            {fieldState.error && (
+                                <p className="text-red-500 text-xs mt-1">{fieldState.error.message}</p>
+                            )}
+                        </div>
+                )}}
             />
         </div>
     );
