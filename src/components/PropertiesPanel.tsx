@@ -3,10 +3,11 @@ import React, { useCallback, useEffect, useRef, useState } from "react"
 import { useFormBuilderStore } from "../store/useFormBuilderStore";
 import { CheckboxElement, FormElement, RadioElement } from "../types/FormElement";
 import { OptionSchema } from "../types/zodValidation";
+import { clearErrorMsg } from "../utils/clearErrorMsg";
 
 export default function PropertiesPanel() {
     const [currentElement, setCurrentElement] = useState<FormElement | null>(null);
-    const [optionFieldErrors, setOptionFieldErrors] = useState<Array<String>>([]);
+    const [errorMsg, setErrorMsg] = useState<Array<string>>([]);
     const selectedId = useFormBuilderStore(store => store.selectedId);
     const elements = useFormBuilderStore(store => store.elements);
     const updateElement = useFormBuilderStore(store => store.updateElementProperty);
@@ -69,7 +70,7 @@ export default function PropertiesPanel() {
                 const validation = OptionSchema.safeParse(inputValue);
                 if (!validation.success) {
                     const errorsArr = validation.error?.flatten().formErrors;
-                    setOptionFieldErrors(errorsArr);
+                    setErrorMsg([...errorMsg, ...errorsArr]);
                 }
           
                 if (inputValue && !hasDuplicates) {
@@ -94,7 +95,7 @@ export default function PropertiesPanel() {
         syncDataInStore(selectedId);
 
     }
-    console.log('cfg', formCfg)
+    console.log('err', errorMsg)
     return (
         <div className="h-[500px] w-[300px] bg-gray-200 text-black">
             <aside>
@@ -131,15 +132,30 @@ export default function PropertiesPanel() {
                                     id='opts-ref' 
                                     ref={optionsInputRef} 
                                     onChange={() => {
-                                        if (optionFieldErrors.length) {
-                                            setOptionFieldErrors([]);
+                                        if (errorMsg.length) {
+                                            clearErrorMsg('option', errorMsg, setErrorMsg);
                                         }
                                     }} 
                                     type="text">
                                 </input>
                                 <button id='addOptBttn'>add</button>
                             </div>
-                            <div>{optionFieldErrors.length ? optionFieldErrors.map(mssg => <p>*{mssg}</p>) : ''}</div>    
+                            <div>{errorMsg.length ? 
+                            
+                            errorMsg.map((msg, i) => {
+                                const key = `mssg-key-${i}`;
+                                if(msg.toLowerCase().startsWith('option')) {
+                                    return (<p key={key}>*{msg}</p>)
+                                }
+                                else {
+                                    return '';
+                                }
+                            }) 
+                            
+                            : 
+
+                            ''
+                            }</div>    
                         </>
                         }
                         {currentElement.type === 'radio' &&
