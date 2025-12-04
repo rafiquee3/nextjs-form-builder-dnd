@@ -57,6 +57,7 @@ type FormBuilderActions = {
     commitCfgToElements: (id: FormElement['id'] | null) => void;
     remItemCfg: (id: FormElement['id'] | null) => void;
     resetCheckedAttr: () => void;
+    setValErrors: (errors: string[]) => void;
 }
 
 export const useFormBuilderStore = create<FormBuilderState & FormBuilderActions>((set, get) => ({
@@ -173,4 +174,27 @@ export const useFormBuilderStore = create<FormBuilderState & FormBuilderActions>
       }
     )
   }),
+  setValErrors: (errors: string[]) => set((state) => {
+    if (!state.elements.length) return;
+    const updatedData = state.elements.map(el => {
+      const fieldErrors = errors.filter(msg => {
+        const id = msg.split('-')[0];
+        if (id && el.id === id) return true;
+      });
+    
+      return {
+          ...el, 
+          validation: {
+            ...el.validation,
+            errors: fieldErrors
+          },
+        }
+    });
+
+    return (
+      {
+        elements: updatedData
+      }
+   )
+  })
 }));

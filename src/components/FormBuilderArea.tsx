@@ -4,17 +4,17 @@ import { useDrop } from "react-dnd";
 import { useFormBuilderStore } from "../store/useFormBuilderStore";
 import ElementRenderer from "./ElementRenderer";
 import { ItemTypes } from "./Palette";
-import { DropItem } from "../types/FormElement";
+import { DropItem, SyncData } from "../types/FormElement";
 import { useForm, FormProvider } from 'react-hook-form';
 import { getRHFDefaultValues } from "../utils/getRHFDefaultValues";
 import { useMemo } from "react";
 import { getSyncData } from "../utils/getSyncData";
 import { schemaGenerator } from "../utils/schemaGenerator";
-import z from "zod";
 
 export default function FormBuilderArea() {
     const formElements = useFormBuilderStore((store) => store.elements);
     const addElement = useFormBuilderStore(store => store.addElement);
+    const setErrors = useFormBuilderStore(store => store.setValErrors);
     const defaultValues = useMemo(() => getRHFDefaultValues(formElements), [formElements]);
     
     const methods = useForm({
@@ -41,13 +41,13 @@ export default function FormBuilderArea() {
 
     const onSubmit = (data:any) => {
         if (!formElements.length) return;
-        const syncData = getSyncData(data, formElements);
+        const syncData: SyncData = getSyncData(data, formElements);
         console.log('syncData', syncData)
         const schemasArr = schemaGenerator(syncData);
-        const errors = [];
+        const errors: string[] | [string[]] = [];
 
         schemasArr.forEach(data => {
-            const {value, schema, id, type, regex,} = data;
+            const {value, schema, id} = data;
     
             const validation = schema.safeParse(value);
             if (!validation.success) {
@@ -56,14 +56,14 @@ export default function FormBuilderArea() {
             } 
         });
         console.log('errors', errors);
-        if (errors.length) return;
+        if (errors.length) {
+            setErrors(errors);
+            return;
+        }
     
-  
-      
-
-       console.log('schemas', schemasArr)
+       
     };
-  
+    console.log('element', formElements)
     return (
         <div ref ={drop as any} className={`h-[500px] w-[300px] bg-gray-200 text-black ${isOver ? 'bg-green-200 text-black' : ''}`}>
             <form onSubmit={handleSubmit(onSubmit)}>

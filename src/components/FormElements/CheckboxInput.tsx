@@ -36,7 +36,7 @@ export default function CheckobxInput({
     }
 
     const {control} = context!;
-
+    if (typeof value === 'boolean') value = '';
     return (
         <div className={styleContainer(isDraggable)} draggable={isDraggable}>
             <label 
@@ -49,7 +49,6 @@ export default function CheckobxInput({
             <Controller
                 name={inputId} 
                 control={control}
-                //rules={{ required: required ? `${label} is required` : false }}
                 render={({ field, fieldState }) => {
                     return (
                         <div>

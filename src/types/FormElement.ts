@@ -4,6 +4,7 @@ export interface ValidationRules {
     regex: string | undefined;
     required: boolean | undefined;
     checked: boolean | undefined;
+    errors: string[];
 }
 
 export type BaseElement = {
