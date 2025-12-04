@@ -51,7 +51,6 @@ export default function RadioInput({
             <Controller
                 name={inputId} 
                 control={control}
-                rules={{ required: required ? `${label} is required` : false }}
                 render={({ field, fieldState }) => (
                     <div>
                        <input

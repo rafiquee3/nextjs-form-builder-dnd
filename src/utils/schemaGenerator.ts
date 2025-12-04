@@ -1,26 +1,28 @@
 import z from "zod";
+import { SchemaData, SyncData } from "../types/FormElement";
 
-export function schemaGenerator(syncData: []) {
+export function schemaGenerator(syncData: SyncData) {
     if (!syncData.length) return [];
 
-    let allSchemas = [];
+    let allSchemas: SchemaData[] = [];
 
-    syncData.forEach(field => {
-        const {id, type, value, options, validation: {regex, min, max, required, checked}} = field;
-        const acc = {}
-        acc.type = type;
-        acc.id = id;
-        acc.validation = field.validation;
-        acc.data = field;
-        acc.value = value;
+    syncData.forEach((field: any) => {
+        const {id, type, value, options, required, validation: {regex, min, max, checked}} = field;
+        const acc: SchemaData = {
+            type,
+            id,
+            value,
+            validation: field.validation,
+            data: field,
+            schema: undefined
+        }
 
-        let schema = z;
-        
+        let schema: any = z;
 
         switch (type) {
             case 'text':
             case 'textarea':
-                schema = schema.string('String error');
+                schema = schema.string('Value must be of type string.');
                 if (min) {
                     schema = schema.min(min, `Must have at least ${min} characters.`);
                 }
@@ -29,12 +31,10 @@ export function schemaGenerator(syncData: []) {
                 }
                 if (regex && typeof regex === 'string') {
                     try {
-                        // Konwertujemy string na obiekt RegExp
                         const regexObject = new RegExp(regex);
                         schema = schema.regex(regexObject, 'Invalid regex format.');
                     } catch (e) {
-                        // Obsługa nieprawidłowego stringa Regex, aby uniknąć błędu
-                        console.error(`Nieprawidłowy wzorzec Regex w konfiguracji: ${regex}`, e);
+                        console.error(`Invalid Regex pattern in configuration: ${regex}`);
                     }
                 }
                 break;
@@ -56,10 +56,12 @@ export function schemaGenerator(syncData: []) {
             case 'radio':
             case 'checkbox':
                 schema  = schema.string();
+                if (required) {
+                    schema = schema.min(1, 'This field is required.');
+                }
                 break;
             case 'select':
-                schema = z.enum(options);
-            
+                schema = z.enum(options);   
         }
 
         if (!required) {

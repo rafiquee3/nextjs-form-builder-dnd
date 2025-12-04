@@ -56,3 +56,14 @@ export interface DropItem {
 export type RHFDefaultValues = {
     [key: string]: string | boolean | number | undefined;
 }
+
+export interface SchemaData {
+    type: BaseElement['type'];
+    id: BaseElement['id'];
+    validation: ValidationRules;
+    data: any;
+    value: string | number | boolean;
+    schema: any;
+}
+
+export type SyncData = FormElement[];

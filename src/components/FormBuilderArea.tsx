@@ -40,18 +40,19 @@ export default function FormBuilderArea() {
     }), [addElement]);
 
     const onSubmit = (data:any) => {
-       const syncData = getSyncData(data, formElements);
-       const schemasArr = schemaGenerator(syncData);
+        if (!formElements.length) return;
+        const syncData = getSyncData(data, formElements);
+        console.log('syncData', syncData)
+        const schemasArr = schemaGenerator(syncData);
         const errors = [];
-        console.log('schArr', schemasArr)
+
         schemasArr.forEach(data => {
             const {value, schema, id, type, regex,} = data;
-            console.log('value', value, 'sche', schema)
-            console.log(`Processing ID: ${id}, Type: ${type}, Regex Value: ${regex}, Regex Type: ${typeof regex}`);
+    
             const validation = schema.safeParse(value);
             if (!validation.success) {
                 const msg = validation.error?.flatten().formErrors;
-                errors.push(msg);
+                errors.push(`${id}-${[...msg]}`);
             } 
         });
         console.log('errors', errors);
