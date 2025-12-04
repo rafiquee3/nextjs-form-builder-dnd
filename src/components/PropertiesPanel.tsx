@@ -2,7 +2,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import { useFormBuilderStore } from "../store/useFormBuilderStore";
 import { CheckboxElement, FormElement, RadioElement } from "../types/FormElement";
-import { IntNumberSchema, LabelSchema, OptionSchema, PlaceholderSchema } from "../types/zodValidation";
+import { IntNumberSchema, LabelSchema, OptionSchema, PlaceholderSchema, RadioCheckboxValueSchema, RegexSchema } from "../types/zodValidation";
 import { addErrorMsg, clearErrorMsg } from "../utils/errorMsgUtils";
 
 const renderErrorsMsg = (errorMsg: string[], field: string) => {
@@ -91,6 +91,7 @@ export default function PropertiesPanel() {
                 const validation = OptionSchema.safeParse(inputValue);
                 if (!validation.success) {
                     addErrorMsg(validation, errorMsg, setErrorMsg);
+                    return;
                 }
           
                 if (inputValue && !hasDuplicates) {
@@ -144,34 +145,32 @@ export default function PropertiesPanel() {
                             <div>{renderErrorsMsg(errorMsg, 'label')}</div> 
                         </div>
                         {currentElement.type === 'select'  && 
-                        <>
-                            <div onClick={handleSelectAction}>
-                                <label htmlFor={optionsInputId}>Options</label>
-                                {
-                                <>
-                                <select ref={optionsSelectRef} id={optionsInputId}>
-                                    <option disabled>Select option</option>
-                                    {currentElement.options &&
-                                    currentElement.options.map(opt => 
-                                    <option key={opt} value={opt}>{opt}</option>)}
-                                </select>
-                                <button id='remOptBttn'>rem</button>
-                                </>
-                                }
-                                <input 
-                                    id='opts-ref' 
-                                    ref={optionsInputRef} 
-                                    onChange={() => {
-                                        if (errorMsg.length) {
-                                            clearErrorMsg('option', errorMsg, setErrorMsg);
-                                        }
-                                    }} 
-                                    type="text">
-                                </input>
-                                <button id='addOptBttn'>add</button>
-                            </div>
-                            <div>{renderErrorsMsg(errorMsg, 'option')}</div>    
-                        </>
+                        <div onClick={handleSelectAction}>
+                            <label htmlFor={optionsInputId}>Options</label>
+                            {
+                            <>
+                            <select ref={optionsSelectRef} id={optionsInputId}>
+                                <option disabled>Select option</option>
+                                {currentElement.options &&
+                                currentElement.options.map(opt => 
+                                <option key={opt} value={opt}>{opt}</option>)}
+                            </select>
+                            <button id='remOptBttn'>rem</button>
+                            </>
+                            }
+                            <input 
+                                id='opts-ref' 
+                                ref={optionsInputRef} 
+                                onChange={() => {
+                                    if (errorMsg.length) {
+                                        clearErrorMsg('option', errorMsg, setErrorMsg);
+                                    }
+                                }} 
+                                type="text">
+                            </input>
+                            <button id='addOptBttn'>add</button>
+                            <div>{renderErrorsMsg(errorMsg, 'option')}</div>   
+                        </div>
                         }
                         {currentElement.type === 'radio' &&
                             <div>
@@ -247,7 +246,7 @@ export default function PropertiesPanel() {
                                                             }
                                                         }
                                                         onBlur={(e) => {
-                                                            const MinSchema = IntNumberSchema('Min').max(22);
+                                                            const MinSchema = IntNumberSchema('Min');
                                                             const validation = MinSchema.safeParse(Number(e.target.value));
                                                             
                                                             if (!validation.success) {
@@ -268,10 +267,24 @@ export default function PropertiesPanel() {
                                                         value={liveCfg?.max ?? ''}
                                                         type='number'
                                                         step='1'
-                                                        onChange={
-                                                            (e) => handleLocalChange('max', e.target.value)
+                                                        onChange={(e) => {
+                                                            if (errorMsg.length) {
+                                                                clearErrorMsg('max', errorMsg, setErrorMsg);
+                                                            }
+                                                            handleLocalChange('max', e.target.value);
+                                                            }
                                                         }
+                                                        onBlur={(e) => {
+                                                            const MaxSchema = IntNumberSchema('Max');
+                                                            const validation = MaxSchema.safeParse(Number(e.target.value));
+                                                            
+                                                            if (!validation.success) {
+                                                                addErrorMsg(validation, errorMsg, setErrorMsg);
+                                                                liveCfg.max = '';
+                                                            }
+                                                        }} 
                                                     />
+                                                    <div>{renderErrorsMsg(errorMsg, 'max')}</div>  
                                                 </div>
                                         ); 
                                         case 'regex':
@@ -281,10 +294,22 @@ export default function PropertiesPanel() {
                                                     <input 
                                                         id={regexInputId} 
                                                         value={liveCfg?.regex ?? ''}
-                                                        onChange={
-                                                             (e) => handleLocalChange('regex', e.target.value)
-                                                        }
+                                                        onChange={(e) => {
+                                                            if (errorMsg.length) {
+                                                                clearErrorMsg('regex', errorMsg, setErrorMsg)
+                                                            }
+                                                            handleLocalChange('regex', e.target.value)
+                                                        }}
+                                                        onBlur={(e) => {
+                                                            const validation = RegexSchema.safeParse(e.target.value);
+                      
+                                                            if (!validation.success) {
+                                                                addErrorMsg(validation, errorMsg, setErrorMsg);
+                                                                liveCfg.regex = '';
+                                                            }
+                                                        }} 
                                                     />
+                                                    <div>{renderErrorsMsg(errorMsg, 'regex')}</div> 
                                                 </div>
                                         ); 
                                         case 'required':
@@ -296,7 +321,6 @@ export default function PropertiesPanel() {
                                                         type='checkbox'
                                                         checked={liveCfg?.required ?? ''} 
                                                         onChange={(e) => {
-                                                            console.log('checkOnCh', e.target.checked)
                                                             handleLocalChange('required', e.target.checked);
                                                             updateElement(checkableElement.id, 'required', e.target.checked);
                                                     }}/>
@@ -328,8 +352,22 @@ export default function PropertiesPanel() {
                                                     <input 
                                                         id={`${checkedInputId}-value`}
                                                         value={liveCfg?.value ?? ''}
-                                                        onChange={(e) => handleLocalChange('value', e.target.value)}
+                                                        onChange={(e) => {
+                                                            if (errorMsg.length) {
+                                                                clearErrorMsg('value', errorMsg, setErrorMsg);
+                                                            }
+                                                            handleLocalChange('value', e.target.value)
+                                                            }
+                                                        }
+                                                        onBlur={(e) => {
+                                                            const validation = RadioCheckboxValueSchema.safeParse(e.target.value);
+                                                            if (!validation.success) {
+                                                                addErrorMsg(validation, errorMsg, setErrorMsg);
+                                                                liveCfg.value = '';
+                                                            }
+                                                        }}     
                                                     />
+                                                    <div>{renderErrorsMsg(errorMsg, 'value')}</div> 
                                                 </div>
                                         );
                                     }
