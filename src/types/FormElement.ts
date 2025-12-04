@@ -1,11 +1,9 @@
 export interface ValidationRules {
-    placeholder: string;
     min: number | undefined;
     max: number | undefined;
     regex: string | undefined;
     required: boolean | undefined;
     checked: boolean | undefined;
-    name: string;
 }
 
 export type BaseElement = {

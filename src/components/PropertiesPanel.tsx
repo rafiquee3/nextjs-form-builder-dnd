@@ -112,6 +112,8 @@ export default function PropertiesPanel() {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        if (errorMsg.length) return;
+        console.log('zzz')
         syncDataInStore(selectedId);
 
     }

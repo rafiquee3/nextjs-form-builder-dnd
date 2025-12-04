@@ -9,6 +9,7 @@ import { useForm, FormProvider } from 'react-hook-form';
 import { getRHFDefaultValues } from "../utils/getRHFDefaultValues";
 import { useMemo } from "react";
 import { getSyncData } from "../utils/getSyncData";
+import { schemaGenerator } from "../utils/schemaGenerator";
 
 export default function FormBuilderArea() {
     const formElements = useFormBuilderStore((store) => store.elements);
@@ -39,8 +40,9 @@ export default function FormBuilderArea() {
 
     const onSubmit = (data:any) => {
        const syncData = getSyncData(data, formElements);
-       console.log('dta', data)
-       console.log('syncData', syncData)
+       const schemasArr = schemaGenerator(syncData);
+
+       console.log('schemas', schemasArr)
     };
   
     return (
