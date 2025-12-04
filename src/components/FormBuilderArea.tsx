@@ -10,6 +10,7 @@ import { getRHFDefaultValues } from "../utils/getRHFDefaultValues";
 import { useMemo } from "react";
 import { getSyncData } from "../utils/getSyncData";
 import { schemaGenerator } from "../utils/schemaGenerator";
+import z from "zod";
 
 export default function FormBuilderArea() {
     const formElements = useFormBuilderStore((store) => store.elements);
@@ -41,6 +42,23 @@ export default function FormBuilderArea() {
     const onSubmit = (data:any) => {
        const syncData = getSyncData(data, formElements);
        const schemasArr = schemaGenerator(syncData);
+        const errors = [];
+        console.log('schArr', schemasArr)
+        schemasArr.forEach(data => {
+            const {value, schema, id, type, regex,} = data;
+            console.log('value', value, 'sche', schema)
+            console.log(`Processing ID: ${id}, Type: ${type}, Regex Value: ${regex}, Regex Type: ${typeof regex}`);
+            const validation = schema.safeParse(value);
+            if (!validation.success) {
+                const msg = validation.error?.flatten().formErrors;
+                errors.push(msg);
+            } 
+        });
+        console.log('errors', errors);
+        if (errors.length) return;
+    
+  
+      
 
        console.log('schemas', schemasArr)
     };

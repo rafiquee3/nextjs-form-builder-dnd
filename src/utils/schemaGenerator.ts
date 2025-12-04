@@ -1,12 +1,12 @@
 import z from "zod";
 
 export function schemaGenerator(syncData: []) {
-    if (!syncData.length) return undefined;
+    if (!syncData.length) return [];
 
     let allSchemas = [];
 
     syncData.forEach(field => {
-        const {id, type, value, validation: {regex, min, max, required, checked}} = field;
+        const {id, type, value, options, validation: {regex, min, max, required, checked}} = field;
         const acc = {}
         acc.type = type;
         acc.id = id;
@@ -20,32 +20,46 @@ export function schemaGenerator(syncData: []) {
         switch (type) {
             case 'text':
             case 'textarea':
-                schema = z.string('String error');
-                    if (min !== undefined) {
-                        schema = schema.min(min, `Must have at least ${min} characters.`);
+                schema = schema.string('String error');
+                if (min) {
+                    schema = schema.min(min, `Must have at least ${min} characters.`);
+                }
+                if (max) {
+                    schema = schema.max(max, `Must have at most ${max} characters.`);
+                }
+                if (regex && typeof regex === 'string') {
+                    try {
+                        // Konwertujemy string na obiekt RegExp
+                        const regexObject = new RegExp(regex);
+                        schema = schema.regex(regexObject, 'Invalid regex format.');
+                    } catch (e) {
+                        // Obsługa nieprawidłowego stringa Regex, aby uniknąć błędu
+                        console.error(`Nieprawidłowy wzorzec Regex w konfiguracji: ${regex}`, e);
                     }
-                    if (max !== undefined) {
-                        schema = schema.max(max, `Must have at most ${max} characters.`);
-                    }
-                    if (regex !== undefined) {
-                        schema = schema.regex(regex, 'Invalid regex format.');
-                    }
-                    break;
+                }
+                break;
             case 'number':
                 schema = z.coerce.number('The value must be a number.');
-                if (min !== undefined && typeof min === 'number') {
+                if (min && typeof min === 'number') {
                     schema = schema.min(min, `Must be greater than or equal to ${min}.`);
                 }
-                if (max !== undefined && typeof max === 'number') {
+                if (max && typeof max === 'number') {
                     schema = schema.max(max, `Must be less than or equal to ${max}.`);
                 }
                 break;
             case 'date':
-                schema = z.coerce.date('Invalid date format.');
+                schema = schema.coerce.date('Invalid date format.');
                 break;
             case 'email':
-                schema = schema.email('Invalid email format.');
+                schema = schema.string().email('Invalid email format.');
                 break;
+            case 'radio':
+            case 'checkbox':
+                schema  = schema.string();
+                break;
+            case 'select':
+                schema = z.enum(options);
+            
         }
 
         if (!required) {
