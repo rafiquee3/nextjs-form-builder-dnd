@@ -41,6 +41,7 @@ export default function FormBuilderArea() {
 
     const onSubmit = (data:any) => {
         if (!formElements.length) return;
+    
         const syncData: SyncData = getSyncData(data, formElements);
         console.log('syncData', syncData)
         const schemasArr = schemaGenerator(syncData);
