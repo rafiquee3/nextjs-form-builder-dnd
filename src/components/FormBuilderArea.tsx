@@ -4,7 +4,7 @@ import { useDrop } from "react-dnd";
 import { useFormBuilderStore } from "../store/useFormBuilderStore";
 import ElementRenderer from "./ElementRenderer";
 import { ItemTypes } from "./Palette";
-import { DropItem, SyncData } from "../types/FormElement";
+import { DropItem, SyncData, ValError } from "../types/FormElement";
 import { useForm, FormProvider } from 'react-hook-form';
 import { getRHFDefaultValues } from "../utils/getRHFDefaultValues";
 import { useMemo } from "react";
@@ -44,7 +44,7 @@ export default function FormBuilderArea() {
         const syncData: SyncData = getSyncData(data, formElements);
         console.log('syncData', syncData)
         const schemasArr = schemaGenerator(syncData);
-        const errors: string[] | [string[]] = [];
+        const errors: ValError[] = [];
 
         schemasArr.forEach(data => {
             const {value, schema, id} = data;
@@ -52,16 +52,16 @@ export default function FormBuilderArea() {
             const validation = schema.safeParse(value);
             if (!validation.success) {
                 const msg = validation.error?.flatten().formErrors;
-                errors.push(`${id}-${[...msg]}`);
+                errors.push({fieldId: id, msg});
             } 
         });
-        console.log('errors', errors);
+  
         if (errors.length) {
             setErrors(errors);
             return;
         }
     
-       
+       console.log('Success');
     };
     console.log('element', formElements)
     return (

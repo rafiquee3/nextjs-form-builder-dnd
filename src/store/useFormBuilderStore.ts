@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { FormElement, FormElementKeys } from '../types/FormElement';
+import { FormElement, FormElementKeys, ValError } from '../types/FormElement';
 
 
 function CreateElement(type: FormElement['type']): FormElement {
@@ -57,7 +57,7 @@ type FormBuilderActions = {
     commitCfgToElements: (id: FormElement['id'] | null) => void;
     remItemCfg: (id: FormElement['id'] | null) => void;
     resetCheckedAttr: () => void;
-    setValErrors: (errors: string[]) => void;
+    setValErrors: (errors: ValError[]) => void;
 }
 
 export const useFormBuilderStore = create<FormBuilderState & FormBuilderActions>((set, get) => ({
@@ -174,19 +174,21 @@ export const useFormBuilderStore = create<FormBuilderState & FormBuilderActions>
       }
     )
   }),
-  setValErrors: (errors: string[]) => set((state) => {
+  setValErrors: (errors: ValError[]) => set((state) => {
     if (!state.elements.length) return;
     const updatedData = state.elements.map(el => {
-      const fieldErrors = errors.filter(msg => {
-        const id = msg.split('-')[0];
+      const hasError = errors.find(err => {
+        const id = err.fieldId;
         if (id && el.id === id) return true;
       });
+      const errMsgArr = hasError ? hasError.msg : [];
+
     
       return {
           ...el, 
           validation: {
             ...el.validation,
-            errors: fieldErrors
+            errors: errMsgArr
           },
         }
     });

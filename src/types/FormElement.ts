@@ -68,3 +68,7 @@ export interface SchemaData {
 }
 
 export type SyncData = FormElement[];
+
+export interface ValError {
+        fieldId: string, msg: string[]
+    }

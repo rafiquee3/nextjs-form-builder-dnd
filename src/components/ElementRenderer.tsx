@@ -7,6 +7,7 @@ import RadioInput from "./FormElements/RadioInput";
 import SelectInput from "./FormElements/SelectInput";
 import TextareaInput from "./FormElements/TextareaInput";
 import TextInput from "./FormElements/TextInput";
+import { ErrorMsg } from "./ErrorMsg";
 
 const componentMap = {
     'text': TextInput,
@@ -32,12 +33,12 @@ export default function ElementRenderer({element, unregister}: ElementRendererPr
     const selectElement = useFormBuilderStore(store => store.selectElement);
     const moveItem = useFormBuilderStore(store => store.moveElement);
     const remCfgItem = useFormBuilderStore(store => store.remItemCfg);
-
+    const errorsMsgArr = element.validation.errors;
     const formElements = useFormBuilderStore(store => store.elements);
     const index = formElements.findIndex(el => el.id === id);
     const firstEl = index === 0;
     const lastEl = index === formElements.length - 1;
-
+    
     const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
         const buttonAction =  (e.target as HTMLElement).closest('button');
         if (buttonAction) {
@@ -69,11 +70,14 @@ export default function ElementRenderer({element, unregister}: ElementRendererPr
     }, []);
 
     return (
-        <div key={id} className="flex my-2 bg-red-100 " onClick={handleClick}>
-            <Component {...element as any} type={element.type} required={element.required}/>
-            <button disabled={firstEl}>⬆️</button>
-            <button disabled={lastEl}>⬇️</button>
-            <button>del</button>
+        <div>
+            <div key={id} className="flex my-2 bg-red-100 " onClick={handleClick}>
+                <Component {...element as any} type={element.type} required={element.required}/>
+                <button disabled={firstEl}>⬆️</button>
+                <button disabled={lastEl}>⬇️</button>
+                <button>del</button>
+            </div>
+            <ErrorMsg errors={errorsMsgArr}/>
         </div>
     );
 }
