@@ -35,7 +35,7 @@ export type TextareaElement = BaseElement & {
 }
 
 export type TextElement = BaseElement & {
-    type: 'text' | 'number' | 'date' | 'email';
+    type: 'text' | 'number' | 'date' | 'email' | 'password';
     value: string;
     placeholder: string;
 }
