@@ -10,6 +10,7 @@ import { getRHFDefaultValues } from "../utils/getRHFDefaultValues";
 import { useMemo } from "react";
 import { getSyncData } from "../utils/getSyncData";
 import { schemaGenerator } from "../utils/schemaGenerator";
+import { generateHTML } from "../utils/generateHTML";
 
 export default function FormBuilderArea() {
     const formElements = useFormBuilderStore((store) => store.elements);
@@ -62,11 +63,15 @@ export default function FormBuilderArea() {
             return;
         }
     
-       console.log('Success');
+       console.log('genHTML', generateHTML(formElements));
     };
     console.log('element', formElements)
     return (
         <div ref ={drop as any} className={`h-[500px] w-[300px] bg-gray-200 text-black ${isOver ? 'bg-green-200 text-black' : ''}`}>
+            <div>
+                <button onClick={() => {}}>Export JSON</button>
+                <button onClick={() => {}}>Export HTML</button>
+            </div>
             <form onSubmit={handleSubmit(onSubmit)}>
                     <FormProvider {...methods}>
                         {formElements.map(el => (<ElementRenderer key={el.id} element={el} unregister={unregister}/>))}
