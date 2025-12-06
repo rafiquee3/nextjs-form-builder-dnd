@@ -42,15 +42,19 @@ export default function FormBuilderArea() {
 
     const onSubmit = (data:any) => {
         if (!formElements.length) return;
-    
+        console.log('data', data)
         const syncData: SyncData = getSyncData(data, formElements);
         console.log('syncData', syncData)
         const schemasArr = schemaGenerator(syncData);
         const errors: ValError[] = [];
 
         schemasArr.forEach(data => {
-            const {value, schema, id} = data;
-    
+            let {value, schema, id, type} = data;
+            
+            if (type === 'number') {
+                //value = Number(value); 
+            }
+            console.log('val', value, 'type', typeof value)
             const validation = schema.safeParse(value);
             if (!validation.success) {
                 const msg = validation.error?.flatten().formErrors;
@@ -62,10 +66,12 @@ export default function FormBuilderArea() {
             setErrors(errors);
             return;
         }
-    
-       //console.log('genHTML', generateHTML(formElements));
+        setErrors([]);
+        console.log('success')
+       console.log('genHTML', generateHTML(formElements));
        //console.log('genHTML', generateRHFComponents(formElements, 'control'));
-        console.log('genHTML', generateSchemaHTML(syncData));
+        //console.log('genHTML', generateSchemaHTML(syncData));
+   
     };
     console.log('element', formElements)
     return (

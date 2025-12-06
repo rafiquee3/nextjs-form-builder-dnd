@@ -21,6 +21,7 @@ export function schemaGenerator(syncData: SyncData) {
 
         switch (type) {
             case 'text':
+            case 'password':
             case 'textarea':
                 schema = schema.string('Value must be of type string.');
                 if (min) {
@@ -39,6 +40,7 @@ export function schemaGenerator(syncData: SyncData) {
                 }
                 break;
             case 'number':
+                console.log('min', min, 'type', typeof min)
                 schema = z.coerce.number('The value must be a number.');
                 if (min && typeof min === 'number') {
                     schema = schema.min(min, `Must be greater than or equal to ${min}.`);
@@ -57,7 +59,7 @@ export function schemaGenerator(syncData: SyncData) {
             case 'checkbox':
                 schema  = schema.string();
                 if (required) {
-                    schema = schema.min(1, 'This field is required.');
+                    schema = schema.min(1, 'This field is required, a value must be provided.');
                 }
                 break;
             case 'select':

@@ -204,7 +204,7 @@ export default function PropertiesPanel() {
                                     onChange={(e) => {
                                         const newType = e.target.value;
                                         handleLocalChange('type', newType);
-                                        updateElement(currentElement.id, 'type', newType)
+                                        updateElement(currentElement.id, 'type', newType);
                                     }}
                                 >
                                     <option value='text'>Text</option>
@@ -245,6 +245,7 @@ export default function PropertiesPanel() {
                                 .map(key => {
                                     switch (key) {
                                         case 'min':
+                                            if (currentElement.type === 'date') return;
                                             return (
                                                 <div key={key}>
                                                     <label htmlFor={minInputId}>Min length</label>
@@ -274,6 +275,7 @@ export default function PropertiesPanel() {
                                                 </div>
                                         );  
                                         case 'max':
+                                            if (currentElement.type === 'date') return;
                                             return (
                                                 <div key={key}>
                                                     <label htmlFor={maxInputId}>Max length</label>
@@ -309,6 +311,7 @@ export default function PropertiesPanel() {
                                                     <label htmlFor={regexInputId}>Regex</label>
                                                     <input 
                                                         id={regexInputId} 
+                                                        placeholder='"[a-z]"'
                                                         value={liveCfg?.regex ?? ''}
                                                         onChange={(e) => {
                                                             const hasFieldError = hasError('regex', errorMsg);
