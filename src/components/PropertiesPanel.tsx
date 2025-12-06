@@ -37,7 +37,6 @@ export default function PropertiesPanel() {
     const formCfg = useFormBuilderStore(store => store.formCfg); 
     const initializeCfg = useFormBuilderStore(store => store.initializeCfg);
     const liveCfg = selectedId ? formCfg[selectedId] : null;
-
     const hasError = (field: string, errors: string[]) => {
         return errors.find(err => err.toLowerCase().startsWith(field.toLowerCase())) ? true : false;
     } 

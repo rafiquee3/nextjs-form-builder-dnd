@@ -17,6 +17,7 @@ export default function FormBuilderArea() {
     const formElements = useFormBuilderStore((store) => store.elements);
     const addElement = useFormBuilderStore(store => store.addElement);
     const setErrors = useFormBuilderStore(store => store.setValErrors);
+    const setSyncData = useFormBuilderStore(store => store.setSyncData);
     const defaultValues = useMemo(() => getRHFDefaultValues(formElements), [formElements]);
     const [toggleModal, setToggleModal] = useState<boolean>(false);
     
@@ -44,9 +45,8 @@ export default function FormBuilderArea() {
 
     const onSubmit = (data:any) => {
         if (!formElements.length) return;
-        console.log('data', data)
-        const syncData: SyncData = getSyncData(data, formElements);
-        console.log('syncData', syncData)
+        setSyncData(data);
+        const syncData = getSyncData(data, formElements);
         const schemasArr = schemaGenerator(syncData);
         const errors: ValError[] = [];
 
@@ -78,7 +78,7 @@ export default function FormBuilderArea() {
     console.log('element', formElements)
     return (
         <div ref ={drop as any} className={`h-[500px] w-[300px] bg-gray-200 text-black ${isOver ? 'bg-green-200 text-black' : ''}`}>
-            {toggleModal && <ExportModal htmlContent={""} onClose={() => setToggleModal(prev => !prev)}/>}
+            {toggleModal && <ExportModal elements={formElements} onClose={() => setToggleModal(prev => !prev)}/>}
             <div>
                 <button onClick={() => {setToggleModal(true)}}>Export</button>
                 <button onClick={() => {}}>Export HTML</button>

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import { FormElement, FormElementKeys, ValError } from '../types/FormElement';
+import { FormElement, FormElementKeys, SyncData, ValError } from '../types/FormElement';
+import { getSyncData } from '../utils/getSyncData';
 
 
 function CreateElement(type: FormElement['type']): FormElement {
@@ -43,6 +44,7 @@ type FormBuilderState = {
     elements: FormElement[];
     selectedId: FormElement['id'] | null;
     formCfg: any;
+    syncData: SyncData;
 };
 
 type FormBuilderActions = {
@@ -58,12 +60,14 @@ type FormBuilderActions = {
     remItemCfg: (id: FormElement['id'] | null) => void;
     resetCheckedAttr: () => void;
     setValErrors: (errors: ValError[]) => void;
+    setSyncData: (submitData: {[key: string]: FormElement}) => void;
 }
 
 export const useFormBuilderStore = create<FormBuilderState & FormBuilderActions>((set, get) => ({
   elements: [],
   selectedId: null,
   formCfg: {},
+  syncData: [],
 
   addElement: (type: FormElement['type']) => set((state) => ({elements: [...state.elements, CreateElement(type)]})),
   remElement: (id: FormElement['id']) => set((state) => {
@@ -198,5 +202,14 @@ export const useFormBuilderStore = create<FormBuilderState & FormBuilderActions>
         elements: updatedData
       }
    )
-  })
+  }),
+  setSyncData: (submitData: {[key: string]: FormElement}) => set((state) => {
+    const syncData = getSyncData(submitData, state.elements);
+
+    return (
+      {
+        syncData,
+      }
+    )
+  }),
 }));

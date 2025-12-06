@@ -1,17 +1,29 @@
 
+'use client';
+
+import { useEffect, useState } from "react";
+import { useFormBuilderStore } from "../store/useFormBuilderStore";
+import { generateHTML, generateRHFComponents, generateSchemaHTML } from "../utils/generateHTML";
+import { FormElement } from "../types/FormElement";
+
 interface ExportModalProps {
-    htmlContent: string;
     onClose: () => void;
+    elements: FormElement[];
 }
 
-export function ExportModal({htmlContent, onClose}: ExportModalProps) {
+export function ExportModal({onClose ,elements}: ExportModalProps) {
+    const [htmlContent, setHtmlContent] = useState<string | null>(null);
+    const syncData = useFormBuilderStore(store => store.syncData);
+
     const handleCopy = () => {
+        if (!htmlContent) return;
         navigator.clipboard.writeText(htmlContent)
             .then(() => console.log('HTML copied to clipboard!'))
             .catch(err => console.error('Failed to copy text'));
     };
 
     const handleSave = () => {
+        if (!htmlContent) return;
         const blob = new Blob([htmlContent], {type: 'text/html;charset=utf-8'});
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -25,6 +37,24 @@ export function ExportModal({htmlContent, onClose}: ExportModalProps) {
         URL.revokeObjectURL(url);
     };
 
+    const handleHTML = () => {
+        if (!elements.length) return;
+        const htmlContent = generateHTML(elements);
+        setHtmlContent(htmlContent);
+    };
+
+    const handleRHF = () => {
+        if (!elements.length) return;
+        const htmlContent = generateRHFComponents(elements, 'control');
+        setHtmlContent(htmlContent);
+    };
+
+    const handleSchema = () => {
+        if (!syncData.length) return;
+        const htmlContent = generateSchemaHTML(syncData);
+        setHtmlContent(htmlContent);
+    };
+    
     return (
         <div className="modal-cnt fixed inset-0 bg-black/0 flex justify-center items-center">
             <div className="modal-content w-[70%] h-[80%] bg-gray-600/50 rounded-xl flex flex-column">
@@ -36,10 +66,19 @@ export function ExportModal({htmlContent, onClose}: ExportModalProps) {
                     <code>{htmlContent}</code>
                 </pre>
                 <div className="modal-nav">
-                    <button onClick={handleCopy}>
+                    <button onClick={handleHTML}>
+                        HTML Form
+                    </button>
+                    <button onClick={handleRHF}>
+                        RHF Form
+                    </button>
+                    <button onClick={handleSchema}>
+                        RHF Form
+                    </button>
+                    <button onClick={handleCopy} disabled={htmlContent ? true : false}>
                         Copy to Clipboard
                     </button>
-                    <button onClick={handleSave}>
+                    <button disabled={htmlContent ? true : false} onClick={handleSave}>
                         Save
                     </button>
                 </div>
