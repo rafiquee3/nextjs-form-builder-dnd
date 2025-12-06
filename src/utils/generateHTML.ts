@@ -1,10 +1,11 @@
-import { FormElement } from "../types/FormElement";
+import { FormElement, RadioElement, SchemaData, SyncData } from "../types/FormElement";
+import z from "zod";
 
 export function generateHTML(elements: FormElement[]): string {
     let htmlContent = '';
     let isRadioRendered = false;
     
-    elements.forEach((element: FormElement) => {
+    elements.forEach((element: FormElement | any) => {
         const requiredAttr = element.required ? 'required' : '';
         const checkedAttr = element.checked ? 'checked' : '';
 
@@ -27,7 +28,7 @@ export function generateHTML(elements: FormElement[]): string {
                 break;
 
             case 'select':
-                const optionsHtml = element.options?.map(opt =>
+                const optionsHtml = element.options?.map((opt: string) =>
                     `<option value="${opt}">${opt}</option>`
                 ).join('\n        ') || '';
 
@@ -51,11 +52,11 @@ export function generateHTML(elements: FormElement[]): string {
                         acc[current.name] = [current];
                        }
                        return acc;
-                    }, {})
+                    }, {} as {[key: string]: FormElement[]})
 
                     const radioElArr = Object.values(radioGroups);
 
-                    radioElArr.sort((a, b) => {
+                    radioElArr.sort((a: any, b: any) => {
                         const nameA = a[0].name; 
                         const nameB = b[0].name;
 
@@ -66,7 +67,7 @@ export function generateHTML(elements: FormElement[]): string {
 
                     radioElArr.forEach(el => {
                         htmlContent += `<div><label>Radio group</label>`;
-                        el.forEach(element => {
+                        el.forEach((element: RadioElement | any) => {
                             htmlContent += ` 
                                 <div class="form-check form-check-inline">
                                     <input type="radio" id="${element.id}" name="${element.name}" value="${element.value}" ${requiredAttr} ${element.checked ? 'checked' : ''} class="form-check-input">
@@ -97,7 +98,7 @@ export function generateRHFComponents(elements: FormElement[], controlName: stri
     let jsxContent = '';
     let isRadioRendered = false;
 
-    elements.forEach((element: FormElement) => {
+    elements.forEach((element: FormElement | any) => {
         const rules = element.required ? `, rules: {required: 'This field is required.'}` : '';
         const nameAttr = element.id;
         const requiredAttr = element.required ? 'required' : '';
@@ -132,7 +133,7 @@ export function generateRHFComponents(elements: FormElement[], controlName: stri
                 break;
 
             case 'select':
-                const optionsJsx = element.options?.map(opt =>
+                const optionsJsx = element.options?.map((opt: string) =>
                     `<option value="${opt}">${opt}</option>`
                 ).join('\n                    ') || '';
 
@@ -167,11 +168,11 @@ export function generateRHFComponents(elements: FormElement[], controlName: stri
                                 acc[current.name] = [current];
                             }
                             return acc;
-                    }, {});
+                    }, {} as {[key: string]: FormElement[]});
 
                     const radioElArr = Object.values(radioGroups);
 
-                    radioElArr.sort((a, b) => {
+                    radioElArr.sort((a: any, b: any) => {
                         const nameA = a[0].name; 
                         const nameB = b[0].name;
 
@@ -181,7 +182,7 @@ export function generateRHFComponents(elements: FormElement[], controlName: stri
                     radioElArr.forEach(el => {
                         jsxContent += `<div className="radio-group"><label>Radio group</label>`;
                   
-                        el.forEach(element => {
+                        el.forEach((element: FormElement | any) => {
                             jsxContent += ` 
                                 <Controller
                                     name="${element.id}"
@@ -223,4 +224,73 @@ export function generateRHFComponents(elements: FormElement[], controlName: stri
             );
         }
     `
+}
+
+export function generateSchemaHTML(syncData: SyncData) {
+    if (!syncData.length) return null;
+
+    let objSchema = '';
+
+    syncData.forEach((field: any) => {
+        const {id, type, value, options, required, validation: {regex, min, max, checked}} = field;
+
+        let schema: string = 'z';
+
+        switch (type) {
+            case 'text':
+            case 'textarea':
+                schema += ".string('Value must be of type string.')";
+                if (min) {
+                    schema += `.min(min, 'Must have at least ${min} characters.')`
+                }
+                if (max) {
+                    schema += `.max(max, 'Must have at most ${max} characters.')`;
+                }
+                if (regex && typeof regex === 'string') {
+                    try {
+                        const regexObject = new RegExp(regex);
+                        schema += `.regex(${regexObject}, 'Invalid regex format.')`;
+                    } catch (e) {
+                        console.error(`Invalid Regex pattern in configuration: ${regex}`);
+                    }
+                }
+                break;
+            case 'number':
+                schema = `z.coerce.number('The value must be a number.')`;
+                if (min && typeof min === 'number') {
+                    schema += `.min(min, 'Must be greater than or equal to ${min}.')`;
+                }
+                if (max && typeof max === 'number') {
+                    schema += `.max(max, 'Must be less than or equal to ${max}.')`;
+                }
+                break;
+            case 'date':
+                schema += `.coerce.date('Invalid date format.')`;
+                break;
+            case 'email':
+                schema += `.string().email('Invalid email format.')`;
+                break;
+            case 'radio':
+            case 'checkbox':
+                schema  += `.string()`;
+                if (required) {
+                    schema += `.min(1, 'This field is required.')`;
+                }
+                break;
+            case 'select':
+                schema += `.enum(options)`;   
+        }
+
+        if (!required) {
+            schema += `.optional().nullable()`;
+        }
+
+        if (schema === 'z') return;
+        objSchema += `${id}: ${schema}, `;
+    });
+    return `
+        const FormSchema = z.object({
+            ${objSchema}
+        })
+    `;
 }

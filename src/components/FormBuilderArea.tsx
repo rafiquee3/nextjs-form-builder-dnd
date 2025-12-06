@@ -10,7 +10,7 @@ import { getRHFDefaultValues } from "../utils/getRHFDefaultValues";
 import { useMemo } from "react";
 import { getSyncData } from "../utils/getSyncData";
 import { schemaGenerator } from "../utils/schemaGenerator";
-import { generateHTML, generateRHFComponents } from "../utils/generateHTML";
+import { generateHTML, generateRHFComponents, generateSchemaHTML } from "../utils/generateHTML";
 
 export default function FormBuilderArea() {
     const formElements = useFormBuilderStore((store) => store.elements);
@@ -64,7 +64,8 @@ export default function FormBuilderArea() {
         }
     
        //console.log('genHTML', generateHTML(formElements));
-       console.log('genHTML', generateRHFComponents(formElements, 'control'));
+       //console.log('genHTML', generateRHFComponents(formElements, 'control'));
+        console.log('genHTML', generateSchemaHTML(syncData));
     };
     console.log('element', formElements)
     return (
