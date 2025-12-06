@@ -10,7 +10,6 @@ import { getRHFDefaultValues } from "../utils/getRHFDefaultValues";
 import { useMemo, useState } from "react";
 import { getSyncData } from "../utils/getSyncData";
 import { schemaGenerator } from "../utils/schemaGenerator";
-import { generateHTML, generateRHFComponents, generateSchemaHTML } from "../utils/generateHTML";
 import { ExportModal } from "./ExportModal";
 
 export default function FormBuilderArea() {
@@ -51,12 +50,8 @@ export default function FormBuilderArea() {
         const errors: ValError[] = [];
 
         schemasArr.forEach(data => {
-            let {value, schema, id, type} = data;
+            let {value, schema, id} = data;
             
-            if (type === 'number') {
-                //value = Number(value); 
-            }
-            console.log('val', value, 'type', typeof value)
             const validation = schema.safeParse(value);
             if (!validation.success) {
                 const msg = validation.error?.flatten().formErrors;
@@ -69,13 +64,8 @@ export default function FormBuilderArea() {
             return;
         }
         setErrors([]);
-        console.log('success')
-       console.log('genHTML', generateHTML(formElements));
-       //console.log('genHTML', generateRHFComponents(formElements, 'control'));
-        //console.log('genHTML', generateSchemaHTML(syncData));
-   
     };
-    console.log('element', formElements)
+
     return (
         <div ref ={drop as any} className={`h-[500px] w-[300px] bg-gray-200 text-black ${isOver ? 'bg-green-200 text-black' : ''}`}>
             {toggleModal && <ExportModal elements={formElements} onClose={() => setToggleModal(prev => !prev)}/>}
