@@ -7,16 +7,18 @@ import { ItemTypes } from "./Palette";
 import { DropItem, SyncData, ValError } from "../types/FormElement";
 import { useForm, FormProvider } from 'react-hook-form';
 import { getRHFDefaultValues } from "../utils/getRHFDefaultValues";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { getSyncData } from "../utils/getSyncData";
 import { schemaGenerator } from "../utils/schemaGenerator";
 import { generateHTML, generateRHFComponents, generateSchemaHTML } from "../utils/generateHTML";
+import { ExportModal } from "./ExportModal";
 
 export default function FormBuilderArea() {
     const formElements = useFormBuilderStore((store) => store.elements);
     const addElement = useFormBuilderStore(store => store.addElement);
     const setErrors = useFormBuilderStore(store => store.setValErrors);
     const defaultValues = useMemo(() => getRHFDefaultValues(formElements), [formElements]);
+    const [toggleModal, setToggleModal] = useState<boolean>(false);
     
     const methods = useForm({
         mode: 'onSubmit',
@@ -76,8 +78,9 @@ export default function FormBuilderArea() {
     console.log('element', formElements)
     return (
         <div ref ={drop as any} className={`h-[500px] w-[300px] bg-gray-200 text-black ${isOver ? 'bg-green-200 text-black' : ''}`}>
+            {toggleModal && <ExportModal htmlContent={""} onClose={() => setToggleModal(prev => !prev)}/>}
             <div>
-                <button onClick={() => {}}>Export JSON</button>
+                <button onClick={() => {setToggleModal(true)}}>Export</button>
                 <button onClick={() => {}}>Export HTML</button>
             </div>
             <form onSubmit={handleSubmit(onSubmit)}>
