@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useEffect, useState } from "react";
@@ -7,7 +6,7 @@ import { generateHTML, generateRHFComponents, generateSchemaHTML } from "../util
 import { FormElement } from "../types/FormElement";
 import Highlight from 'react-highlight'
 import '../styles/atom-one-dark.css'
-import { styleBttn } from "../styles/styles";
+import { menuActive, menuDefault, styleBttn } from "../styles/styles";
 
 import * as prettier from "prettier/standalone"
 import parserBabel from "prettier/plugins/babel";
@@ -24,6 +23,7 @@ export function ExportModal({onClose ,elements}: ExportModalProps) {
     const [htmlContent, setHtmlContent] = useState<string | null>(null);
     const [syntax, setSyntax] = useState<string>('html');
     const syncData = useFormBuilderStore(store => store.syncData);
+    const [aciveBttn, setActiveBttn] = useState('html');
 
     const handleCopy = () => {
         if (!htmlContent) return;
@@ -49,6 +49,7 @@ export function ExportModal({onClose ,elements}: ExportModalProps) {
     };
 
     const handleHTML =  async () => {
+        if(aciveBttn !== 'html') setActiveBttn('html');
         if (!elements.length) return setHtmlContent('Add fields to the form.');
         if (syntax !== 'html') {setSyntax('html')}
         const rawHTML = generateHTML(elements);
@@ -65,6 +66,7 @@ export function ExportModal({onClose ,elements}: ExportModalProps) {
     };
 
     const handleRHF = async () => {
+        if(aciveBttn !== 'rhf') setActiveBttn('rhf');
         if (!elements.length) return setHtmlContent('Add fields to the form.');
         if (syntax !== 'ts') {setSyntax('ts')}
         const rawHTML = generateRHFComponents(elements);
@@ -81,6 +83,7 @@ export function ExportModal({onClose ,elements}: ExportModalProps) {
     };
 
     const handleSchema = async () => {
+        if(aciveBttn !== 'zod') setActiveBttn('zod');
         if (!syncData.length) return setHtmlContent('Form submission is required.');
         if (syntax !== 'ts') {setSyntax('ts')}
         const rawHTML = generateSchemaHTML(syncData);
@@ -115,7 +118,7 @@ export function ExportModal({onClose ,elements}: ExportModalProps) {
     
     return (
         <div className="modal-cnt fixed inset-0 bg-black/0 flex justify-center items-center">
-            <div className="modal-content w-[70%] h-[80%] bg-gray-600/50 rounded-xl flex flex-col">
+            <div className="modal-content w-[70%] h-[80%] bg-gray-300 rounded-xl flex flex-col shadow-xl">
                 <div className="modal-header flex w-full items-center justify-between h-12">
                     <div className="w-1/3"></div> 
                     <div className="flex justify-center w-1/3">
@@ -130,22 +133,27 @@ export function ExportModal({onClose ,elements}: ExportModalProps) {
                         {htmlContent}
                     </Highlight>
                 </div>
-                <div className="modal-nav h-12 flex justify-center items-center gap-10">
-                    <button onClick={handleHTML}>
-                        HTML
-                    </button>
-                    <button onClick={handleRHF}>
-                        RHF
-                    </button>
-                    <button onClick={handleSchema}>
-                        ZOD
-                    </button>
-                    <button onClick={handleCopy} disabled={htmlContent ? false : true}>
-                        Copy to Clipboard
-                    </button>
-                    <button disabled={htmlContent ? false : true} onClick={handleSave}>
-                        Save
-                    </button>
+                <div className="modal-nav h-12 flex justify-center items-center">
+                    <div className="w-1/3"></div> 
+                    <div className="flex justify-center gap-6 w-1/3 font-medium">
+                        <button className={aciveBttn === 'html' ? menuActive : menuDefault} onClick={handleHTML}>
+                            HTML
+                        </button>
+                        <button className={aciveBttn === 'rhf' ? menuActive : menuDefault} onClick={handleRHF}>
+                            RHF
+                        </button>
+                        <button className={aciveBttn === 'zod' ? menuActive : menuDefault} onClick={handleSchema}>
+                            ZOD
+                        </button>
+                    </div>
+                    <div className="flex justify-end gap-2 w-1/3">
+                        <button className={`${styleBttn}`} onClick={handleCopy} disabled={htmlContent ? false : true}>
+                            Copy
+                        </button>
+                        <button className={`${styleBttn} mr-5`} disabled={htmlContent ? false : true} onClick={handleSave}>
+                            Save
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

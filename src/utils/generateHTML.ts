@@ -167,7 +167,7 @@ export function generateRHFComponents(elements: FormElement[], controlName: stri
                         .filter(el => el.type === 'radio')
                         .reduce((acc, current) => {
                             if (acc[current.name]) {
-                                acc[element.name].push(current);
+                                acc[current.name].push(current);
                                 
                             } else {
                                 acc[current.name] = [current];
@@ -183,18 +183,20 @@ export function generateRHFComponents(elements: FormElement[], controlName: stri
 
                         return nameA.localeCompare(nameB);
                     })
-                    
+
+                    let radioControllers = '';
+
                     radioElArr.forEach(el => {
-                        jsxContent += `<div className="radio-group"><label>Radio group</label>`;
+                        //jsxContent += `<div key={el.id} className="radio-group"><label>Radio group</label>`;
                   
                         el.forEach((element: FormElement | any) => {
-                            jsxContent += ` 
+                            radioControllers += `
                                 <Controller
                                     name="${element.id}"
                                     control={${controlName}}
                                     render={({field, fieldState}) => (
                                         <div className="form-check form-check-inline">
-                                            <input type="radio" id="${element.id}" name="${element.name}" value="${element.value}" ${requiredAttr} ${checkedAttr} className="form-check-input">
+                                            <input type="radio" id="${element.id}" name="${element.name}" value="${element.value}" ${element.required ? 'required' : ''} ${element.checked ? 'checked' : ''} className="form-check-input"/>
                                             <label for="${element.id}" className="form-check-label">${element.label}</label>
                                             {fieldState.error && (
                                                 <p className="error-msg">{fieldState.error.message}</p>
@@ -205,8 +207,11 @@ export function generateRHFComponents(elements: FormElement[], controlName: stri
                                 />
                             `
                         });
-                        jsxContent += `</div>`;
+                       
                     })
+                    jsxContent += `<div className="radio-group"><label>Radio group</label>
+                                        ${radioControllers}
+                                   </div>`;
                 }
             default:
                 break;   

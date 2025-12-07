@@ -13,16 +13,16 @@ export default function BuilderPage() {
         setIsMounted(true);
     }, []);
   return (
-    <div className="flex min-h-screen items-center justify-center font-sans">
-      <main className="flex min-h-screen w-full gap-10 items-center justify-center py-32 px-16 bg-white">
-        {isMounted &&
+    <main className="flex  grow w-full gap-10 justify-center bg-white ">
+      {isMounted &&
+      <div className="flex">
         <DndProvider backend={HTML5Backend}>
           <PalettePanel/>
           <FormBuilderArea/>
           <PropertiesPanel/>
         </DndProvider>
-        }
-      </main>
-    </div>
+      </div>
+      }
+    </main>
   );
 }
