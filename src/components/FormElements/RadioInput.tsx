@@ -19,10 +19,9 @@ export default function RadioInput({
 
     if (isPaletteItem) {
         return (
-            <div className={styleContainer(isDraggable)} draggable={isDraggable}>
+            <div className="p-4 bg-gray-400" draggable={isDraggable}>
             <label 
                 htmlFor={inputId} 
-                className=""
             >
                 {label}
             </label>
@@ -32,6 +31,7 @@ export default function RadioInput({
                 type="radio"
                 className=""
                 disabled
+                hidden
             />
         </div>
         )

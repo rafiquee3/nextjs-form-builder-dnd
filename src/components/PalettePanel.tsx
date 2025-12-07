@@ -10,7 +10,7 @@ export default function PalettePanel() {
         id: Date.now().toString(),
         isPaletteItem: true, 
         required: false, 
-        placeholder: "Example", 
+        placeholder: "", 
         validation: {
             placeholder: '',
             min: undefined,
@@ -32,7 +32,7 @@ export default function PalettePanel() {
                     }}>
                         <TextInput 
                             type="text" 
-                            label="Text Input" 
+                            label="+ Text Input" 
                             {...DUMMY_PROPS}
                         />
                     </DraggableElement>
@@ -41,7 +41,7 @@ export default function PalettePanel() {
                     }}>
                         <TextareaInput 
                             type="textarea" 
-                            label="Textarea Input" 
+                            label="+ Textarea Input" 
                             {...DUMMY_PROPS}
                         />
                     </DraggableElement>
@@ -50,7 +50,7 @@ export default function PalettePanel() {
                     }}>
                         <SelectInput 
                             type="select" 
-                            label="Select Input" 
+                            label="+ Select Input" 
                             {...DUMMY_PROPS}   
                             options={[]}
                             value=''
@@ -61,7 +61,7 @@ export default function PalettePanel() {
                     }}>
                         <CheckobxInput 
                             type="checkbox" 
-                            label="Checkbox Input"
+                            label="+ Checkbox Input"
                             checked={false}
                             value=''
                             {...DUMMY_PROPS}  
@@ -72,7 +72,7 @@ export default function PalettePanel() {
                     }}>
                         <RadioInput 
                             type="radio" 
-                            label="Radio Input" 
+                            label="+ Radio Input" 
                             checked={false}
                             name=''
                             value=''

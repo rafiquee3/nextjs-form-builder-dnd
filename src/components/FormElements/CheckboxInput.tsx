@@ -17,7 +17,7 @@ export default function CheckobxInput({
 
     if (isPaletteItem) {
         return (
-        <div className={styleContainer(isDraggable)}>
+        <div className="p-4 bg-red-300">
                 <label 
                     htmlFor={inputId} 
                     className=""
@@ -30,6 +30,7 @@ export default function CheckobxInput({
                     type="checkbox"
                     className=""
                     disabled
+                    hidden
                 />
             </div>
         )

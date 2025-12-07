@@ -16,7 +16,7 @@ export default function TextareaInput({
 
      if (isPaletteItem) {
         return (
-           <div className={styleContainer(isDraggable)} draggable={isDraggable}>
+           <div className="bg-violet-300 p-4" draggable={isDraggable}>
                 <label 
                     htmlFor={inputId} 
                     className=""

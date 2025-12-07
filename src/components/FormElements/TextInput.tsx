@@ -13,11 +13,11 @@ export default function TextInput({
 }: TextInputProps ) {
     const inputId = `text-${id}`;
     const isDraggable = isPaletteItem;
-    const context = isPaletteItem ? null : useFormContext();
+    const context = useFormContext();
     
     if (isPaletteItem) {
         return (
-            <div className={styleContainer(isDraggable)} draggable={isDraggable}>
+            <div className="bg-blue-300 p-4" draggable={isDraggable}>
                 <label 
                     htmlFor={inputId} 
                     className=""

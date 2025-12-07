@@ -16,7 +16,7 @@ export default function SelectInput({
 
     if (isPaletteItem) {
         return (
-            <div className={styleContainer(isDraggable)} draggable={isDraggable}>
+            <div className="bg-orange-300 p-4" draggable={isDraggable}>
                 <label 
                     htmlFor={selectId} 
                     className=""
@@ -28,6 +28,7 @@ export default function SelectInput({
                     id={selectId}
                     className=""
                     disabled
+                    hidden
                 >
                     <option value="" disabled>Select an option</option>
                 </select>

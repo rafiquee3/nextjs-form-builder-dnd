@@ -16,7 +16,7 @@ export default function DraggableElement({elementProps, children}: DraggableElem
     return (
         <li 
             ref={ drag as any} 
-            className={`cursor-grab p-2 border-b border-gray-300 transition duration-150 ease-in-out`}
+            className={``}
         >
             {children}
         </li>
