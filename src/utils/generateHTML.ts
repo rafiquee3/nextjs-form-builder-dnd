@@ -104,7 +104,7 @@ export function generateRHFComponents(elements: FormElement[], controlName: stri
     let isRadioRendered = false;
 
     elements.forEach((element: FormElement | any) => {
-        const rules = element.required ? `, rules: {required: 'This field is required.'}` : '';
+        const rules = element.required ? `rules={{required: 'This field is required.'}}` : '';
         const nameAttr = element.id;
         const requiredAttr = element.required ? 'required' : '';
         const checkedAttr = element.checked ? 'checked' : '';

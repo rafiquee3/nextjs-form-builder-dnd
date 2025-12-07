@@ -1,7 +1,6 @@
 
 'use client';
 
-
 import { useEffect, useState } from "react";
 import { useFormBuilderStore } from "../store/useFormBuilderStore";
 import { generateHTML, generateRHFComponents, generateSchemaHTML } from "../utils/generateHTML";
@@ -50,7 +49,7 @@ export function ExportModal({onClose ,elements}: ExportModalProps) {
     };
 
     const handleHTML =  async () => {
-        if (!elements.length) return;
+        if (!elements.length) return setHtmlContent('Add fields to the form.');
         if (syntax !== 'html') {setSyntax('html')}
         const rawHTML = generateHTML(elements);
 
@@ -66,10 +65,10 @@ export function ExportModal({onClose ,elements}: ExportModalProps) {
     };
 
     const handleRHF = async () => {
-        if (!elements.length) return;
-        if (syntax !== 'js') {setSyntax('js')}
+        if (!elements.length) return setHtmlContent('Add fields to the form.');
+        if (syntax !== 'ts') {setSyntax('ts')}
         const rawHTML = generateRHFComponents(elements);
-
+        console.log('raw', rawHTML)
         const formattedCode = await prettier.format(rawHTML, {semi: false, 
                                                             parser: "babel", 
                                                             plugins: [parserBabel, prettierPluginEstree],
@@ -82,8 +81,8 @@ export function ExportModal({onClose ,elements}: ExportModalProps) {
     };
 
     const handleSchema = async () => {
-        if (!syncData.length) return;
-        if (syntax !== 'js') {setSyntax('js')}
+        if (!syncData.length) return setHtmlContent('Form submission is required.');
+        if (syntax !== 'ts') {setSyntax('ts')}
         const rawHTML = generateSchemaHTML(syncData);
         const formattedCode = await prettier.format(rawHTML, {semi: false, 
                                                             parser: "babel", 
@@ -97,7 +96,7 @@ export function ExportModal({onClose ,elements}: ExportModalProps) {
     };
 
     useEffect(() => {
-        if (!elements.length) return;
+        if (!elements.length) return setHtmlContent('Add fields to the form.');
         const rawHTML = generateHTML(elements);
 
         const getCode = async () => {
@@ -117,12 +116,17 @@ export function ExportModal({onClose ,elements}: ExportModalProps) {
     return (
         <div className="modal-cnt fixed inset-0 bg-black/0 flex justify-center items-center">
             <div className="modal-content w-[70%] h-[80%] bg-gray-600/50 rounded-xl flex flex-col">
-                <div className="modal-header flex justify-center items-center relative h-12">
-                    <h3>Export HTML Code</h3>
-                    <button className={`absolute right-10 ${styleBttn} top-1/2 transform -translate-y-1/2`} onClick={onClose}>Close</button>
+                <div className="modal-header flex w-full items-center justify-between h-12">
+                    <div className="w-1/3"></div> 
+                    <div className="flex justify-center w-1/3">
+                        <h3 className="self-center">Export HTML Code</h3>
+                    </div>
+                    <div className="flex justify-end w-1/3">
+                        <button className={`${styleBttn} mr-5`} onClick={onClose}>Close</button>
+                    </div>
                 </div>
-                <div className="modal-code grow h-full overflow-y-auto bg-[#282C34] flex ">            
-                    <Highlight className={`${syntax === 'js' ? 'js' : 'html'} w-fit m-auto`}>
+                <div className="modal-code grow h-full overflow-y-auto bg-[#282C34] flex p-2">            
+                    <Highlight className={`${syntax === 'ts' ? 'typescript' : 'html'}`}>
                         {htmlContent}
                     </Highlight>
                 </div>
