@@ -17,7 +17,7 @@ export default function TextInput({
     
     if (isPaletteItem) {
         return (
-            <div className="bg-blue-300 p-4" draggable={isDraggable}>
+            <div className="bg-blue-300 p-4 hover:shadow-inner hover:shadow-black/80" draggable={isDraggable}>
                 <label 
                     htmlFor={inputId} 
                     className=""
@@ -38,13 +38,13 @@ export default function TextInput({
     const {control} = context!;
 
     return (
-        <div className={styleContainer(isDraggable)} draggable={isDraggable}>
+        <div className={`grow`} draggable={isDraggable}>
             <label 
                 htmlFor={inputId} 
-                className=""
+                className="font-bold flex gap-1 pb-2"
             >
-                {label}
-                {required && <span className="">*</span>}
+                <p>{label}</p>
+                {required && <p className="text-red-400"> *</p>}
             </label>
             <Controller
                 name={inputId} 
@@ -70,7 +70,7 @@ export default function TextInput({
                                         required={required}
                                         id={inputId}
                                         placeholder={placeholder}
-                                        className=""
+                                        className="bg-[#F7F8FA] border-1 border-[#DEDFE0] rounded-md w-full p-3"
                                     
                                     />
                                     {fieldState.error && (

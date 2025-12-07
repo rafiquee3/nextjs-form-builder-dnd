@@ -116,8 +116,8 @@ export function ExportModal({elements}: ExportModalProps) {
     } , []);
     
     return (
-        <div className="modal-cnt fixed inset-0 bg-black/0 flex justify-center items-center">
-            <div className="modal-content w-[70%] h-[80%] bg-gray-300 rounded-xl flex flex-col shadow-xl">
+        <div className="modal-cnt fixed inset-0 bg-black/0 flex justify-center items-center z-50">
+            <div className="modal-content w-[70%] h-[80%] bg-gray-300 rounded-xl flex flex-col shadow-xl relative z-2">
                 <div className="modal-header flex w-full items-center justify-between h-12">
                     <div className="w-1/3"></div> 
                     <div className="flex justify-center w-1/3">
@@ -127,7 +127,7 @@ export function ExportModal({elements}: ExportModalProps) {
                         <button className={`${styleBttn} mr-5`} onClick={() => setToggleModal()}>Close</button>
                     </div>
                 </div>
-                <div className="modal-code grow h-full overflow-y-auto bg-[#282C34] flex p-2">            
+                <div className="modal-code grow h-full overflow-y-auto bg-[#282C34] flex p-2 relative">            
                     <Highlight className={`${syntax === 'ts' ? 'typescript' : 'html'}`}>
                         {htmlContent}
                     </Highlight>

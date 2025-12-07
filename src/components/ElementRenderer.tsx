@@ -38,8 +38,33 @@ export default function ElementRenderer({element, unregister}: ElementRendererPr
     const index = formElements.findIndex(el => el.id === id);
     const firstEl = index === 0;
     const lastEl = index === formElements.length - 1;
-    
+    let widgetColor = '';
+
+    switch (element.type) {
+        case 'text': 
+        case 'password':
+        case 'email':
+        case 'date':
+        case 'number':
+            widgetColor = 'blue-300';
+            break;
+        case 'checkbox':
+            widgetColor = 'red-300';
+            break;
+        case 'select':
+            widgetColor = 'orange-300';
+            break;
+        case 'textarea':
+            widgetColor = `violet-300`;
+            break; 
+        case 'radio':
+            widgetColor = 'gray-400';
+            break;
+    }
+    const borderColor = `border-${widgetColor}`;
+    console.log('colorB', borderColor)
     const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        e.preventDefault();
         const buttonAction =  (e.target as HTMLElement).closest('button');
         if (buttonAction) {
             switch(buttonAction.textContent) {
@@ -49,10 +74,10 @@ export default function ElementRenderer({element, unregister}: ElementRendererPr
                     remCfgItem(id);
                     unregister();
                     break;
-                case '⬆️':
+                case '⬆':
                     moveItem(id, 'up');
                     break;
-                case '⬇️':
+                case '⬇':
                     moveItem(id, 'down');
                     break;
             }
@@ -70,12 +95,19 @@ export default function ElementRenderer({element, unregister}: ElementRendererPr
     }, []);
 
     return (
-        <div>
-            <div key={id} className="flex my-2 bg-red-100 " onClick={handleClick}>
+        <div className="my-2 relative z-0" onClick={handleClick}>
+            <div className={`flex bg-${widgetColor} py-[5px] px-3 rounded-t-lg w-[200px] z-999 -mb-[1px] z-1 relative flex justify-between`}>
+                <div className="px-6">
+                    <h3>{element.type}</h3>
+                </div>
+                <div className="flex gap-1">   
+                    <button disabled={firstEl}>⬆</button>
+                    <button disabled={lastEl}>⬇</button>
+                    <button>⌫</button>
+                </div>
+            </div>
+            <div key={id} className={`flex bg-white border-1 border border-dashed ${borderColor} hover:border-black rounded-lg rounded-tl-none p-4`} onClick={handleClick}>
                 <Component {...element as any} type={element.type} required={element.required}/>
-                <button disabled={firstEl}>⬆️</button>
-                <button disabled={lastEl}>⬇️</button>
-                <button>del</button>
             </div>
             <ErrorMsg errors={errorsMsgArr}/>
         </div>

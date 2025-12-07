@@ -115,7 +115,7 @@ export default function PropertiesPanel() {
             <aside>
                 <h2 className="p-3 bg-white border-1 border-gray-200 rounded-t-xl">Properties Panel</h2>
                 {currentElement ?
-                    <form key={selectedId} onSubmit={handleSubmit}>
+                    <form key={selectedId} onSubmit={handleSubmit} className="mt-2">
                         <div className={elementWrapper}>
                             <label htmlFor={labelInputId} className={styleLabelPanel}>
                                 Label
@@ -144,13 +144,13 @@ export default function PropertiesPanel() {
                         <div onClick={handleSelectAction} className={`flex-col`}>
                             <div className={elementWrapper}>
                                 <label htmlFor={optionsInputId} className={styleLabelPanel}>Options</label>
-                                <select ref={optionsSelectRef} id={optionsInputId} className={styleInputPanel}>
+                                <select ref={optionsSelectRef} id={optionsInputId} className={`${styleInputPanel} rounded-r-none`}>
                                     <option disabled>Select option</option>
                                     {currentElement.options &&
                                     currentElement.options.map(opt => 
                                     <option key={opt} value={opt}>{opt}</option>)}
                                 </select>
-                                 <button id='remOptBttn' className={`${styleLabelPanel} bg-red-200 cursor-pointer hover:bg-red-400`}>rem</button>
+                                 <button id='remOptBttn' className={`${styleLabelPanel} bg-red-200 cursor-pointer hover:bg-red-400 rounded-l-none rounded-r-lg`}>rem</button>
                             </div>
                             <div className={elementWrapper}>
                                 <div className={styleLabelPanel}>Opt-val</div>
@@ -171,10 +171,10 @@ export default function PropertiesPanel() {
                                     }} 
                                     type="text"
                                     placeholder="option"
-                                    className={styleInputPanel}
+                                    className={`${styleInputPanel} rounded-r-none`}
                                 />
                                
-                                <button id='addOptBttn' className={`${styleLabelPanel} bg-green-200 cursor-pointer hover:bg-green-400`}>add</button>             
+                                <button id='addOptBttn' className={`${styleLabelPanel} bg-green-200 cursor-pointer hover:bg-green-400 rounded-l-none rounded-r-lg`}>add</button>             
                             </div>
                              <ErrorMsg errors={fieldErrorsMsg(errorMsg, 'option')}/>  
                         </div>

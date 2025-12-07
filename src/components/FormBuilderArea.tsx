@@ -67,14 +67,11 @@ export default function FormBuilderArea() {
     };
   
     return (
-        <div ref ={drop as any} className={`grow bg-gray-200 text-black ${isOver ? 'bg-green-200 text-black' : ''} rounded-xl mb-2`}>
+        <div ref ={drop as any} className={`grow bg-gray-200 text-black ${isOver ? 'bg-green-200 text-black' : ''} h-full rounded-xl mb-2 overflow`}>
             {toggleModal && 
             <ExportModal elements={formElements}/>
             }
-            <div>
-                <button onClick={() => {}}>Export HTML</button>
-            </div>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSubmit(onSubmit)} className="py-17 px-30 h-full overflow">
                     <FormProvider {...methods}>
                         {formElements.map(el => (<ElementRenderer key={el.id} element={el} unregister={unregister}/>))}
                     </FormProvider>
