@@ -45,6 +45,7 @@ type FormBuilderState = {
     selectedId: FormElement['id'] | null;
     formCfg: any;
     syncData: SyncData;
+    toggleModal: boolean;
 };
 
 type FormBuilderActions = {
@@ -61,6 +62,7 @@ type FormBuilderActions = {
     resetCheckedAttr: () => void;
     setValErrors: (errors: ValError[]) => void;
     setSyncData: (submitData: {[key: string]: FormElement}) => void;
+    setToggleModal: () => void;
 }
 
 export const useFormBuilderStore = create<FormBuilderState & FormBuilderActions>((set, get) => ({
@@ -68,6 +70,7 @@ export const useFormBuilderStore = create<FormBuilderState & FormBuilderActions>
   selectedId: null,
   formCfg: {},
   syncData: [],
+  toggleModal: false,
 
   addElement: (type: FormElement['type']) => set((state) => ({elements: [...state.elements, CreateElement(type)]})),
   remElement: (id: FormElement['id']) => set((state) => {
@@ -212,4 +215,6 @@ export const useFormBuilderStore = create<FormBuilderState & FormBuilderActions>
       }
     )
   }),
+  setToggleModal: () => set((state) => {
+    return {toggleModal: !state.toggleModal}}),
 }));

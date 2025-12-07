@@ -13,17 +13,16 @@ import parserBabel from "prettier/plugins/babel";
 import * as prettierPluginEstree from "prettier/plugins/estree";
 import parserHtml from 'prettier/parser-html';
 
-
 interface ExportModalProps {
-    onClose: () => void;
     elements: FormElement[];
 }
 
-export function ExportModal({onClose ,elements}: ExportModalProps) {
+export function ExportModal({elements}: ExportModalProps) {
     const [htmlContent, setHtmlContent] = useState<string | null>(null);
     const [syntax, setSyntax] = useState<string>('html');
     const syncData = useFormBuilderStore(store => store.syncData);
     const [aciveBttn, setActiveBttn] = useState('html');
+    const setToggleModal = useFormBuilderStore(store => store.setToggleModal);
 
     const handleCopy = () => {
         if (!htmlContent) return;
@@ -125,7 +124,7 @@ export function ExportModal({onClose ,elements}: ExportModalProps) {
                         <h3 className="self-center">Export HTML Code</h3>
                     </div>
                     <div className="flex justify-end w-1/3">
-                        <button className={`${styleBttn} mr-5`} onClick={onClose}>Close</button>
+                        <button className={`${styleBttn} mr-5`} onClick={() => setToggleModal()}>Close</button>
                     </div>
                 </div>
                 <div className="modal-code grow h-full overflow-y-auto bg-[#282C34] flex p-2">            

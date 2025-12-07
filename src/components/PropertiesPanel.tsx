@@ -110,9 +110,9 @@ export default function PropertiesPanel() {
     }
     console.log('err', errorMsg)
     return (
-        <div className="h-[500px] w-[300px] bg-gray-200 text-black rounded-xl">
+        <div className="w-[350px] bg-gray-200 text-black rounded-xl m-2 mt-0">
             <aside>
-                <h2 className="h-12 bg-white border-1 border-gray-200 rounded-t-xl">Properties Panel</h2>
+                <h2 className="p-3 bg-white border-1 border-gray-200 rounded-t-xl">Properties Panel</h2>
                 {currentElement ?
                     <form key={selectedId} onSubmit={handleSubmit}>
                         <div>

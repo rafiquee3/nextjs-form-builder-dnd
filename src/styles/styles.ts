@@ -6,3 +6,6 @@ export const styleContainer = (isDraggable: boolean) => isDraggable
 export const styleBttn = 'py-1 px-2  text-gray-800 cursor-pointer hover:bg-black hover:text-white rounded-md border-1 border-gray-500';
 export const menuActive = 'cursor-pointer text-[#18780C]';
 export const menuDefault = 'cursor-pointer hover:text-[#18780C]'
+
+// Header
+export const styleBttnHead = 'py-2 px-6 rounded-lg hover:bg-red-100 cursor-pointer';

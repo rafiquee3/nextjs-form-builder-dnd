@@ -23,8 +23,8 @@ export default function PalettePanel() {
     };
 
     return (
-        <div className="h-[500px] w-[300px] bg-gray-200">
-            <h2 className="text-black">Palette Panel</h2>
+        <div className=" w-[350px] bg-gray-200 m-2 mt-0 rounded-xl">
+            <h2 className="p-3 bg-white border-1 border-gray-200 rounded-t-xl text-black">Palette Panel</h2>
             <aside>
                 <ul>
                     <DraggableElement elementProps={{

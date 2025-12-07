@@ -13,15 +13,13 @@ export default function BuilderPage() {
         setIsMounted(true);
     }, []);
   return (
-    <main className="flex  grow w-full gap-10 justify-center bg-white ">
+    <main className="grow flex w-full bg-white ">
       {isMounted &&
-      <div className="flex">
         <DndProvider backend={HTML5Backend}>
           <PalettePanel/>
           <FormBuilderArea/>
           <PropertiesPanel/>
         </DndProvider>
-      </div>
       }
     </main>
   );
