@@ -1,6 +1,6 @@
 import { FormElement, RadioElement, SyncData } from "../types/FormElement";
 
-export function generateHTML(elements: FormElement[]): string {
+export function generateHTML(elements: FormElement[]) {
     let htmlContent = '';
     let isRadioRendered = false;
     
@@ -28,10 +28,10 @@ export function generateHTML(elements: FormElement[]): string {
                 const inputAttrs = element.type !== 'textarea' ? `type="${element.type}"` : '';
                 
                 htmlContent += `
-                    <div class="form-group">
-                        <label for="${element.id}">${element.label}</label>
-                        <${inputType} ${inputAttrs} id="${element.id}" name="${element.id}" ${fieldAttr} class="form-control"${element.type === 'textarea' ? '></textarea>' : ' />'}
-                    </div>`;
+                <div class="form-group">
+                    <label for="${element.id}">${element.label}</label>
+                    <${inputType} ${inputAttrs} id="${element.id}" name="${element.id}" ${fieldAttr} class="form-control"${element.type === 'textarea' ? '></textarea>' : ' />'}
+                </div>`;
                 break;
 
             case 'select':
@@ -40,12 +40,12 @@ export function generateHTML(elements: FormElement[]): string {
                 ).join('\n        ') || '';
 
                 htmlContent += `
-                    <div class="form-group">
-                        <label for="${element.id}">${element.label}</label>
-                        <select id="${element.id}" name="${element.id}" ${fieldAttr} class="form-control">
-                            ${optionsHtml}
-                        </select>
-                    </div>`;
+                <div class="form-group">
+                    <label for="${element.id}">${element.label}</label>
+                    <select id="${element.id}" name="${element.id}" ${fieldAttr} class="form-control">
+                        ${optionsHtml}
+                    </select>
+                </div>`;
                 break;
             
             case 'radio':
@@ -70,16 +70,14 @@ export function generateHTML(elements: FormElement[]): string {
                         return nameA.localeCompare(nameB);
                     })
                     
-          
-
                     radioElArr.forEach(el => {
                         htmlContent += `<div><label>Radio group</label>`;
                         el.forEach((element: RadioElement | any) => {
                             htmlContent += ` 
-                                <div class="form-check form-check-inline">
-                                    <input type="radio" id="${element.id}" name="${element.name}" value="${element.value}" ${fieldAttr} class="form-check-input">
-                                    <label for="${element.id}" class="form-check-label">${element.label}</label>
-                                </div>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="${element.id}" name="${element.name}" value="${element.value}" ${fieldAttr} class="form-check-input">
+                                <label for="${element.id}" class="form-check-label">${element.label}</label>
+                            </div>
                             `
                         });
                         htmlContent += `</div>`;
@@ -91,17 +89,17 @@ export function generateHTML(elements: FormElement[]): string {
                 break;
         }
     });
-
-    return `
-        <form id="dynamic-form" class="form-cnt">
+    const template = `<form id="dynamic-form" class="form-cnt">
             ${htmlContent.trim()}
             <div class="form-group submit-btn">
                 <button type="submit">Submit Form</button>
             </div>
-        </form>`;
+        </form>
+    `;
+    return template;
 }
 
-export function generateRHFComponents(elements: FormElement[], controlName: string = 'control'): string {
+export function generateRHFComponents(elements: FormElement[], controlName: string = 'control') {
     let jsxContent = '';
     let isRadioRendered = false;
 
@@ -142,7 +140,7 @@ export function generateRHFComponents(elements: FormElement[], controlName: stri
             case 'select':
                 const optionsJsx = element.options?.map((opt: string) =>
                     `<option value="${opt}">${opt}</option>`
-                ).join('\n                    ') || '';
+                ) || '';
 
                 jsxContent += `
                     <Controller
@@ -214,8 +212,7 @@ export function generateRHFComponents(elements: FormElement[], controlName: stri
                 break;   
         }
     });
-
-    return `
+    const template = `
         import { useForm, Controller } from 'react-hook-form';
 
         function DynamicForm({ onSubmit }) {
@@ -223,14 +220,15 @@ export function generateRHFComponents(elements: FormElement[], controlName: stri
             
             return (
                 <form id="dynamic-form" onSubmit={handleSubmit(onSubmit)} className="form-cnt">
-                    ${jsxContent.trim()}
+                    ${jsxContent}
                     <div className="form-group submit-btn">
                         <button type="submit">Submit</button>
                     </div>
                 </form>
             );
         }
-    `
+    `;
+    return template;
 }
 
 export function generateSchemaHTML(syncData: SyncData) {
@@ -238,7 +236,7 @@ export function generateSchemaHTML(syncData: SyncData) {
 
     let objSchema = '';
 
-    syncData.forEach((field: any) => {
+    syncData.forEach((field: any, i) => {
         const {id, type, value, options, required, validation: {regex, min, max, checked}} = field;
 
         let schema: string = 'z';
@@ -293,11 +291,14 @@ export function generateSchemaHTML(syncData: SyncData) {
         }
 
         if (schema === 'z') return;
-        objSchema += `${id}: ${schema}, `;
+        objSchema += `${id}: ${schema},\n `;
     });
+
+    objSchema = objSchema.trimEnd().replace(/,$/, '');
+
     return `
         const FormSchema = z.object({
-            ${objSchema}
-        })
+ ${objSchema}
+        });
     `;
 }

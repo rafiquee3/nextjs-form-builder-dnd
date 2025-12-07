@@ -68,7 +68,9 @@ export default function FormBuilderArea() {
 
     return (
         <div ref ={drop as any} className={`h-[500px] w-[300px] bg-gray-200 text-black ${isOver ? 'bg-green-200 text-black' : ''}`}>
-            {toggleModal && <ExportModal elements={formElements} onClose={() => setToggleModal(prev => !prev)}/>}
+            {toggleModal && 
+            <ExportModal elements={formElements} onClose={() => setToggleModal(prev => !prev)}/>
+            }
             <div>
                 <button onClick={() => {setToggleModal(true)}}>Export</button>
                 <button onClick={() => {}}>Export HTML</button>
