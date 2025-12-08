@@ -1,5 +1,5 @@
 'use client';
-import { styleContainer } from "@/src/styles/styles";
+import { styleContainer, styleInputElement, styleLabelElement } from "@/src/styles/styles";
 import { TextInputProps } from "@/src/types/props/props";
 import { useFormContext, Controller } from 'react-hook-form';
 
@@ -17,20 +17,10 @@ export default function TextInput({
     
     if (isPaletteItem) {
         return (
-            <div className="bg-blue-300 p-4 hover:shadow-inner hover:shadow-black/80" draggable={isDraggable}>
-                <label 
-                    htmlFor={inputId} 
-                    className=""
-                >
+            <div className="bg-blue-300 p-4 flex" draggable={isDraggable}>
+           
                     {label}
-                </label>
-                <input
-                    type='text'
-                    id={inputId}
-                    placeholder={placeholder}
-                    className=""
-                    disabled
-                />
+
             </div>
         )
     }
@@ -41,7 +31,7 @@ export default function TextInput({
         <div className={`grow`} draggable={isDraggable}>
             <label 
                 htmlFor={inputId} 
-                className="font-bold flex gap-1 pb-2"
+                className={styleLabelElement}
             >
                 <p>{label}</p>
                 {required && <p className="text-red-400"> *</p>}
@@ -70,8 +60,7 @@ export default function TextInput({
                                         required={required}
                                         id={inputId}
                                         placeholder={placeholder}
-                                        className="bg-[#F7F8FA] border-1 border-[#DEDFE0] rounded-md w-full p-3"
-                                    
+                                        className={styleInputElement}
                                     />
                                     {fieldState.error && (
                                         <p className="text-red-500 text-xs mt-1">{fieldState.error.message}</p>

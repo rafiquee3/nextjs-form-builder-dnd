@@ -5,7 +5,7 @@ import { CheckboxElement, FormElement, RadioElement } from "../types/FormElement
 import { IntNumberSchema, LabelSchema, OptionSchema, PlaceholderSchema, RadioCheckboxValueSchema, RadioGroupNameSchema, RegexSchema } from "../types/zodValidation";
 import { addErrorMsg, clearErrorMsg } from "../utils/errorMsgUtils";
 import { ErrorMsg } from "./ErrorMsg";
-import { elementWrapper, styleBttnHead, styleInputPanel, styleLabelPanel } from "../styles/styles";
+import { elementWrapper, styleBttn, styleBttnHead, styleInputPanel, styleLabelPanel } from "../styles/styles";
 
 const fieldErrorsMsg = (errorMsg: string[], field: string) => {
     if (!errorMsg.length) return [];
@@ -113,9 +113,12 @@ export default function PropertiesPanel() {
     return (
         <div className="w-[350px] bg-gray-200 text-black rounded-xl m-2 mt-0">
             <aside>
-                <h2 className="p-3 bg-white border-1 border-gray-200 rounded-t-xl">Properties Panel</h2>
                 {currentElement ?
-                    <form key={selectedId} onSubmit={handleSubmit} className="mt-2">
+                    <form key={selectedId} onSubmit={handleSubmit} className="">
+                        <div className="flex bg-white border-1 border-gray-200 rounded-t-xl items-between justify-between">
+                            <h2 className="p-3">Properties Panel</h2>
+                            <button type='submit' disabled={Boolean(errorMsg.length)} className={`${styleBttn} m-2`}>Save</button>
+                        </div>
                         <div className={elementWrapper}>
                             <label htmlFor={labelInputId} className={styleLabelPanel}>
                                 Label
@@ -365,7 +368,7 @@ export default function PropertiesPanel() {
                                         ); 
                                         case 'checked':
                                             return (
-                                                <>
+                                                <div key={key}>
                                                     <div className={elementWrapper} key={`${key}-check-1`}>
                                                         <label htmlFor={checkedInputId} className={styleLabelPanel}>Checked</label>
                                                         <select 
@@ -414,14 +417,13 @@ export default function PropertiesPanel() {
                                                         />
                                                         <ErrorMsg errors={fieldErrorsMsg(errorMsg, 'value')}/> 
                                                     </div>
-                                                </>
+                                                </div>
                                         );
                                     }
                                 })
                             }
                         </div>
                         )}
-                        <button type='submit' disabled={Boolean(errorMsg.length)} className={`${styleBttnHead} bg-blue-400 m-2`}>Save</button>
                     </form>
 
                     :

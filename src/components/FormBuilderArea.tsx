@@ -11,6 +11,7 @@ import { useMemo, useState } from "react";
 import { getSyncData } from "../utils/getSyncData";
 import { schemaGenerator } from "../utils/schemaGenerator";
 import { ExportModal } from "./ExportModal";
+import { styleBttn, styleBttnHead } from "../styles/styles";
 
 export default function FormBuilderArea() {
     const formElements = useFormBuilderStore((store) => store.elements);
@@ -71,11 +72,19 @@ export default function FormBuilderArea() {
             {toggleModal && 
             <ExportModal elements={formElements}/>
             }
-            <form onSubmit={handleSubmit(onSubmit)} className="py-17 px-30 h-full overflow">
+            <form onSubmit={handleSubmit(onSubmit)} className="py-13 px-30 h-full overflow flex flex-col">
                     <FormProvider {...methods}>
                         {formElements.map(el => (<ElementRenderer key={el.id} element={el} unregister={unregister}/>))}
                     </FormProvider>
-                    <button type='submit'>Submit</button>
+                    {formElements.length ? 
+                        <button className={`${styleBttn} bg-white border-1 border-black py-3`} type='submit'>Submit</button>
+                    
+                        :
+                        
+                        <div>
+                            <p className="text-center">Drag the element from the PalettePanel and drop it onto the workspace.</p>
+                        </div>
+                    }
             </form>
          </div>
     )

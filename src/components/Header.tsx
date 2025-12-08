@@ -9,8 +9,9 @@ export function Header() {
     return (
         <div className="flex bg-white">
             <div className="w-full bg-gray-200 m-2 h-14 rounded-xl flex">
-                <div className="flex flex-col justify-center w-1/3 h-full text-black">
-                    <h2 className="ml-10">Form Generator</h2>
+                <div className="flex items-center w-1/3 h-full text-black">
+                    <p>🇫 </p>
+                    <h2 className="">Form Generator</h2>
                 </div>
                 <div className="w-1/3 flex items-center justify-center text-black ">
                     <div className="bg-white rounded-lg flex">

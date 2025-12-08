@@ -68,7 +68,7 @@ export default function ElementRenderer({element, unregister}: ElementRendererPr
         const buttonAction =  (e.target as HTMLElement).closest('button');
         if (buttonAction) {
             switch(buttonAction.textContent) {
-                case 'del':
+                case '⌫':
                     e.stopPropagation();
                     remItem(id);
                     remCfgItem(id);
@@ -95,10 +95,10 @@ export default function ElementRenderer({element, unregister}: ElementRendererPr
     }, []);
 
     return (
-        <div className="my-2 relative z-0" onClick={handleClick}>
-            <div className={`flex bg-${widgetColor} py-[5px] px-3 rounded-t-lg w-[200px] z-999 -mb-[1px] z-1 relative flex justify-between`}>
+        <div className="mb-4 relative z-0" onClick={handleClick}>
+            <div className={`flex bg-${widgetColor} py-[5px] px-3 rounded-t-lg w-[230px] z-999 -mb-[1px] z-1 relative flex justify-between`}>
                 <div className="px-6">
-                    <h3>{element.type}</h3>
+                    <h3>{element.type.toUpperCase()}</h3>
                 </div>
                 <div className="flex gap-1">   
                     <button disabled={firstEl}>⬆</button>
@@ -106,7 +106,7 @@ export default function ElementRenderer({element, unregister}: ElementRendererPr
                     <button>⌫</button>
                 </div>
             </div>
-            <div key={id} className={`flex bg-white border-1 border border-dashed ${borderColor} hover:border-black rounded-lg rounded-tl-none p-4`} onClick={handleClick}>
+            <div key={id} className={`flex bg-white border-1 border border-dashed ${borderColor} hover:border-black rounded-lg rounded-tl-none p-4 pb-5`} onClick={handleClick}>
                 <Component {...element as any} type={element.type} required={element.required}/>
             </div>
             <ErrorMsg errors={errorsMsgArr}/>

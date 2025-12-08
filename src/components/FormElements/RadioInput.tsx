@@ -1,6 +1,6 @@
 'use client';
 import { useFormBuilderStore } from "@/src/store/useFormBuilderStore";
-import { styleContainer } from "@/src/styles/styles";
+import { styleContainer, styleInputElement, styleLabelElement } from "@/src/styles/styles";
 import { RadioInputProps } from "@/src/types/props/props";
 import { Controller, useFormContext } from "react-hook-form";
 
@@ -19,34 +19,21 @@ export default function RadioInput({
 
     if (isPaletteItem) {
         return (
-            <div className="p-4 bg-gray-400" draggable={isDraggable}>
-            <label 
-                htmlFor={inputId} 
-            >
-                {label}
-            </label>
-            
-            <input 
-                id={inputId}
-                type="radio"
-                className=""
-                disabled
-                hidden
-            />
+        <div className="p-4 bg-gray-400" draggable={isDraggable}>
+            {label}
         </div>
         )
     }
-    console.log('checked', checked)
     const {control} = context!;
 
     return (
-        <div className={styleContainer(isDraggable)} draggable={isDraggable}>
+        <div className="grow flex gap-3" draggable={isDraggable}>
             <label 
                 htmlFor={inputId} 
-                className=""
+                className={styleLabelElement}
             >
-                {label}
-                {required && <span className="">*</span>}
+                <p>{label}</p>
+                {required && <p className="text-red-400"> *</p>}
             </label>
             <Controller
                 name={inputId} 
@@ -57,7 +44,7 @@ export default function RadioInput({
                             {...field} // Spreads RHF props: onChange, onBlur, value, ref
                             type="radio"
                             id={inputId}
-                            className=""
+                            className={styleInputElement}
                             required={required}
                             checked={checked}
                             value={value}

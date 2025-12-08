@@ -1,5 +1,5 @@
 'use client';
-import { styleContainer } from "@/src/styles/styles";
+import { styleInputElement, styleLabelElement } from "@/src/styles/styles";
 import { CheckboxInputProps } from "@/src/types/props/props";
 import { Controller, useFormContext } from "react-hook-form";
 
@@ -17,21 +17,8 @@ export default function CheckobxInput({
 
     if (isPaletteItem) {
         return (
-        <div className="p-4 bg-red-300">
-                <label 
-                    htmlFor={inputId} 
-                    className=""
-                >
-                    {label}
-                </label>
-                
-                <input 
-                    id={inputId}
-                    type="checkbox"
-                    className=""
-                    disabled
-                    hidden
-                />
+            <div className="p-4 bg-red-300">
+                {label}
             </div>
         )
     }
@@ -39,13 +26,13 @@ export default function CheckobxInput({
     const {control} = context!;
     if (typeof value === 'boolean') value = '';
     return (
-        <div className={styleContainer(isDraggable)} draggable={isDraggable}>
+        <div className="grow flex gap-3">
             <label 
                 htmlFor={inputId} 
-                className=""
+                className={styleLabelElement}
             >
-                {label}
-                {required && <span className="">*</span>}
+                <p>{label}</p>
+                {required && <p className="text-red-400"> *</p>}
             </label>
             <Controller
                 name={inputId} 
@@ -58,7 +45,7 @@ export default function CheckobxInput({
                                     type="checkbox"
                                     id={inputId}
                                     checked={checked}
-                                    className=""
+                                    className={styleInputElement}
                                     required={required}
                                     value={value}
                             />

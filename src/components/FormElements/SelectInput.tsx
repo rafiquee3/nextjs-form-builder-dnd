@@ -1,5 +1,5 @@
 'use client';
-import { styleContainer } from "@/src/styles/styles";
+import { styleContainer, styleInputElement, styleLabelElement } from "@/src/styles/styles";
 import { SelectInputProps } from "@/src/types/props/props";
 import { Controller, useFormContext } from "react-hook-form";
 
@@ -17,21 +17,7 @@ export default function SelectInput({
     if (isPaletteItem) {
         return (
             <div className="bg-orange-300 p-4" draggable={isDraggable}>
-                <label 
-                    htmlFor={selectId} 
-                    className=""
-                >
-                    {label}
-                </label>
-                
-                <select 
-                    id={selectId}
-                    className=""
-                    disabled
-                    hidden
-                >
-                    <option value="" disabled>Select an option</option>
-                </select>
+                {label}
             </div>
         )
     }
@@ -39,24 +25,24 @@ export default function SelectInput({
     const {control} = context!;
 
     return (
-        <div className={styleContainer(isDraggable)} draggable={isDraggable}>
+        <div className="grow" draggable={isDraggable}>
             <label 
                 htmlFor={selectId} 
-                className=""
+                className={styleLabelElement}
             >
-                {label}
-                {required && <span className="">*</span>}
+                <p>{label}</p>
+                {required && <p className="text-red-400"> *</p>}
             </label>
             <Controller
                 name={selectId} 
                 control={control}
                 rules={{ required: required ? `${label} is required` : false }}
                 render={({ field, fieldState }) => (
-                    <div>
+                    <div className="">
                         <select
                             {...field} // Spreads RHF props: onChange, onBlur, value, ref
                             id={selectId}
-                            className=""
+                            className={styleInputElement}
                             required={required}
                             value={field.value ?? ''}   
                         >

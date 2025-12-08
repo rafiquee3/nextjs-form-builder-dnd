@@ -1,5 +1,5 @@
 'use client';
-import { styleContainer } from "@/src/styles/styles";
+import { styleContainer, styleInputElement, styleLabelElement } from "@/src/styles/styles";
 import { TextInputProps } from "@/src/types/props/props";
 import { Controller, useFormContext } from "react-hook-form";
 
@@ -17,20 +17,7 @@ export default function TextareaInput({
      if (isPaletteItem) {
         return (
            <div className="bg-violet-300 p-4" draggable={isDraggable}>
-                <label 
-                    htmlFor={inputId} 
-                    className=""
-                >
-                    {label}
-                </label>
-                
-                <input 
-                    id={inputId}
-                    type="textarea"
-                    placeholder={placeholder}
-                    className=""
-                    disabled
-                />
+                {label}
             </div>
         )
     }
@@ -38,29 +25,30 @@ export default function TextareaInput({
     const {control} = context!;
 
     return (
-        <div className={styleContainer(isDraggable)} draggable={isDraggable}>
+        <div className="grow" draggable={isDraggable}>
             <label 
                 htmlFor={inputId} 
-                className=""
+                className={styleLabelElement}
             >
-                {label}
-                {required && <span className="">*</span>}
+                <p>{label}</p>
+                {required && <p className="text-red-400"> *</p>}
             </label>
             <Controller
                 name={inputId} 
                 control={control}
                 rules={{ required: required ? `${label} is required` : false }}
                 render={({ field, fieldState }) => (
-                    <div>
-                        <input
+                    <div className="w-full">
+                        <textarea
                             {...field} // Spreads RHF props: onChange, onBlur, value, ref
                             value={field.value ?? ''}
-                            type="textarea"
                             required={required ?? false}
                             placeholder={placeholder ?? ''}
                             id={inputId}
-                            className=""
-                        />
+                            rows={2}
+                            className={`${styleInputElement}`}
+                        >
+                        </textarea>
                         {fieldState.error && (
                             <p className="text-red-500 text-xs mt-1">{fieldState.error.message}</p>
                         )}
