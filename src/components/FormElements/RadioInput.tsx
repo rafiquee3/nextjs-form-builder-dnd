@@ -30,7 +30,7 @@ export default function RadioInput({
         <div className="grow flex gap-3" draggable={isDraggable}>
             <label 
                 htmlFor={inputId} 
-                className={styleLabelElement}
+                className={`font-bold flex gap-1`}
             >
                 <p>{label}</p>
                 {required && <p className="text-red-400"> *</p>}

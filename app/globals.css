@@ -27,3 +27,7 @@ body {
 ul li {
   margin-bottom: 15px;
 }
+
+.inset-border-blue {
+    border: 1px inset blue; 
+}

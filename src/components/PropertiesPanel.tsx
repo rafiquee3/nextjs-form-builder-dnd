@@ -113,323 +113,344 @@ export default function PropertiesPanel() {
     return (
         <div className="w-[350px] bg-gray-200 text-black rounded-xl m-2 mt-0">
             <aside>
-                {currentElement ?
                     <form key={selectedId} onSubmit={handleSubmit} className="">
                         <div className="flex bg-white border-1 border-gray-200 rounded-t-xl items-between justify-between">
                             <h2 className="p-3">Properties Panel</h2>
                             <button type='submit' disabled={Boolean(errorMsg.length)} className={`${styleBttn} m-2`}>Save</button>
                         </div>
-                        <div className={elementWrapper}>
-                            <label htmlFor={labelInputId} className={styleLabelPanel}>
-                                Label
-                            </label>
-                            <input 
-                                id={labelInputId}
-                                value={liveCfg?.label ?? ''}
-                                className={styleInputPanel}
-                                onChange={(e) => {
-                                    handleLocalChange('label', e.target.value);
-                                    const validation = LabelSchema.safeParse(e.target.value);
-                                    const hasFieldError = hasError('label', errorMsg);
-                                    if (!validation.success) {
-                                        if (!hasFieldError) addErrorMsg(validation, errorMsg, setErrorMsg);
-                                        return;
-                                    }
-                                    if (hasFieldError) {
-                                        clearErrorMsg('label', errorMsg, setErrorMsg);
-                                    }
-                                    updateElement(currentElement.id, 'label', e.target.value);
-                                }}
-                            />
-                            <ErrorMsg errors={fieldErrorsMsg(errorMsg, 'label')}/>
-                        </div>
-                        {currentElement.type === 'select'  && 
-                        <div onClick={handleSelectAction} className={`flex-col`}>
-                            <div className={elementWrapper}>
-                                <label htmlFor={optionsInputId} className={styleLabelPanel}>Options</label>
-                                <select ref={optionsSelectRef} id={optionsInputId} className={`${styleInputPanel} rounded-r-none`}>
-                                    <option disabled>Select option</option>
-                                    {currentElement.options &&
-                                    currentElement.options.map(opt => 
-                                    <option key={opt} value={opt}>{opt}</option>)}
-                                </select>
-                                 <button id='remOptBttn' className={`${styleLabelPanel} bg-red-200 cursor-pointer hover:bg-red-400 rounded-l-none rounded-r-lg`}>rem</button>
+                        {currentElement ?
+                        <div className="flex flex-col w-full">
+                            <div>
+                                <div className={elementWrapper}>
+                                    <label htmlFor={labelInputId} className={styleLabelPanel}>
+                                        Label
+                                    </label>
+                                    <input 
+                                        id={labelInputId}
+                                        value={liveCfg?.label ?? ''}
+                                        className={styleInputPanel}
+                                        onChange={(e) => {
+                                            handleLocalChange('label', e.target.value);
+                                            const validation = LabelSchema.safeParse(e.target.value);
+                                            const hasFieldError = hasError('label', errorMsg);
+                                            if (!validation.success) {
+                                                if (!hasFieldError) addErrorMsg(validation, errorMsg, setErrorMsg);
+                                                return;
+                                            }
+                                            if (hasFieldError) {
+                                                clearErrorMsg('label', errorMsg, setErrorMsg);
+                                            }
+                                            updateElement(currentElement.id, 'label', e.target.value);
+                                        }}
+                                        />
+                                </div>
+                                <ErrorMsg errors={fieldErrorsMsg(errorMsg, 'label')}/>
                             </div>
-                            <div className={elementWrapper}>
-                                <div className={styleLabelPanel}>Opt-val</div>
-                                <input 
-                                    id='opts-ref' 
-                                    ref={optionsInputRef} 
-                                    onChange={(e) => {
-                                        const value = e.target.value;
-                                        const validation = OptionSchema.safeParse(value);
-                                        const hasFieldError = hasError('option', errorMsg);
-                                        if (!validation.success) {
-                                            if (!hasFieldError) addErrorMsg(validation, errorMsg, setErrorMsg);
-                                            return;
-                                        }
-                                        if (hasFieldError) {
-                                            clearErrorMsg('option', errorMsg, setErrorMsg);
-                                        }
-                                    }} 
-                                    type="text"
-                                    placeholder="option"
-                                    className={`${styleInputPanel} rounded-r-none`}
-                                />
-                               
-                                <button id='addOptBttn' className={`${styleLabelPanel} bg-green-200 cursor-pointer hover:bg-green-400 rounded-l-none rounded-r-lg`}>add</button>             
+                            {currentElement.type === 'select'  && 
+                            <div onClick={handleSelectAction} className={`flex-col`}>
+                                <div>
+                                    <div className={elementWrapper}>
+                                        <label htmlFor={optionsInputId} className={styleLabelPanel}>Options</label>
+                                        <select ref={optionsSelectRef} id={optionsInputId} className={`${styleInputPanel} rounded-r-none`}>
+                                            <option disabled>Select option</option>
+                                            {currentElement.options &&
+                                            currentElement.options.map(opt => 
+                                            <option key={opt} value={opt}>{opt}</option>)}
+                                        </select>
+                                        <button id='remOptBttn' className={`${styleLabelPanel} bg-red-200 cursor-pointer hover:bg-red-400 rounded-l-none rounded-r-lg`}>rem</button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className={elementWrapper}>
+                                        <div className={styleLabelPanel}>Opt-val</div>
+                                        <input 
+                                            id='opts-ref' 
+                                            ref={optionsInputRef} 
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                const validation = OptionSchema.safeParse(value);
+                                                const hasFieldError = hasError('option', errorMsg);
+                                                if (!validation.success) {
+                                                    if (!hasFieldError) addErrorMsg(validation, errorMsg, setErrorMsg);
+                                                    return;
+                                                }
+                                                if (hasFieldError) {
+                                                    clearErrorMsg('option', errorMsg, setErrorMsg);
+                                                }
+                                            }} 
+                                            type="text"
+                                            placeholder="option"
+                                            className={`${styleInputPanel} rounded-r-none`}
+                                        />
+                                        <button id='addOptBttn' className={`${styleLabelPanel} bg-green-200 cursor-pointer hover:bg-green-400 rounded-l-none rounded-r-lg`}>add</button>  
+                                    </div>
+                                    <ErrorMsg errors={fieldErrorsMsg(errorMsg, 'option')}/>            
+                                </div> 
                             </div>
-                             <ErrorMsg errors={fieldErrorsMsg(errorMsg, 'option')}/>  
-                        </div>
-                        }
-                        {currentElement.type === 'radio' &&
-                            <div className={elementWrapper}>
-                                <label htmlFor={nameInputId} className={styleLabelPanel}>Group name</label>
-                                <input 
-                                    id={nameInputId} 
-                                    value={liveCfg?.name ?? ''}
-                                    onChange={(e) => {
-                                        const value = e.target.value;
-                                        handleLocalChange('name', value);
-
-                                        const validation = RadioGroupNameSchema.safeParse(value);
-                                        const hasFieldError = hasError('name', errorMsg);
-
-                                        if (!validation.success && value) {
-                                            if (!hasFieldError) addErrorMsg(validation, errorMsg, setErrorMsg);
-                                            return;
-                                        }
-                                        if (hasFieldError) clearErrorMsg('name', errorMsg, setErrorMsg);
-                                    }}
-                                    className={styleInputPanel}
-                                />
-                                <ErrorMsg errors={fieldErrorsMsg(errorMsg, 'name')}/> 
-                            </div>
-                        }
-                        {['text', 'number', 'email', 'date', 'password'].includes(currentElement.type) && 
-                            <div className={elementWrapper}>
-                                <label htmlFor={typeInputId} className={styleLabelPanel}>Type</label>
-                                <select 
-                                    id={typeInputId} 
-                                    value={currentElement.type}
-                                    onChange={(e) => {
-                                        const newType = e.target.value;
-                                        handleLocalChange('type', newType);
-                                        updateElement(currentElement.id, 'type', newType);
-                                    }}
-                                    className={styleInputPanel}
-                                >
-                                    <option value='text'>Text</option>
-                                    <option value='email'>Email</option>
-                                    <option value='password'>Password</option>
-                                    <option value='number'>Number</option>
-                                    <option value='date'>Date</option>
-                                </select>
-                            </div>
-                        }
-                        {(currentElement.type === 'text' || currentElement.type === 'textarea') &&
-                            <div className={elementWrapper}>
-                                <label htmlFor={placeholderInputId} className={styleLabelPanel}>Placeholder</label>
-                                <input
-                                    id={placeholderInputId}
-                                    value={liveCfg?.placeholder ?? ''}
-                                    onChange={(e) => {
-                                        const validation = PlaceholderSchema.safeParse(e.target.value);
-                                        const hasFieldError = hasError('placeholder', errorMsg);
-                                        if (!validation.success) {
-                                            if (!hasFieldError) addErrorMsg(validation, errorMsg, setErrorMsg);
-                                            return;
-                                        }
-                                        if (hasFieldError) clearErrorMsg('placeholder', errorMsg, setErrorMsg);
-                                        handleLocalChange('placeholder', e.target.value)
-                                    }}
-                                    onBlur={(e) => {
-                                        if (!hasError('placeholder', errorMsg)) updateElement(currentElement.id, 'placeholder', e.target.value);
-                                    }}
-                                    className={styleInputPanel}
-                                />
-                                <ErrorMsg errors={fieldErrorsMsg(errorMsg, 'placeholder')}/> 
-                            </div>
-                        }
-                        {hasValidationRules && (
-                        <div>
-                            {Object
-                                .keys(currentElement.validation)
-                                .map(key => {
-                                    switch (key) {
-                                        case 'min':
-                                            if (currentElement.type === 'date') return;
-                                            return (
-                                                <div className={elementWrapper} key={key}>
-                                                    <label htmlFor={minInputId} className={styleLabelPanel}>Min length</label>
-                                                    <input 
-                                                        id={minInputId} 
-                                                        value={liveCfg?.min ?? ''}
-                                                        type="number"
-                                                        step='1'
-                                                        onChange={(e) => {
-                                                            const hasFieldError = hasError('min', errorMsg);
-                                                            const value = Number(e.target.value) ? Number(e.target.value) : undefined;
-                                                            handleLocalChange('min', value);
-                        
-                                                            const MinSchema = IntNumberSchema('Min');
-                                                            const validation = MinSchema.safeParse(value);
-                                                            if (!validation.success) {
-                                                                if (!hasFieldError) addErrorMsg(validation, errorMsg, setErrorMsg);
-                                                                return;
-                                                            }
-                                                            else if (hasFieldError) {
-                                                                clearErrorMsg('min', errorMsg, setErrorMsg);
-                                                            }
-                                                        }}
-                                                        className={styleInputPanel}
-                                                    />
-                                                    <ErrorMsg errors={fieldErrorsMsg(errorMsg, 'min')}/> 
-                                                </div>
-                                        );  
-                                        case 'max':
-                                            if (currentElement.type === 'date') return;
-                                            return (
-                                                <div className={elementWrapper} key={key}>
-                                                    <label htmlFor={maxInputId} className={styleLabelPanel}>Max length</label>
-                                                    <input 
-                                                        id={maxInputId} 
-                                                        value={liveCfg?.max ?? ''}
-                                                        type='number'
-                                                        step='1'
-                                                        onChange={(e) => {
-                                                            const hasFieldError = hasError('max', errorMsg);
-                                                            const value = Number(e.target.value) ? Number(e.target.value) : undefined;
-                                                            handleLocalChange('max', value);
-
-                                                            const MaxSchema = IntNumberSchema('Max');
-                                                            const validation = MaxSchema.safeParse(value);
-                                                            
-                                                            if (!validation.success) {
-                                                                if (!hasFieldError) addErrorMsg(validation, errorMsg, setErrorMsg);
-                                                                return;
-                                                            }
-                                                            else if (hasFieldError) {
-                                                                clearErrorMsg('max', errorMsg, setErrorMsg);
-                                                            }
-                                                            }
-                                                        }
-                                                        className={styleInputPanel}
-                                                    />
-                                                    <ErrorMsg errors={fieldErrorsMsg(errorMsg, 'max')}/>  
-                                                </div>
-                                        ); 
-                                        case 'regex':
-                                            return (
-                                                <div className={elementWrapper} key={key}>
-                                                    <label htmlFor={regexInputId} className={styleLabelPanel}>Regex</label>
-                                                    <input 
-                                                        id={regexInputId} 
-                                                        placeholder='"[a-z]"'
-                                                        value={liveCfg?.regex ?? ''}
-                                                        onChange={(e) => {
-                                                            const hasFieldError = hasError('regex', errorMsg);
-                                                            const value = e.target.value;
-                                                            handleLocalChange('regex', value);
-                                                            const validation = RegexSchema.safeParse(value);
-                                         
-                                                            if (!validation.success) {
-                                                                if (!hasFieldError) addErrorMsg(validation, errorMsg, setErrorMsg);
-                                                                return;
-                                                            }
-
-                                                            if (hasFieldError) {
-                                                                clearErrorMsg('regex', errorMsg, setErrorMsg)
-                                                            }
-                                                        }}
-                                                        className={styleInputPanel}
-                                                    />
-                                                    <ErrorMsg errors={fieldErrorsMsg(errorMsg, 'regex')}/> 
-                                                </div>
-                                        ); 
-                                        case 'required':
-                                            return (
-                                                <div className={elementWrapper} key={key}>
-                                                    <label htmlFor={requiredInputId} className={styleLabelPanel}>Required</label>
-                                                       <select 
-                                                            id={requiredInputId} 
-                                                            value={liveCfg?.required ?? false}
-                                                            onChange={(e) => {
-                                                                const required = e.target.value === 'true' ? true : false;
-                                                                handleLocalChange('required', required);
-                                                                updateElement(currentElement.id, 'required', required);
-                                                            }}
-                                                            className={styleInputPanel}
-                                                        >
-                                                            <option value='true'>True</option>
-                                                            <option value='false'>False</option>
-                                                        </select>
-                                                </div>
-                                        ); 
-                                        case 'checked':
-                                            return (
-                                                <div key={key}>
-                                                    <div className={elementWrapper} key={`${key}-check-1`}>
-                                                        <label htmlFor={checkedInputId} className={styleLabelPanel}>Checked</label>
-                                                        <select 
-                                                            id={requiredInputId} 
-                                                            value={liveCfg?.checked ?? ''}
-                                                            onChange={(e) => {
-                                                                if (currentElement.type === 'radio') {
-                                                                    const needReset = Object.keys(formCfg)
-                                                                                            .filter(el => formCfg[el]?.name === liveCfg?.name && formCfg[el]?.name !== undefined)
-                                                                                            .length > 1 ? true : false;
-                                                                    if (needReset) {
-                                                                    resetCheckedAttr();    
-                                                                    };
-                                                                }
-                                                                const checked = e.target.value === 'true' ? true : false;
-                                                                handleLocalChange('checked', checked);
-                                                                updateElement(checkableElement.id, 'checked', checked);
-                                                            }}
-                                                            className={styleInputPanel}
-                                                        >
-                                                            <option value='true'>True</option>
-                                                            <option value='false'>False</option>
-                                                        </select>
-                                                    </div>
-                                                    <div className={elementWrapper} key={`${key}-check-2`}>
-                                                        <label htmlFor={`${checkedInputId}-value`} className={styleLabelPanel}>Value</label>
-                                                        <input 
-                                                            id={`${checkedInputId}-value`}
-                                                            value={liveCfg?.value ?? ''}
-                                                            onChange={(e) => {
-                                                                const value = e.target.value;
-                                                                handleLocalChange('value', value);
-                                                                const hasFieldError = hasError('value', errorMsg);
-                                                                const validation = RadioCheckboxValueSchema.safeParse(value);
-
-                                                                if (!validation.success) {
-                                                                    if (!hasFieldError) addErrorMsg(validation, errorMsg, setErrorMsg);
-                                                                    return;
-                                                                }
-                                                                if (hasFieldError) {
-                                                                    clearErrorMsg('value', errorMsg, setErrorMsg);
-                                                                }
-                                                                }
-                                                            }  
-                                                            className={styleInputPanel}
-                                                        />
-                                                        <ErrorMsg errors={fieldErrorsMsg(errorMsg, 'value')}/> 
-                                                    </div>
-                                                </div>
-                                        );
-                                    }
-                                })
                             }
+                            {currentElement.type === 'radio' &&
+                                <div>
+                                    <div className={elementWrapper}>
+                                        <label htmlFor={nameInputId} className={styleLabelPanel}>Group name</label>
+                                        <input 
+                                            id={nameInputId} 
+                                            value={liveCfg?.name ?? ''}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                handleLocalChange('name', value);
+
+                                                const validation = RadioGroupNameSchema.safeParse(value);
+                                                const hasFieldError = hasError('name', errorMsg);
+
+                                                if (!validation.success && value) {
+                                                    if (!hasFieldError) addErrorMsg(validation, errorMsg, setErrorMsg);
+                                                    return;
+                                                }
+                                                if (hasFieldError) clearErrorMsg('name', errorMsg, setErrorMsg);
+                                            }}
+                                            className={styleInputPanel}
+                                        />
+                                    </div>
+                                    <ErrorMsg errors={fieldErrorsMsg(errorMsg, 'name')}/> 
+                                </div>
+                            }
+                            {['text', 'number', 'email', 'date', 'password'].includes(currentElement.type) && 
+                                <div className={elementWrapper}>
+                                    <label htmlFor={typeInputId} className={styleLabelPanel}>Type</label>
+                                    <select 
+                                        id={typeInputId} 
+                                        value={currentElement.type}
+                                        onChange={(e) => {
+                                            const newType = e.target.value;
+                                            handleLocalChange('type', newType);
+                                            updateElement(currentElement.id, 'type', newType);
+                                        }}
+                                        className={`${styleInputPanel} w-full`}
+                                    >
+                                        <option value='text'>Text</option>
+                                        <option value='email'>Email</option>
+                                        <option value='password'>Password</option>
+                                        <option value='number'>Number</option>
+                                        <option value='date'>Date</option>
+                                    </select>
+                                </div>
+                            }
+                            {(currentElement.type === 'text' || currentElement.type === 'textarea') &&
+                                <div>
+                                    <div className={elementWrapper}>
+                                        <label htmlFor={placeholderInputId} className={styleLabelPanel}>Placeholder</label>
+                                        <input
+                                            id={placeholderInputId}
+                                            value={liveCfg?.placeholder ?? ''}
+                                            onChange={(e) => {
+                                                const validation = PlaceholderSchema.safeParse(e.target.value);
+                                                const hasFieldError = hasError('placeholder', errorMsg);
+                                                if (!validation.success) {
+                                                    if (!hasFieldError) addErrorMsg(validation, errorMsg, setErrorMsg);
+                                                    return;
+                                                }
+                                                if (hasFieldError) clearErrorMsg('placeholder', errorMsg, setErrorMsg);
+                                                handleLocalChange('placeholder', e.target.value)
+                                            }}
+                                            onBlur={(e) => {
+                                                if (!hasError('placeholder', errorMsg)) updateElement(currentElement.id, 'placeholder', e.target.value);
+                                            }}
+                                            className={styleInputPanel}
+                                        />
+                                    </div>
+                                    <ErrorMsg errors={fieldErrorsMsg(errorMsg, 'placeholder')}/> 
+                                </div>
+                            }
+                            {hasValidationRules && (
+                            <div>
+                                {Object
+                                    .keys(currentElement.validation)
+                                    .map(key => {
+                                        switch (key) {
+                                            case 'min':
+                                                if (currentElement.type === 'date') return;
+                                                return (
+                                                    <div key={key}>
+                                                        <div className={elementWrapper}>
+                                                            <label htmlFor={minInputId} className={styleLabelPanel}>Min length</label>
+                                                            <input 
+                                                                id={minInputId} 
+                                                                value={liveCfg?.min ?? ''}
+                                                                type="number"
+                                                                step='1'
+                                                                onChange={(e) => {
+                                                                    const hasFieldError = hasError('min', errorMsg);
+                                                                    const value = Number(e.target.value) ? Number(e.target.value) : undefined;
+                                                                    handleLocalChange('min', value);
+                                
+                                                                    const MinSchema = IntNumberSchema('Min');
+                                                                    const validation = MinSchema.safeParse(value);
+                                                                    if (!validation.success) {
+                                                                        if (!hasFieldError) addErrorMsg(validation, errorMsg, setErrorMsg);
+                                                                        return;
+                                                                    }
+                                                                    else if (hasFieldError) {
+                                                                        clearErrorMsg('min', errorMsg, setErrorMsg);
+                                                                    }
+                                                                }}
+                                                                className={styleInputPanel}
+                                                            />
+                                                        </div>
+                                                        <ErrorMsg errors={fieldErrorsMsg(errorMsg, 'min')}/> 
+                                                    </div>
+                                            );  
+                                            case 'max':
+                                                if (currentElement.type === 'date') return;
+                                                return (
+                                                    <div key={key}>
+                                                        <div className={elementWrapper} >
+                                                            <label htmlFor={maxInputId} className={styleLabelPanel}>Max length</label>
+                                                            <input 
+                                                                id={maxInputId} 
+                                                                value={liveCfg?.max ?? ''}
+                                                                type='number'
+                                                                step='1'
+                                                                onChange={(e) => {
+                                                                    const hasFieldError = hasError('max', errorMsg);
+                                                                    const value = Number(e.target.value) ? Number(e.target.value) : undefined;
+                                                                    handleLocalChange('max', value);
+
+                                                                    const MaxSchema = IntNumberSchema('Max');
+                                                                    const validation = MaxSchema.safeParse(value);
+                                                                    
+                                                                    if (!validation.success) {
+                                                                        if (!hasFieldError) addErrorMsg(validation, errorMsg, setErrorMsg);
+                                                                        return;
+                                                                    }
+                                                                    else if (hasFieldError) {
+                                                                        clearErrorMsg('max', errorMsg, setErrorMsg);
+                                                                    }
+                                                                    }
+                                                                }
+                                                                className={styleInputPanel}
+                                                            />
+                                                        </div>
+                                                        <ErrorMsg errors={fieldErrorsMsg(errorMsg, 'max')}/>  
+                                                    </div>
+                                            ); 
+                                            case 'regex':
+                                                return (
+                                                    <div key={key}>
+                                                        <div className={elementWrapper} >
+                                                            <label htmlFor={regexInputId} className={styleLabelPanel}>Regex</label>
+                                                            <input 
+                                                                id={regexInputId} 
+                                                                placeholder='"[a-z]"'
+                                                                value={liveCfg?.regex ?? ''}
+                                                                onChange={(e) => {
+                                                                    const hasFieldError = hasError('regex', errorMsg);
+                                                                    const value = e.target.value;
+                                                                    handleLocalChange('regex', value);
+                                                                    const validation = RegexSchema.safeParse(value);
+                                                
+                                                                    if (!validation.success) {
+                                                                        if (!hasFieldError) addErrorMsg(validation, errorMsg, setErrorMsg);
+                                                                        return;
+                                                                    }
+
+                                                                    if (hasFieldError) {
+                                                                        clearErrorMsg('regex', errorMsg, setErrorMsg)
+                                                                    }
+                                                                }}
+                                                                className={styleInputPanel}
+                                                            />
+                                                        </div>
+                                                        <ErrorMsg errors={fieldErrorsMsg(errorMsg, 'regex')}/> 
+                                                    </div>
+                                            ); 
+                                            case 'required':
+                                                return (
+                                                    <div className={elementWrapper} key={key}>
+                                                        <label htmlFor={requiredInputId} className={styleLabelPanel}>Required</label>
+                                                        <select 
+                                                                id={requiredInputId} 
+                                                                value={liveCfg?.required ?? false}
+                                                                onChange={(e) => {
+                                                                    const required = e.target.value === 'true' ? true : false;
+                                                                    handleLocalChange('required', required);
+                                                                    updateElement(currentElement.id, 'required', required);
+                                                                }}
+                                                                className={styleInputPanel}
+                                                            >
+                                                                <option value='true'>True</option>
+                                                                <option value='false'>False</option>
+                                                            </select>
+                                                    </div>
+                                            ); 
+                                            case 'checked':
+                                                return (
+                                                    <div key={key}>
+                                                        <div className={elementWrapper} key={`${key}-check-1`}>
+                                                            <label htmlFor={checkedInputId} className={styleLabelPanel}>Checked</label>
+                                                            <select 
+                                                                id={requiredInputId} 
+                                                                value={liveCfg?.checked ?? ''}
+                                                                onChange={(e) => {
+                                                                    if (currentElement.type === 'radio') {
+                                                                        const needReset = Object.keys(formCfg)
+                                                                                                .filter(el => formCfg[el]?.name === liveCfg?.name && formCfg[el]?.name !== undefined)
+                                                                                                .length > 1 ? true : false;
+                                                                        if (needReset) {
+                                                                        resetCheckedAttr();    
+                                                                        };
+                                                                    }
+                                                                    const checked = e.target.value === 'true' ? true : false;
+                                                                    handleLocalChange('checked', checked);
+                                                                    updateElement(checkableElement.id, 'checked', checked);
+                                                                }}
+                                                                className={styleInputPanel}
+                                                            >
+                                                                <option value='true'>True</option>
+                                                                <option value='false'>False</option>
+                                                            </select>
+                                                        </div>
+                                                        <div key={`${key}-check-2`}>
+                                                            <div className={elementWrapper}>
+                                                                <label htmlFor={`${checkedInputId}-value`} className={styleLabelPanel}>Value</label>
+                                                                <input 
+                                                                    id={`${checkedInputId}-value`}
+                                                                    value={liveCfg?.value ?? ''}
+                                                                    onChange={(e) => {
+                                                                        const value = e.target.value;
+                                                                        handleLocalChange('value', value);
+                                                                        const hasFieldError = hasError('value', errorMsg);
+                                                                        const validation = RadioCheckboxValueSchema.safeParse(value);
+
+                                                                        if (!validation.success) {
+                                                                            if (!hasFieldError) addErrorMsg(validation, errorMsg, setErrorMsg);
+                                                                            return;
+                                                                        }
+                                                                        if (hasFieldError) {
+                                                                            clearErrorMsg('value', errorMsg, setErrorMsg);
+                                                                        }
+                                                                        }
+                                                                    }  
+                                                                    className={styleInputPanel}
+                                                                />
+                                                            </div>
+                                                            <ErrorMsg errors={fieldErrorsMsg(errorMsg, 'value')}/> 
+                                                        </div>
+                                                    </div>
+                                            );
+                                        }
+                                    })
+                                }
+                            </div>
+                            )}
                         </div>
-                        )}
+                        :
+
+                        <p className="p-3">Click on the element you want to edit</p>
+                    }
                     </form>
 
-                    :
+                  
 
-                    <p>Click on the element you want to edit</p>
-                }
             </aside>
         </div>
     )

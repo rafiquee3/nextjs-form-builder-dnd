@@ -26,6 +26,15 @@ interface ElementRendererProps {
     unregister: () => void;
 }
 
+/*
+   Wymuszenie obecności klas w kompilacji Tailwind CSS:
+   border-blue-300
+   border-red-300
+   border-orange-300
+   border-violet-300
+   border-gray-400
+*/
+
 export default function ElementRenderer({element, unregister}: ElementRendererProps) {
     const Component = componentMap[element.type];
     const id = element.id;

@@ -18,9 +18,7 @@ export default function TextInput({
     if (isPaletteItem) {
         return (
             <div className="bg-blue-300 p-4 flex" draggable={isDraggable}>
-           
-                    {label}
-
+                {label}
             </div>
         )
     }

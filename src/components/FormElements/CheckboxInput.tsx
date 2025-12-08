@@ -29,7 +29,7 @@ export default function CheckobxInput({
         <div className="grow flex gap-3">
             <label 
                 htmlFor={inputId} 
-                className={styleLabelElement}
+                className={`font-bold flex gap-1`}
             >
                 <p>{label}</p>
                 {required && <p className="text-red-400"> *</p>}
@@ -45,7 +45,7 @@ export default function CheckobxInput({
                                     type="checkbox"
                                     id={inputId}
                                     checked={checked}
-                                    className={styleInputElement}
+                                    className={`${styleInputElement}`}
                                     required={required}
                                     value={value}
                             />

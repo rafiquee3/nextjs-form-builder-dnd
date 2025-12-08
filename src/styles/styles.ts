@@ -16,5 +16,5 @@ export const styleLabelPanel = 'bg-black text-white p-3 rounded-l-lg';
 export const styleInputPanel = 'bg-white pl-2 grow rounded-r-lg';
 
 // Elements
-export const styleLabelElement = 'font-bold flex gap-1';
+export const styleLabelElement = 'font-bold flex gap-1 pb-2';
 export const styleInputElement = 'bg-[#F7F8FA] border-1 border-[#DEDFE0] rounded-md w-full p-3';

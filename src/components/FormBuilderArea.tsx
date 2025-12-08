@@ -68,7 +68,7 @@ export default function FormBuilderArea() {
     };
   
     return (
-        <div ref ={drop as any} className={`grow bg-gray-200 text-black ${isOver ? 'bg-green-200 text-black' : ''} h-full rounded-xl mb-2 overflow`}>
+        <div ref ={drop as any} className={`grow bg-gray-200 text-black ${isOver ? 'inset-border-blue' : ''} h-full rounded-xl mb-2 overflow`}>
             {toggleModal && 
             <ExportModal elements={formElements}/>
             }

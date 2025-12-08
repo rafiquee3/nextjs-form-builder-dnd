@@ -1,5 +1,5 @@
 'use client';
-import { styleContainer, styleInputElement, styleLabelElement } from "@/src/styles/styles";
+import { styleInputElement, styleLabelElement } from "@/src/styles/styles";
 import { TextInputProps } from "@/src/types/props/props";
 import { Controller, useFormContext } from "react-hook-form";
 
@@ -50,7 +50,7 @@ export default function TextareaInput({
                         >
                         </textarea>
                         {fieldState.error && (
-                            <p className="text-red-500 text-xs mt-1">{fieldState.error.message}</p>
+                            <p className="text-red-500 text-xs">{fieldState.error.message}</p>
                         )}
                     </div>
                 )}
