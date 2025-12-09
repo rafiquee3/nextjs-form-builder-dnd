@@ -2,10 +2,18 @@
 
 import { useFormBuilderStore } from "../store/useFormBuilderStore";
 import { styleBttnHead } from "../styles/styles";
+import { StatusFormMsg } from "./StatusFormMsg";
 
+const showToast = (mssg: string, status: string) => {
+    const store = useFormBuilderStore.getState();
+    store.showToast(mssg, status);
+}
 export function Header() {
     const setToggleModal = useFormBuilderStore(store => store.setToggleModal);
-
+    const showToast = useFormBuilderStore(store => store.showToast);
+    const hideToast = useFormBuilderStore(store => store.hideToast);
+    const formMsgStatus = useFormBuilderStore(store => store.formMsgStatus);
+    console.log('header rerender')
     return (
         <div className="flex bg-white">
             <div className="w-full bg-gray-200 m-2 h-14 rounded-xl flex">
@@ -23,6 +31,7 @@ export function Header() {
                 </div>
                 <div className="w-1/3"></div>
             </div>
+            <StatusFormMsg msg={formMsgStatus.msg} status={formMsgStatus.status} isVisible={formMsgStatus.isVisible} onClose={hideToast} duration={formMsgStatus.duration}/>
         </div>
     );
 }

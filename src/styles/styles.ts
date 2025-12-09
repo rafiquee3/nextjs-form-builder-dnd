@@ -13,7 +13,7 @@ export const styleBttnHead = 'py-2 px-6 rounded-lg hover:bg-green-200 cursor-poi
 // Properties Panel
 export const elementWrapper = 'p-2 flex';
 export const styleLabelPanel = 'bg-black text-white p-3 rounded-l-lg';
-export const styleInputPanel = 'bg-white pl-2 grow rounded-r-lg';
+export const styleInputPanel = 'bg-white pl-2 grow rounded-r-lg focus:outline-none focus:border-blue-500';
 
 // Elements
 export const styleLabelElement = 'font-bold flex gap-1 pb-2';

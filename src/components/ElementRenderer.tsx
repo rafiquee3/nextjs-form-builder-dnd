@@ -42,6 +42,8 @@ export default function ElementRenderer({element, unregister}: ElementRendererPr
     const selectElement = useFormBuilderStore(store => store.selectElement);
     const moveItem = useFormBuilderStore(store => store.moveElement);
     const remCfgItem = useFormBuilderStore(store => store.remItemCfg);
+    const showToast = useFormBuilderStore(store => store.showToast);
+    const clearSyncData = useFormBuilderStore(store => store.clearSyncData);
     const errorsMsgArr = element.validation.errors;
     const formElements = useFormBuilderStore(store => store.elements);
     const index = formElements.findIndex(el => el.id === id);
@@ -71,7 +73,6 @@ export default function ElementRenderer({element, unregister}: ElementRendererPr
             break;
     }
     const borderColor = `border-${widgetColor}`;
-    console.log('colorB', borderColor)
     const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
         const buttonAction =  (e.target as HTMLElement).closest('button');
@@ -82,6 +83,8 @@ export default function ElementRenderer({element, unregister}: ElementRendererPr
                     remItem(id);
                     remCfgItem(id);
                     unregister();
+                    showToast('Element has been removed.', 'success');
+                    clearSyncData();
                     break;
                 case '⬆':
                     moveItem(id, 'up');
@@ -104,7 +107,7 @@ export default function ElementRenderer({element, unregister}: ElementRendererPr
     }, []);
 
     return (
-        <div className="mb-4 relative z-0" onClick={handleClick}>
+        <div className="mb-4 relative z-0 min-w-[233px]" onClick={handleClick}>
             <div className={`flex bg-${widgetColor} py-[5px] px-3 rounded-t-lg w-[230px] z-999 -mb-[1px] z-1 relative flex justify-between`}>
                 <div className="px-6">
                     <h3>{element.type.toUpperCase()}</h3>

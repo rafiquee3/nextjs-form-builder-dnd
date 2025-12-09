@@ -4,15 +4,14 @@ import { useDrop } from "react-dnd";
 import { useFormBuilderStore } from "../store/useFormBuilderStore";
 import ElementRenderer from "./ElementRenderer";
 import { ItemTypes } from "./Palette";
-import { DropItem, SyncData, ValError } from "../types/FormElement";
+import { DropItem, ValError } from "../types/FormElement";
 import { useForm, FormProvider } from 'react-hook-form';
 import { getRHFDefaultValues } from "../utils/getRHFDefaultValues";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { getSyncData } from "../utils/getSyncData";
 import { schemaGenerator } from "../utils/schemaGenerator";
 import { ExportModal } from "./ExportModal";
-import { styleBttn, styleBttnHead } from "../styles/styles";
-import { StatusFormMsg } from "./StatusFormMsg";
+import { styleBttn } from "../styles/styles";
 
 export default function FormBuilderArea() {
     const formElements = useFormBuilderStore((store) => store.elements);
@@ -21,26 +20,11 @@ export default function FormBuilderArea() {
     const setSyncData = useFormBuilderStore(store => store.setSyncData);
     const defaultValues = useMemo(() => getRHFDefaultValues(formElements), [formElements]);
     const toggleModal = useFormBuilderStore(store => store.toggleModal);
+    const showToast = useFormBuilderStore(store => store.showToast);
 
-    const [statusFormMsg, setStatusFormMsg] = useState({ 
-        isVisible: false, 
-        msg: '', 
-        status: 'success', 
-        duration: 3000 
-    });
-
-    const showStatusMsg = (msg: string, status: string, duration = 3000) => {
-        setStatusFormMsg({ isVisible: true, msg, status, duration });
-    };
-    
-    const hideToast = () => {
-        setStatusFormMsg(prev => ({ ...prev, isVisible: false }));
-    };
-    
     const methods = useForm({
         mode: 'onSubmit',
         reValidateMode: 'onSubmit',
-        //resolver: zodResolver(), 
         defaultValues: defaultValues,
     });
 
@@ -51,6 +35,7 @@ export default function FormBuilderArea() {
         drop: (item: DropItem, monitor) => {
             if (monitor.didDrop()) return;
             addElement(item.type);
+            showToast(`Element ${item.type} added.`, 'success');
         },
 
         collect: (monitor) => ({
@@ -59,7 +44,7 @@ export default function FormBuilderArea() {
         }),
     }), [addElement]);
 
-    const onSubmit = (data:any) => {
+    const onSubmit = (data: any) => {
         if (!formElements.length) return;
         setSyncData(data);
         const syncData = getSyncData(data, formElements);
@@ -77,26 +62,25 @@ export default function FormBuilderArea() {
         });
   
         if (errors.length) {
-            showStatusMsg('The form failed validation.', 'error');
+            showToast('The form failed validation.', 'error');
             setErrors(errors);
             return;
         }
-        showStatusMsg('The form passed validation successfully.', 'success');
+        showToast('The form passed validation successfully.', 'success');
         setErrors([]);
     };
-  
+
     return (
-        <div ref ={drop as any} className={`grow bg-gray-200 h-[calc(100vh-80px)] overflow-hidden] text-black ${isOver ? 'inset-border-blue' : ''}  rounded-xl mb-2 shadow-sm`}>
+        <div ref ={drop as any} className={`grow-1 bg-gray-200 h-[calc(100vh-80px)] overflow-hidden text-black ${isOver ? 'inset-border-blue' : ''}  rounded-xl mb-2 shadow-sm flex-col items-center`}>
             {toggleModal && 
             <ExportModal elements={formElements}/>
             }
-            <StatusFormMsg msg={statusFormMsg.msg} status={statusFormMsg.status} isVisible={statusFormMsg.isVisible} onClose={hideToast} duration={statusFormMsg.duration}/>
             <form onSubmit={handleSubmit(onSubmit)} className="py-10 px-30 h-full overflow-y-scroll flex flex-col">
                     <FormProvider {...methods}>
                         {formElements.map(el => (<ElementRenderer key={el.id} element={el} unregister={unregister}/>))}
                     </FormProvider>
                     {formElements.length ? 
-                        <button className={`${styleBttn} bg-white border-1 border-black py-3`} type='submit'>Submit</button>
+                        <button className={`${styleBttn} bg-white border-1 py-3 shadow-md mt-1 min-w-[233px]`} type='submit'>Submit</button>
                     
                         :
                         

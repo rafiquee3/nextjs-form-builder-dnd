@@ -7,7 +7,6 @@ import { FormElement } from "../types/FormElement";
 import Highlight from 'react-highlight'
 import '../styles/atom-one-dark.css'
 import { menuActive, menuDefault, styleBttn } from "../styles/styles";
-
 import * as prettier from "prettier/standalone"
 import parserBabel from "prettier/plugins/babel";
 import * as prettierPluginEstree from "prettier/plugins/estree";
@@ -18,21 +17,25 @@ interface ExportModalProps {
 }
 
 export function ExportModal({elements}: ExportModalProps) {
-    const [htmlContent, setHtmlContent] = useState<string | null>(null);
+    const [htmlContent, setHtmlContent] = useState<string>('');
     const [syntax, setSyntax] = useState<string>('html');
     const syncData = useFormBuilderStore(store => store.syncData);
     const [aciveBttn, setActiveBttn] = useState('html');
     const setToggleModal = useFormBuilderStore(store => store.setToggleModal);
+    const showToast = useFormBuilderStore(store => store.showToast);
+    const isContentEmpty = elements.length ? false : true;
 
     const handleCopy = () => {
-        if (!htmlContent) return;
+        if (isContentEmpty) return showToast('No content.', 'error');
+        if (htmlContent.startsWith('Form submission')) return showToast('Submit the form.', 'error');
         navigator.clipboard.writeText(htmlContent)
-            .then(() => console.log('HTML copied to clipboard!'))
-            .catch(err => console.error('Failed to copy text'));
+            .then(() => showToast('Copied to clipboard', 'success'))
+            .catch(err => showToast('Submit the form.', 'error'));
     };
 
     const handleSave = () => {
-        if (!htmlContent) return;
+        if (isContentEmpty) return showToast('Downloading filed.', 'error');
+        if (htmlContent.startsWith('Form submission')) return showToast('Submit the form.', 'error');
         const blob = new Blob([htmlContent], {type: 'text/html;charset=utf-8'});
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -45,6 +48,7 @@ export function ExportModal({elements}: ExportModalProps) {
         
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
+        showToast('Downloading file generatedForm.html', 'success');
     };
 
     const handleHTML =  async () => {
@@ -146,7 +150,7 @@ export function ExportModal({elements}: ExportModalProps) {
                         </button>
                     </div>
                     <div className="flex justify-end gap-2 w-1/3">
-                        <button className={`${styleBttn}`} onClick={handleCopy} disabled={htmlContent ? false : true}>
+                        <button className={`${styleBttn}`} onClick={handleCopy}>
                             Copy
                         </button>
                         <button className={`${styleBttn} mr-5`} disabled={htmlContent ? false : true} onClick={handleSave}>

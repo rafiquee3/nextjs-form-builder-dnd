@@ -23,7 +23,7 @@ export default function PalettePanel() {
     };
 
     return (
-        <div className=" w-[300px] bg-gray-200 m-2 mt-0 rounded-xl text-white">
+        <div className=" w-[300px] bg-gray-200 m-2 mt-0 rounded-xl text-white flex-shrink-0">
             <h2 className="p-3 bg-white border-1 border-gray-200 rounded-t-xl text-black">Palette Panel</h2>
             <aside>
                 <ul>

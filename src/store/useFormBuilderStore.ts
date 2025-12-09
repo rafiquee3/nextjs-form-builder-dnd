@@ -46,6 +46,12 @@ type FormBuilderState = {
     formCfg: any;
     syncData: SyncData;
     toggleModal: boolean;
+    formMsgStatus: {
+                      isVisible: boolean, 
+                      msg: string, 
+                      status: string, 
+                      duration: number,
+                   };
 };
 
 type FormBuilderActions = {
@@ -63,6 +69,11 @@ type FormBuilderActions = {
     setValErrors: (errors: ValError[]) => void;
     setSyncData: (submitData: {[key: string]: FormElement}) => void;
     setToggleModal: () => void;
+    setStatusMsg: (msg: string, status: string, isVisible: boolean, duration?: number) => void;
+    showToast: (msg: string, status: string) => void;
+    hideToast: () => void;
+    clearSyncData: () => void;
+
 }
 
 export const useFormBuilderStore = create<FormBuilderState & FormBuilderActions>((set, get) => ({
@@ -71,6 +82,12 @@ export const useFormBuilderStore = create<FormBuilderState & FormBuilderActions>
   formCfg: {},
   syncData: [],
   toggleModal: false,
+  formMsgStatus: {
+                    isVisible: false, 
+                    msg: '', 
+                    status: 'success', 
+                    duration: 3000,
+  },
 
   addElement: (type: FormElement['type']) => set((state) => ({elements: [...state.elements, CreateElement(type)]})),
   remElement: (id: FormElement['id']) => set((state) => {
@@ -190,7 +207,6 @@ export const useFormBuilderStore = create<FormBuilderState & FormBuilderActions>
       });
       const errMsgArr = hasError ? hasError.msg : [];
 
-    
       return {
           ...el, 
           validation: {
@@ -215,6 +231,19 @@ export const useFormBuilderStore = create<FormBuilderState & FormBuilderActions>
       }
     )
   }),
+  clearSyncData: () => set({syncData: []}),
   setToggleModal: () => set((state) => {
     return {toggleModal: !state.toggleModal}}),
+  setStatusMsg: (msg: string, status: string, isVisible: boolean, duration = 3000) => set(state => {
+    return (
+      { formMsgStatus: {
+                          isVisible, 
+                          msg, 
+                          status, 
+                          duration,
+                        }
+      }
+  )}),
+  showToast: (msg: string, status: string, duration?: number) => get().setStatusMsg(msg, status, true, duration || 3000),
+  hideToast: () => get().setStatusMsg(get().formMsgStatus.msg, get().formMsgStatus.status, false),
 }));

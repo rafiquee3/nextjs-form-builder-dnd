@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 
 export function StatusFormMsg({msg, status, duration = 3000, isVisible, onClose}: {msg: string, status: string, duration: number, isVisible: boolean, onClose: () => void}) {
-    const statusClasses = status === 'success' ? 'border-green-500 bg-green-200 tex-green-600' : 'border-red-500 bg-red-200 text-red-500';
+    const statusClasses = status === 'success' ? 'border-green-500 bg-green-200 text-green-600' : 'border-red-500 bg-red-200 text-red-500';
     const transitionClasses = isVisible
         ? '-translate-x-5 opacity-100' 
-        : 'translate-x-1/1 opacity-30';
+        : 'translate-x-1/1 opacity-0';
 
     useEffect(() => {
         if (isVisible && duration > 0) {
