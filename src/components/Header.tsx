@@ -13,9 +13,9 @@ export function Header() {
                     <p>🌐</p>
                     <h2 className="text-xl">Form Generator</h2>
                 </div>
-                <div className="w-1/3 flex items-center justify-center text-black ">
-                    <div className="bg-white rounded-lg flex">
-                        <button className="bg-blue-200 py-2 px-6 rounded-lg">Form</button>
+                <div className="w-1/3 flex items-center justify-center text-black">
+                    <div className="bg-white rounded-lg flex shadow-md">
+                        <button className="bg-blue-200 py-2 px-6 rounded-lg shadow-md">Form</button>
                         <button className={styleBttnHead} onClick={() => setToggleModal()}>Export</button>
                         <button className={styleBttnHead}>Load</button>
                         <button className={styleBttnHead}>Save</button>

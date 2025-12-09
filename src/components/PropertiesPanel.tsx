@@ -6,6 +6,7 @@ import { IntNumberSchema, LabelSchema, OptionSchema, PlaceholderSchema, RadioChe
 import { addErrorMsg, clearErrorMsg } from "../utils/errorMsgUtils";
 import { ErrorMsg } from "./ErrorMsg";
 import { elementWrapper, styleBttn, styleBttnHead, styleInputPanel, styleLabelPanel } from "../styles/styles";
+import { StatusFormMsg } from "./StatusFormMsg";
 
 const fieldErrorsMsg = (errorMsg: string[], field: string) => {
     if (!errorMsg.length) return [];
@@ -34,6 +35,21 @@ export default function PropertiesPanel() {
     const handleLocalChange =  useCallback((field: string, value: any) => {
         updateFormCfg(selectedId, field, value);
     }, [selectedId, updateFormCfg]);
+
+    const [statusFormMsg, setStatusFormMsg] = useState({ 
+        isVisible: false, 
+        msg: '', 
+        status: 'success', 
+        duration: 3000 
+    });
+
+    const showStatusMsg = (msg: string, status: string, duration = 3000) => {
+        setStatusFormMsg({ isVisible: true, msg, status, duration });
+    };
+    
+    const hideToast = () => {
+        setStatusFormMsg(prev => ({ ...prev, isVisible: false }));
+    };
 
     const formCfg = useFormBuilderStore(store => store.formCfg); 
     const initializeCfg = useFormBuilderStore(store => store.initializeCfg);
@@ -88,6 +104,7 @@ export default function PropertiesPanel() {
                 if (inputValue && !hasDuplicates && !hasError('option', errorMsg)) {
                     updateElement(currentElement.id, 'options', [...currentOptions, inputValue]);
                     optionsInputRef.current.value = '';
+                    showStatusMsg('Option added successfully.', 'success');
                 }
             } else if (buttonAction.id === 'remOptBttn' && optionsSelectRef.current) {
                 const selectValue = optionsSelectRef.current.value;
@@ -96,6 +113,7 @@ export default function PropertiesPanel() {
                 if (selectValue && hasDuplicates) {
                     updateElement(currentElement.id, 'options', [...currentOptions.filter((opt: string) => opt !== selectValue)]);
                     optionsSelectRef.current.value = '';
+                     showStatusMsg('Successfully removed option..', 'success');
                 }
             }   
         }
@@ -103,15 +121,17 @@ export default function PropertiesPanel() {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (errorMsg.length) return;
+        if (errorMsg.length) return showStatusMsg('Problem saving changes.', 'error');
 
         syncDataInStore(selectedId);
+        showStatusMsg('Changes saved successfully.', 'success');
         console.log('saved')
 
     }
     console.log('err', errorMsg)
     return (
         <div className="w-[350px] bg-gray-200 text-black rounded-xl m-2 mt-0">
+            <StatusFormMsg msg={statusFormMsg.msg} status={statusFormMsg.status} isVisible={statusFormMsg.isVisible} onClose={hideToast} duration={statusFormMsg.duration}/>
             <aside>
                     <form key={selectedId} onSubmit={handleSubmit} className="">
                         <div className="flex bg-white border-1 border-gray-200 rounded-t-xl items-between justify-between">

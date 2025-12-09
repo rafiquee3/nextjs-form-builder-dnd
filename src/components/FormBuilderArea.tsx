@@ -12,6 +12,7 @@ import { getSyncData } from "../utils/getSyncData";
 import { schemaGenerator } from "../utils/schemaGenerator";
 import { ExportModal } from "./ExportModal";
 import { styleBttn, styleBttnHead } from "../styles/styles";
+import { StatusFormMsg } from "./StatusFormMsg";
 
 export default function FormBuilderArea() {
     const formElements = useFormBuilderStore((store) => store.elements);
@@ -20,6 +21,21 @@ export default function FormBuilderArea() {
     const setSyncData = useFormBuilderStore(store => store.setSyncData);
     const defaultValues = useMemo(() => getRHFDefaultValues(formElements), [formElements]);
     const toggleModal = useFormBuilderStore(store => store.toggleModal);
+
+    const [statusFormMsg, setStatusFormMsg] = useState({ 
+        isVisible: false, 
+        msg: '', 
+        status: 'success', 
+        duration: 3000 
+    });
+
+    const showStatusMsg = (msg: string, status: string, duration = 3000) => {
+        setStatusFormMsg({ isVisible: true, msg, status, duration });
+    };
+    
+    const hideToast = () => {
+        setStatusFormMsg(prev => ({ ...prev, isVisible: false }));
+    };
     
     const methods = useForm({
         mode: 'onSubmit',
@@ -61,18 +77,21 @@ export default function FormBuilderArea() {
         });
   
         if (errors.length) {
+            showStatusMsg('The form failed validation.', 'error');
             setErrors(errors);
             return;
         }
+        showStatusMsg('The form passed validation successfully.', 'success');
         setErrors([]);
     };
   
     return (
-        <div ref ={drop as any} className={`grow bg-gray-200 text-black ${isOver ? 'inset-border-blue' : ''} h-full rounded-xl mb-2 overflow`}>
+        <div ref ={drop as any} className={`grow bg-gray-200 h-[calc(100vh-80px)] overflow-hidden] text-black ${isOver ? 'inset-border-blue' : ''}  rounded-xl mb-2 shadow-sm`}>
             {toggleModal && 
             <ExportModal elements={formElements}/>
             }
-            <form onSubmit={handleSubmit(onSubmit)} className="py-13 px-30 h-full overflow flex flex-col">
+            <StatusFormMsg msg={statusFormMsg.msg} status={statusFormMsg.status} isVisible={statusFormMsg.isVisible} onClose={hideToast} duration={statusFormMsg.duration}/>
+            <form onSubmit={handleSubmit(onSubmit)} className="py-10 px-30 h-full overflow-y-scroll flex flex-col">
                     <FormProvider {...methods}>
                         {formElements.map(el => (<ElementRenderer key={el.id} element={el} unregister={unregister}/>))}
                     </FormProvider>

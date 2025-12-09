@@ -13,7 +13,7 @@ export default function BuilderPage() {
         setIsMounted(true);
     }, []);
   return (
-    <main className="grow flex w-full bg-white ">
+    <main className="grow flex w-full bg-white h-full">
       {isMounted &&
         <DndProvider backend={HTML5Backend}>
           <PalettePanel/>

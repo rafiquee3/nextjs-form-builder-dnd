@@ -115,7 +115,7 @@ export default function ElementRenderer({element, unregister}: ElementRendererPr
                     <button>⌫</button>
                 </div>
             </div>
-            <div key={id} className={`flex bg-white border-1 border border-dashed ${borderColor} hover:border-black rounded-lg rounded-tl-none p-4 pb-5`} onClick={handleClick}>
+            <div key={id} className={`flex bg-white border-1 border border-dashed ${borderColor} hover:border-black rounded-lg rounded-tl-none p-4 pb-5 shadow-md`} onClick={handleClick}>
                 <Component {...element as any} type={element.type} required={element.required}/>
             </div>
             <ErrorMsg errors={errorsMsgArr}/>

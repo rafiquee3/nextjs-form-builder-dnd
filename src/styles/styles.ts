@@ -8,7 +8,7 @@ export const menuActive = 'cursor-pointer text-[#18780C]';
 export const menuDefault = 'cursor-pointer hover:text-[#18780C]'
 
 // Header
-export const styleBttnHead = 'py-2 px-6 rounded-lg hover:bg-green-200 cursor-pointer';
+export const styleBttnHead = 'py-2 px-6 rounded-lg hover:bg-green-200 cursor-pointer hover:shadow-md';
 
 // Properties Panel
 export const elementWrapper = 'p-2 flex';
