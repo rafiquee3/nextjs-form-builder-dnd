@@ -2,18 +2,39 @@
 
 import { useFormBuilderStore } from "../store/useFormBuilderStore";
 import { styleBttnHead } from "../styles/styles";
+import { exportToJson } from "../utils/exportToJson";
+import LoadJsonBttn from "./LoadBttn";
 import { StatusFormMsg } from "./StatusFormMsg";
 
-const showToast = (mssg: string, status: string) => {
-    const store = useFormBuilderStore.getState();
-    store.showToast(mssg, status);
-}
 export function Header() {
     const setToggleModal = useFormBuilderStore(store => store.setToggleModal);
     const showToast = useFormBuilderStore(store => store.showToast);
     const hideToast = useFormBuilderStore(store => store.hideToast);
     const formMsgStatus = useFormBuilderStore(store => store.formMsgStatus);
-    console.log('header rerender')
+    const elements = useFormBuilderStore(store => store.elements);
+    const isEmptyForm = elements.length ? false : true;
+
+    const handleSave = () => {
+        if (isEmptyForm) return showToast('Empty form.', 'error');
+        const jsonData = exportToJson(elements);
+        const blob = new Blob([JSON.stringify(jsonData)], {
+            type: "application/json",
+        });
+     
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        
+        link.href = url;
+        link.download = 'dataForm.json';
+
+        document.body.appendChild(link);
+        link.click();
+        
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        showToast('Downloading file dataForm.json', 'success');
+    };
+
     return (
         <div className="flex bg-white">
             <div className="w-full bg-gray-200 m-2 h-14 rounded-xl flex">
@@ -25,8 +46,8 @@ export function Header() {
                     <div className="bg-white rounded-lg flex shadow-md">
                         <button className="bg-blue-200 py-2 px-6 rounded-lg shadow-md">Form</button>
                         <button className={styleBttnHead} onClick={() => setToggleModal()}>Export</button>
-                        <button className={styleBttnHead}>Load</button>
-                        <button className={styleBttnHead}>Save</button>
+                        <LoadJsonBttn />
+                        <button className={styleBttnHead} onClick={handleSave}>Save</button>
                     </div>
                 </div>
                 <div className="w-1/3"></div>
