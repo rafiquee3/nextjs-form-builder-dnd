@@ -59,7 +59,7 @@ export function ExportModal({elements}: ExportModalProps) {
 
         const formattedCode = await prettier.format(rawHTML, {semi: false, 
                                                             parser: "html", 
-                                                            plugins: [parserHtml, prettierPluginEstree],
+                                                            plugins: [parserHtml, prettierPluginEstree as any],
                                                             trailingComma: "all",
                                                             singleQuote: false,
                                                             printWidth: 90,
@@ -76,7 +76,7 @@ export function ExportModal({elements}: ExportModalProps) {
         console.log('raw', rawHTML)
         const formattedCode = await prettier.format(rawHTML, {semi: false, 
                                                             parser: "babel", 
-                                                            plugins: [parserBabel, prettierPluginEstree],
+                                                            plugins: [parserBabel, prettierPluginEstree as any],
                                                             trailingComma: "all",
                                                             singleQuote: false,
                                                             printWidth: 90,
@@ -92,7 +92,7 @@ export function ExportModal({elements}: ExportModalProps) {
         const rawHTML = generateSchemaHTML(syncData);
         const formattedCode = await prettier.format(rawHTML, {semi: false, 
                                                             parser: "babel", 
-                                                            plugins: [parserBabel, prettierPluginEstree],
+                                                            plugins: [parserBabel, prettierPluginEstree as any],
                                                             trailingComma: "all",
                                                             singleQuote: false,
                                                             printWidth: 90,
@@ -108,7 +108,7 @@ export function ExportModal({elements}: ExportModalProps) {
         const getCode = async () => {
             const formattedCode = await prettier.format(rawHTML, {semi: false, 
                                                             parser: "html", 
-                                                            plugins: [parserHtml, prettierPluginEstree],
+                                                            plugins: [parserHtml, prettierPluginEstree as any],
                                                             trailingComma: "all",
                                                             singleQuote: false,
                                                             printWidth: 90,

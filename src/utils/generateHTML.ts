@@ -237,7 +237,7 @@ export function generateRHFComponents(elements: FormElement[], controlName: stri
 }
 
 export function generateSchemaHTML(syncData: SyncData) {
-    if (!syncData.length) return null;
+    if (!syncData.length) return '';
 
     let objSchema = '';
 

@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+@theme {
+  --breakpoint-xs: 30rem;
+  --breakpoint-2xl: 100rem;
+  --breakpoint-3xl: 120rem;
+  --breakpoint-desktop: 1154px;
+  --breakpoint-areaM: 960px;
+  --breakpoint-tablet: 720px;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -22,10 +31,6 @@
 body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
-}
-
-ul li {
-  margin-bottom: 15px;
 }
 
 .inset-border-blue {

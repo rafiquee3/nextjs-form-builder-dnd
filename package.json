@@ -6,15 +6,15 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "css:init": "node ./node_modules/.bin/tailwindcss init -p"
   },
   "dependencies": {
-    "next": "16.0.5",
-    "postcss": "^8.5.6",
-    "react": "19.2.0",
+    "next": "^16.0.8",
+    "react": "^19.2.1",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
-    "react-dom": "19.2.0",
+    "react-dom": "^19.2.1",
     "react-highlight": "^0.15.0",
     "react-hook-form": "^7.67.0",
     "zod": "^4.1.13",
@@ -27,8 +27,10 @@
     "@types/react-dom": "^19",
     "@types/react-highlight": "^0.12.8",
     "@types/react-syntax-highlighter": "^15.5.13",
+    "autoprefixer": "^10.4.22",
     "eslint": "^9",
     "eslint-config-next": "16.0.5",
+    "postcss": "^8.5.6",
     "prettier": "^3.7.4",
     "tailwindcss": "^4.1.17",
     "typescript": "^5"

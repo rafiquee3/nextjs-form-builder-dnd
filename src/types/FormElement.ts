@@ -1,12 +1,5 @@
-export interface ValidationRules {
-    min: number | undefined;
-    max: number | undefined;
-    regex: string | undefined;
-    required: boolean | undefined;
-    checked: boolean | undefined;
-    errors: string[];
-}
-
+export type ValidationRules = {[key: string]: any}
+  
 export type BaseElement = {
     id: string;
     type: 'text' | 'checkbox' | 'select' | 'textarea' | 'radio' | 'email' | 'password' | 'number' | 'date';

@@ -16,7 +16,7 @@ export default function DraggableElement({elementProps, children}: DraggableElem
     return (
         <li 
             ref={ drag as any} 
-            className={``}
+            className=""
         >
             {children}
         </li>

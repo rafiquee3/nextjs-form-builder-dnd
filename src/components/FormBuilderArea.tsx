@@ -28,7 +28,7 @@ export default function FormBuilderArea() {
         defaultValues: defaultValues,
     });
 
-    const {handleSubmit, reset, unregister} = methods;
+    const {handleSubmit, unregister} = methods;
 
     const [{ isOver }, drop] = useDrop(() => ({
         accept: ItemTypes.FORM_ELEMENT,
@@ -71,11 +71,11 @@ export default function FormBuilderArea() {
     };
 
     return (
-        <div ref ={drop as any} className={`grow-1 bg-gray-200 h-[calc(100vh-80px)] overflow-hidden text-black ${isOver ? 'inset-border-blue' : ''}  rounded-xl mb-2 shadow-sm flex-col items-center`}>
+        <div ref ={drop as any} className={`grow-1 bg-gray-200 tablet:h-[calc(100vh-80px)] overflow-hidden text-black ${isOver ? 'inset-border-blue' : ''}  rounded-xl tablet:mb-2 shadow-sm flex-col items-center`}>
             {toggleModal && 
             <ExportModal elements={formElements}/>
             }
-            <form onSubmit={handleSubmit(onSubmit)} className="py-10 px-30 h-full overflow-y-scroll flex flex-col">
+            <form onSubmit={handleSubmit(onSubmit)} className=" py-3 tablet:py-10 max-tablet:px-2 areaM:px-30 h-full overflow-y-scroll flex flex-col">
                     <FormProvider {...methods}>
                         {formElements.map(el => (<ElementRenderer key={el.id} element={el} unregister={unregister}/>))}
                     </FormProvider>
@@ -85,7 +85,8 @@ export default function FormBuilderArea() {
                         :
                         
                         <div>
-                            <p className="text-center">Drag the element from the PalettePanel and drop it onto the workspace.</p>
+                            <p className="text-center max-tablet:hidden">Drag the element from the PalettePanel and drop it onto the workspace.</p>
+                            <p className="text-center tablet:hidden">Add an element from the palette panel.</p>
                         </div>
                     }
             </form>

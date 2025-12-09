@@ -37,10 +37,10 @@ export function Header() {
 
     return (
         <div className="flex bg-white">
-            <div className="w-full bg-gray-200 m-2 h-14 rounded-xl flex">
+            <div className="w-full bg-gray-200 max-tablet: my-2 tablet:m-2 h-14 rounded-xl flex">
                 <div className="flex items-center w-1/3 h-full text-black pl-10 gap-3">
                     <p>🌐</p>
-                    <h2 className="text-xl">Form Generator</h2>
+                    <h2 className="text-xl hidden areaM:block">Form Generator</h2>
                 </div>
                 <div className="w-1/3 flex items-center justify-center text-black">
                     <div className="bg-white rounded-lg flex shadow-md">

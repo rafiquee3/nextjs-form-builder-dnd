@@ -198,7 +198,7 @@ export const useFormBuilderStore = create<FormBuilderState & FormBuilderActions>
       }
     )
   }),
-  setValErrors: (errors: ValError[]) => set((state) => {
+  setValErrors: (errors: ValError[]) => set((state): any => {
     if (!state.elements.length) return;
     const updatedData = state.elements.map(el => {
       const hasError = errors.find(err => {
