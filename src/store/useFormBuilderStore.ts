@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { FormElement, FormElementKeys, SyncData, ValError } from '../types/FormElement';
 import { getSyncData } from '../utils/getSyncData';
+import { persist, createJSONStorage } from 'zustand/middleware'
 
 
 function CreateElement(type: FormElement['type']): FormElement {
@@ -75,8 +76,8 @@ type FormBuilderActions = {
     clearSyncData: () => void;
 
 }
-
-export const useFormBuilderStore = create<FormBuilderState & FormBuilderActions>((set, get) => ({
+type CartStore = FormBuilderState & FormBuilderActions;
+export const useFormBuilderStore = create<CartStore>()(persist((set, get) => ({
   elements: [],
   selectedId: null,
   formCfg: {},
@@ -246,4 +247,9 @@ export const useFormBuilderStore = create<FormBuilderState & FormBuilderActions>
   )}),
   showToast: (msg: string, status: string, duration?: number) => get().setStatusMsg(msg, status, true, duration || 3000),
   hideToast: () => get().setStatusMsg(get().formMsgStatus.msg, get().formMsgStatus.status, false),
-}));
+}),
+    {
+      name: 'e-form-gen-storage', 
+      storage: createJSONStorage(() => localStorage), 
+    }
+));
