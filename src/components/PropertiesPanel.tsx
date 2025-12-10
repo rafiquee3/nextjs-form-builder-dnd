@@ -114,7 +114,7 @@ export default function PropertiesPanel() {
     }
  
     return (
-        <div className="desktop:w-[350px] bg-gray-200 text-black rounded-xl max-tablet:w-full tablet:m-2 mt-0 flex-shrink-0">
+        <div className="desktop:w-[350px] bg-gray-200 text-black rounded-xl max-tablet:w-full tablet:m-2 tablet:mt-0 flex-shrink-0">
             <aside>
                     <form key={selectedId} onSubmit={handleSubmit} className="">
                         <div className="flex bg-white border-1 border-gray-200 rounded-t-xl items-between justify-between">

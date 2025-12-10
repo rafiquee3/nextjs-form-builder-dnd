@@ -120,12 +120,13 @@ export function ExportModal({elements}: ExportModalProps) {
     } , []);
     
     return (
-        <div className="modal-cnt fixed inset-0 bg-black/0 flex justify-center items-center z-50">
-            <div className="modal-content w-[70%] h-[80%] bg-gray-300 rounded-xl flex flex-col shadow-xl relative z-2">
+        <div className="max-tablet:min-w-[370px] modal-cnt fixed inset-0 bg-black/0 flex justify-center tablet:items-center z-50 max-tablet:w-full">
+            <div className="modal-content max-tablet:w-full tablet:w-[70%] tablet:h-[80%] bg-gray-300 tablet:rounded-xl flex flex-col shadow-xl relative z-2">
                 <div className="modal-header flex w-full items-center justify-between h-12">
                     <div className="w-1/3"></div> 
                     <div className="flex justify-center w-1/3">
-                        <h3 className="self-center">Export HTML Code</h3>
+                        <h3 className="hidden tablet:block self-center">Export HTML Code</h3>
+                        <h3 className="hidden max-tablet:block self-center">Export</h3>
                     </div>
                     <div className="flex justify-end w-1/3">
                         <button className={`${styleBttn} mr-5`} onClick={() => setToggleModal()}>Close</button>
@@ -137,8 +138,8 @@ export function ExportModal({elements}: ExportModalProps) {
                     </Highlight>
                 </div>
                 <div className="modal-nav h-12 flex justify-center items-center">
-                    <div className="w-1/3"></div> 
-                    <div className="flex justify-center gap-6 w-1/3 font-medium">
+                    <div className="max-tablet:hidden w-1/3"></div> 
+                    <div className="flex max-tablet:item-start justify-center gap-6 w-1/3 max-tablet:w-2/3 font-medium">
                         <button className={aciveBttn === 'html' ? menuActive : menuDefault} onClick={handleHTML}>
                             HTML
                         </button>
