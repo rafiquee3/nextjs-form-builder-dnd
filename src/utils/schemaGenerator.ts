@@ -23,7 +23,7 @@ export function schemaGenerator(syncData: SyncData) {
             case 'text':
             case 'password':
             case 'textarea':
-                schema = schema.string('Value must be of type string.');
+                schema = z.string({ invalid_type_error: 'Value must be of type string.' });
                 if (min) {
                     schema = schema.min(min, `Must have at least ${min} characters.`);
                 }
@@ -41,7 +41,7 @@ export function schemaGenerator(syncData: SyncData) {
                 break;
             case 'number':
                 console.log('min', min, 'type', typeof min)
-                schema = z.coerce.number('The value must be a number.');
+                schema = z.coerce.number({ invalid_type_error: 'The value must be a number.' });
                 if (min && typeof min === 'number') {
                     schema = schema.min(min, `Must be greater than or equal to ${min}.`);
                 }
@@ -50,7 +50,7 @@ export function schemaGenerator(syncData: SyncData) {
                 }
                 break;
             case 'date':
-                schema = schema.coerce.date('Invalid date format.');
+                schema = z.coerce.date({ invalid_type_error: 'Invalid date format.' });
                 break;
             case 'email':
                 schema = schema.string().email('Invalid email format.');
